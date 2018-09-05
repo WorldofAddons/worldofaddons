@@ -1,4 +1,4 @@
-const React = require('react')
+import React from 'react'
 const { app } = window.require('electron').remote
 
 class Dashboard extends React.Component {
