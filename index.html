@@ -2,12 +2,125 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>Hello World!</title>
+    <title>World of Addons</title>
   </head>
   <body>
     <div id="root"></div>
+    <div id="error"></div>
+
+    <input type="text" id="addonUrlTxtbox" value="https://www.curseforge.com/wow/addons/Skada">
+    <button onclick="checkURL(document.getElementById('addonUrlTxtbox').value)">Get Addon</button>
+    <br>
+    <table border=1 id="addonTable" style="width:100%;"></table>
+
     <script>
-      // You can also require other files to run in this process
+      const { ipcRenderer } = require('electron')
+           
+      // Universal listener to update errors to display to user
+      ipcRenderer.on('error', function(event, errObj){
+        showError(errObj)
+      })
+
+      // Universal listener to update addon status
+      ipcRenderer.on('updateAddonStatus', function(event, updateObj){
+          console.log(updateObj)
+          if (updateObj.hasOwnProperty("dlStatus")) { // Download %
+            document.getElementById(updateObj.name + "_action").innerHTML = updateObj.dlStatus + "%"
+          }
+      })
+
+      ipcRenderer.on('newAddonObj', function(event, addonObj){
+        newAddonToTable(addonObj)
+      })      
+      
+      // Checks the provided url, if it's valid then send it to the backend to match host
+      function checkURL(newUrl) {
+        var isURL = /^(http|https):\/\/[^ "]+$/.test(newUrl);                // Checks the URL
+        if (isURL === true) {                                             // If it is a URL, 
+          ipcRenderer.send('newURL', newUrl)                              // send the URL to main to be matched with a host
+        }else {
+          var errorObj = {'error': "ERROR: Invalid URL '" + newUrl + "'"}   // Otherwise return an error
+          showError(errorObj)
+        } 
+      }
+
+      // Appends more addons to the table "addontable"
+      function newAddonToTable(addonObj) {
+        console.log("function newAddonToTable()")
+        console.log("\tCreating new addon entry in table:\n\t" + JSON.stringify(addonObj))
+        
+        // Create new row in addonTable
+        var addonTable = document.getElementById("addonTable");
+        var row = addonTable.insertRow(0)
+        var name = row.insertCell(0)
+        var host = row.insertCell(1)
+        var version = row.insertCell(2)
+        var status = row.insertCell(3)
+
+        // Assign all items some ID
+        row.id = addonObj.name
+        name.id = addonObj.name + "_name"
+        host.id = addonObj.name + "_host"
+        version.id = addonObj.name + "_version"
+        status.id = addonObj.name + "_action"
+
+        // Create install and cancel buttons
+        var installButton = makeInstallButton(addonObj)
+        var cancelButton = makeCancelButton(row)
+        status.appendChild(installButton)
+        status.appendChild(cancelButton)
+
+        // Initilize status
+        name.innerHTML = addonObj.name
+        host.innerHTML = addonObj.host
+        version.innerHTML = addonObj.version
+      }
+      
+      // Create install button that can call backend to download the addon
+      function makeInstallButton(addonObj) {
+        console.log("\tCreated install button for " + addonObj.name)
+        var installButton = document.createElement('button')
+        installButton.innerHTML = "Install " + String(addonObj.name)
+        installButton.onclick = function()
+        {
+          ipcRenderer.send('installAddon', addonObj)
+          document.getElementById(addonObj.name + "_action").innerHTML = "Downloading..."
+          console.log("\tUser clicked Install, sending installAddon req.")
+        }
+        return installButton
+      }
+
+      // Clears the specified row, "cancelling" the installation
+      function makeCancelButton(row) {
+        console.log("\tCreated cancel button")
+        var cancelButton = document.createElement('button')
+       cancelButton.innerHTML = "Cancel"
+       cancelButton.onclick = function()
+        {
+          _clearAll(row)
+        }
+        return cancelButton
+      }
+      
+      // Clears the row
+      function _clearAll(row) {
+        console.log("\tRow cleared")
+        row.parentNode.removeChild(row)
+      }
+      
+      // Generic show error in error div function
+      function showError(errObj) {
+        if (errObj.hasOwnProperty("error")) {
+          console.log(errObj.error)
+          document.getElementById("error").innerHTML = errObj.error
+          return true
+        }
+        return false
+      }
+
+    </script>
+
+    <script>
       import './src/renderer.js'
       import './src-react/App.jsx'
     </script>
