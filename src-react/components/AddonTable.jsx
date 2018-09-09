@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { ipcRenderer } from 'electron'
 
+// TODO: Optimize memory consumption by getting rid of addonList in state.
 export class AddonTable extends Component {
   constructor(props){
     super(props)
