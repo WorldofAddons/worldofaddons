@@ -17,6 +17,7 @@ export class AddonTable extends Component {
 
   addRow(e, newAddon) {
     let { addonList } = this.state
+    console.log(newAddon)
     addonList.push(newAddon)
     this.setState({addonList})
   }
@@ -46,13 +47,36 @@ export class AddonTable extends Component {
     )
   }
 
-  render(){
-    const tags = this.state.addonList.map(a => this.renderRow(a))
+  renderHeader() {
+    return(
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Host</th>
+          <th>Version</th>
+          <th>Status</th>
+          <th></th>
+          <th></th>
+        </tr>
+      </thead>
+    )
+  }
 
+  renderBody() {
+    const tags = this.state.addonList.map(a => this.renderRow(a))
+    return (
+      <tbody>
+        {tags}
+      </tbody>
+    )
+  }
+
+  render(){
     return(
       <div>
         <table>
-          {tags}
+          {this.renderHeader()}
+          {this.renderBody()}
         </table>
       </div>
     )

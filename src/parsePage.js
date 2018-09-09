@@ -1,4 +1,6 @@
-const { ipcRenderer } = require('electron')
+import { ipcRenderer } from 'electron'
+import { XMLHttpRequest } from 'xmlhttprequest'
+import { JSDOM } from 'jsdom'
 
 export function checkWhichHost(url) {
     if (url.startsWith("https://www.curseforge.com/wow/addons/")) {
@@ -22,21 +24,22 @@ export function parseCurseforgeUrl(url) {
 export function curseForge(urlObj) {
     let req = makeHttpObject();
     req.open("GET", urlObj.url + "/files", true);
-    req.send(null);
-    req.onreadystatechange = function() {
+    req.send(null)
+
+    req.onreadystatechange = () => {
         if (req.readyState == 4){
-            var pageHTML = req.responseText
-            var parser = new DOMParser();
-            var page = parser.parseFromString(pageHTML, "text/html");
+            let pageHTML = req.responseText
+            let parser = new JSDOM(pageHTML)
+            let page = parser.parseFromString(pageHTML, "text/html")
             
             // Check if URL is 404
             if (page.getElementsByClassName('error-page').length != 0){
-                var errorObj = {'error': "ERROR: Invalid URL '" + urlObj.url + "'."}
+                const errorObj = {'error': `ERROR: Invalid URL 404 ${urlObj.url}`}
                 return errorObj
             }
-            var version = page.getElementsByClassName('table__content file__name full')[0].innerHTML
+            const version = page.getElementsByClassName('table__content file__name full')[0].innerHTML
 
-            var addonObj = {
+            const addonObj = {
                 'name': urlObj.name,
                 'version': version,
                 'host': urlObj.host,
@@ -45,12 +48,12 @@ export function curseForge(urlObj) {
             console.log(addonObj)
             ipcRenderer.send('newAddonObj', addonObj)
         }
-    };
-
+    }
     req.onloadend = () => {
-    if(req.status == 404)
-        const errorObj = {'error': "ERROR: Invalid URL 404 '" + urlObj.url + "'."}
-        ipcRenderer.send('error', errorObj)
+        if(req.status === 404) {
+            const errorObj = {'error': `ERROR: Invalid URL 404 ${urlObj.url}`}
+            ipcRenderer.send('error', errorObj)
+        }
     }
 }
 

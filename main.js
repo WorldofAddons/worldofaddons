@@ -1,5 +1,6 @@
 // Modules to control application life and create native browser window
 import {app, BrowserWindow} from 'electron'
+import { checkWhichHost, curseForge } from './src/parsePage'
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -29,7 +30,7 @@ function parsePage(newUrl) {
   const win = new BrowserWindow({show: false})
   win.loadFile('./src/parsePage.html')
   console.log("\tHidden parsePage() window created")
-  win.webContents.on('did-finish-load', function () {
+  win.webContents.on('did-finish-load', () => {
       win.webContents.send('newUrl', newUrl);
       console.log("\tLoad successful, newUrl sent to parsePage.html")
   });
@@ -74,10 +75,13 @@ app.on('activate', () => {
 const {ipcMain} = require('electron')
 
 // newURL listener
-ipcMain.on('newURL', (event, newURL) => {
+ipcMain.on('newURL', (e, newURL) => {
   console.log("Recieved new URL " + newURL)
   console.log("\tSending URL to be matched with host and parse addon page")
-  parsePage(newURL)
+  const urlObj = checkWhichHost(newURL)
+  if (urlObj.host === 'curseforge') {
+    curseForge(urlObj)
+  }
 })
 
 // error listener
