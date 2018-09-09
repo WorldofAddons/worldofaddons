@@ -7,10 +7,6 @@
   <body>
     <div id="root"></div>
     <div id="error"></div>
-
-    <input type="text" id="addonUrlTxtbox" value="https://www.curseforge.com/wow/addons/Skada">
-    <button onclick="checkURL(document.getElementById('addonUrlTxtbox').value)">Get Addon</button>
-    <br>
     <table border=1 id="addonTable" style="width:100%;"></table>
 
     <script>
@@ -33,16 +29,6 @@
         newAddonToTable(addonObj)
       })      
       
-      // Checks the provided url, if it's valid then send it to the backend to match host
-      function checkURL(newUrl) {
-        var isURL = /^(http|https):\/\/[^ "]+$/.test(newUrl);                // Checks the URL
-        if (isURL === true) {                                             // If it is a URL, 
-          ipcRenderer.send('newURL', newUrl)                              // send the URL to main to be matched with a host
-        }else {
-          var errorObj = {'error': "ERROR: Invalid URL '" + newUrl + "'"}   // Otherwise return an error
-          showError(errorObj)
-        } 
-      }
 
       // Appends more addons to the table "addontable"
       function newAddonToTable(addonObj) {

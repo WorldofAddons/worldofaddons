@@ -2,8 +2,8 @@
 // be executed in the renderer process for that window.
 // All of the Node.js APIs are available in this process.
 
-import './src/parsePage.js'
-import './src/installAddon.js'
+import './parsePage.js'
+import './installAddon.js'
 
 const { ipcRenderer } = require('electron')
 

@@ -4,18 +4,18 @@ export function checkWhichHost(url) {
     if (url.startsWith("https://www.curseforge.com/wow/addons/")) {
         return parseCurseforgeUrl(url)
     }
-    var errorObj = {'error': "ERROR: Invalid URL '" + url + "'. Given link does not match parse"}
+    const errorObj = {'error': "ERROR: Invalid URL '" + url + "'. Given link does not match parse"}
     return errorObj
 }
 
 // curseforge
 export function parseCurseforgeUrl(url) {
-    var urlSplit = url.split("https://www.curseforge.com/wow/addons/")
+    const urlSplit = url.split("https://www.curseforge.com/wow/addons/")
     if (urlSplit.length === 2) {
         var urlObj = {'url': url, 'host': "curseforge", 'name': urlSplit[1]}
         return urlObj
     }
-    var errorObj = {'error': "ERROR: Invalid URL '" + url + "'."}
+    const errorObj = {'error': "ERROR: Invalid URL '" + url + "'."}
     return errorObj
 }
 
