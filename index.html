@@ -18,7 +18,7 @@
       })
 
       // Universal listener to update addon status
-      ipcRenderer.on('updateAddonStatus', function(event, updateObj){
+      ipcRenderer.on('updateAddonStatus', (e, updateObj) => {
           console.log(updateObj)
           if (updateObj.hasOwnProperty("dlStatus")) { // Download %
             document.getElementById(updateObj.name + "_action").innerHTML = updateObj.dlStatus + "%"

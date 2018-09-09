@@ -2,17 +2,21 @@
 // be executed in the renderer process for that window.
 // All of the Node.js APIs are available in this process.
 
-import './parsePage.js'
-import './installAddon.js'
+import {
+    curseForge,
+    checkWhichHost
+} from './parsePage.js'
+import {
+    downloadAddon
+} from './installAddon.js'
+import { parseCurseforgeHTML } from './curseforge'
+import { ipcRenderer } from 'electron'
 
-const { ipcRenderer } = require('electron')
-
-ipcRenderer.on('newUrl' , function(event , newUrl){
+ipcRenderer.on('newUrl' , function(e, newUrl){
     console.log("URL: " + newUrl)
     var urlObj = checkWhichHost(newUrl)
     if (urlObj.hasOwnProperty('error')) {
         ipcRenderer.send('error', urlObj)
-        window.close()
     }
     
     if (urlObj.host === "curseforge"){                  // If URL host is curseforge, parse the page
@@ -21,7 +25,7 @@ ipcRenderer.on('newUrl' , function(event , newUrl){
     }
 })
 
-ipcRenderer.on('addonObj' , function(event , addonObj){
+ipcRenderer.on('addonObj' , function(e, addonObj){
     console.log(addonObj)
     var targetPath = "C:\\Users\\khlam\\Downloads\\" + addonObj.name + ".zip" // change later, set for testing
     var pageHTML = ""
