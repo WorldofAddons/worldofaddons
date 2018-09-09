@@ -12,7 +12,7 @@ export function checkWhichHost(url) {
 export function parseCurseforgeUrl(url) {
     const urlSplit = url.split("https://www.curseforge.com/wow/addons/")
     if (urlSplit.length === 2) {
-        var urlObj = {'url': url, 'host': "curseforge", 'name': urlSplit[1]}
+        const urlObj = {'url': url, 'host': "curseforge", 'name': urlSplit[1]}
         return urlObj
     }
     const errorObj = {'error': "ERROR: Invalid URL '" + url + "'."}
@@ -20,7 +20,7 @@ export function parseCurseforgeUrl(url) {
 }
 
 export function curseForge(urlObj) {
-    var req = makeHttpObject();
+    let req = makeHttpObject();
     req.open("GET", urlObj.url + "/files", true);
     req.send(null);
     req.onreadystatechange = function() {
@@ -47,9 +47,9 @@ export function curseForge(urlObj) {
         }
     };
 
-    req.onloadend = function() {
+    req.onloadend = () => {
     if(req.status == 404)
-        var errorObj = {'error': "ERROR: Invalid URL 404 '" + urlObj.url + "'."}
+        const errorObj = {'error': "ERROR: Invalid URL 404 '" + urlObj.url + "'."}
         ipcRenderer.send('error', errorObj)
     }
 }
