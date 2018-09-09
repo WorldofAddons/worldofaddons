@@ -21,7 +21,13 @@ ipcRenderer.on('newUrl', (e, newUrl) =>{
     
     if (urlObj.host === "curseforge"){                  // If URL host is curseforge, parse the page
         console.log("URL host matched to Curseforge")
-        curseForge(urlObj)
+        const result = curseForge(urlObj)
+        console.log('----------------------------', result)
+        if (result.error){
+            ipcRenderer.send('error', result)
+        } else {
+            ipcRenderer.send('newAddonObj', result)
+        }
     }
 })
 

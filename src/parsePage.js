@@ -26,11 +26,11 @@ export function curseForge(urlObj) {
     req.open("GET", urlObj.url + "/files", true);
     req.send(null)
 
-    req.onreadystatechange = () => {
-        if (req.readyState == 4){
+    req.onreadystatechange = function() {
+        if (req.readyState === 4){
             let pageHTML = req.responseText
             let parser = new JSDOM(pageHTML)
-            let page = parser.parseFromString(pageHTML, "text/html")
+            let page = parser.window.document
             
             // Check if URL is 404
             if (page.getElementsByClassName('error-page').length != 0){
@@ -46,13 +46,15 @@ export function curseForge(urlObj) {
                 'url': urlObj.url
             }
             console.log(addonObj)
-            ipcRenderer.send('newAddonObj', addonObj)
+            return addonObj
+            //ipcRenderer.send('newAddonObj', addonObj)
         }
     }
     req.onloadend = () => {
         if(req.status === 404) {
             const errorObj = {'error': `ERROR: Invalid URL 404 ${urlObj.url}`}
-            ipcRenderer.send('error', errorObj)
+            return errorObj
+            //ipcRenderer.send('error', errorObj)
         }
     }
 }
