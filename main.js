@@ -5,7 +5,7 @@ import {installAddon} from './src/installAddon'
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
-let mainWindow
+export let mainWindow;
 
 function createWindow () {
   // Create the browser window.
@@ -59,18 +59,18 @@ ipcMain.on('newURL', (e, newURL) => {
   console.log("\tSending URL to be matched with host and parse addon page")
   const urlObj = checkWhichHost(newURL)
   if (urlObj.host === 'curseforge') {
-    curseForge(urlObj).then(function(value) {
+    curseForge(urlObj).then((value) => {
       mainWindow.webContents.send("newAddonObj", value)
-    }).catch(function(value) {
-        mainWindow.webContents.send("error", value)
-      })
+    }).catch((value) => {
+      mainWindow.webContents.send("error", value)
+    })
   }
 })
 
 // installAddon() listener
-ipcMain.on('installAddon', (event, addonObj) => {
+ipcMain.on('installAddon', (e, addonObj) => {
   console.log("Recieved request to install addon " + addonObj.name)
-  const targetPath = "C:\\Users\\khlam\\Downloads\\" + addonObj.name + ".zip" // change later, set for testing
+  const targetPath = `C:\\Users\\khlam\\Downloads\\${addonObj.name}.zip` // change later, set for testing
   installAddon(addonObj, targetPath)
 })
 

@@ -9,10 +9,33 @@ export class AddonTable extends Component {
     this.state = {
       addonList: []
     }
+  }
 
-    // event listeners
-    ipcRenderer.on('newAddonObj', this.addRow)
-    ipcRenderer.on('updateAddonStatus', (e, updateObj) => {}) // TODO: fix download status
+  componentDidMount() {
+    ipcRenderer.on('newAddonObj', this.addRow.bind(this))
+    ipcRenderer.on('updateAddonStatus', this.updateDLPercent.bind(this))
+  }
+
+  componentWillUnmount() {
+    ipcRenderer.removeListener('newAddonObj', this.addRow.bind(this))
+    ipcRenderer.removeListener('updateAddonStatus', this.updateDLPercent.bind(this))
+  }
+
+  // TODO: refactor this
+  updateDLPercent(e, updateObj) {
+    const {name, dlStatus} = updateObj
+    let { addonList } = this.state
+    let idx = addonList.findIndex(a => a.name === name)
+    if(idx === -1) {
+      // throw new Error('Newly downloaded addon could not be found.')
+    }
+    let addon = addonList[idx]
+    addon.percentage = dlStatus
+
+    const newAddonList = [...addonList]
+    newAddonList[idx] = addon
+
+    this.setState({addonList: newAddonList})
   }
 
   addRow(e, newAddon) {
@@ -22,23 +45,23 @@ export class AddonTable extends Component {
     this.setState({addonList})
   }
 
-  onInstall(e) {
+  onInstall(addonObj) {
+    ipcRenderer.send('installAddon', addonObj)
+  }
+
+  onRemove() {
 
   }
 
-  onRemove(e) {
-
-  }
-
-  renderRow(addonObj) {
+  renderRow(addonObj, key) {
     return(
-      <tr>
+      <tr key={key}>
         <td>{addonObj.name}</td>
         <td>{addonObj.host}</td>
         <td>{addonObj.version}</td>
-        <td>{"TODO: download Status"}</td>
+        <td>{addonObj.percentage || 0}%</td>
         <td>
-          <button onClick={this.onInstall.bind(this)}>Install</button>
+          <button onClick={() => this.onInstall(addonObj)}>Install</button>
         </td>
         <td>
           <button onClick={this.onRemove.bind(this)}>Remove</button>
@@ -63,7 +86,7 @@ export class AddonTable extends Component {
   }
 
   renderBody() {
-    const tags = this.state.addonList.map(a => this.renderRow(a))
+    const tags = this.state.addonList.map((a, i) => this.renderRow(a, i))
     return (
       <tbody>
         {tags}
@@ -73,7 +96,7 @@ export class AddonTable extends Component {
 
   render(){
     return(
-      <div>
+      <div key="addon-table">
         <table>
           {this.renderHeader()}
           {this.renderBody()}

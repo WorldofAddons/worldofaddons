@@ -7,92 +7,14 @@
   <body>
     <div id="root"></div>
     <div id="error"></div>
-    <table border=1 id="addonTable" style="width:100%;"></table>
 
     <script>
       const { ipcRenderer } = require('electron')
            
-      // Universal listener to update errors to display to user
+      // TODO: remove into react component
       ipcRenderer.on('error', function(event, errObj){
         showError(errObj)
       })
-
-      // Universal listener to update addon status
-      ipcRenderer.on('updateAddonStatus', (e, updateObj) => {
-          console.log(updateObj)
-          if (updateObj.hasOwnProperty("dlStatus")) { // Download %
-            document.getElementById(updateObj.name + "_action").innerHTML = updateObj.dlStatus + "%"
-          }
-      })
-
-      ipcRenderer.on('newAddonObj', function(event, addonObj){
-        newAddonToTable(addonObj)
-      })      
-      
-
-      // Appends more addons to the table "addontable"
-      function newAddonToTable(addonObj) {
-        console.log("function newAddonToTable()")
-        console.log("\tCreating new addon entry in table:\n\t" + JSON.stringify(addonObj))
-        
-        // Create new row in addonTable
-        var addonTable = document.getElementById("addonTable");
-        var row = addonTable.insertRow(0)
-        var name = row.insertCell(0)
-        var host = row.insertCell(1)
-        var version = row.insertCell(2)
-        var status = row.insertCell(3)
-
-        // Assign all items some ID
-        row.id = addonObj.name
-        name.id = addonObj.name + "_name"
-        host.id = addonObj.name + "_host"
-        version.id = addonObj.name + "_version"
-        status.id = addonObj.name + "_action"
-
-        // Create install and cancel buttons
-        var installButton = makeInstallButton(addonObj)
-        var cancelButton = makeCancelButton(row)
-        status.appendChild(installButton)
-        status.appendChild(cancelButton)
-
-        // Initilize status
-        name.innerHTML = addonObj.name
-        host.innerHTML = addonObj.host
-        version.innerHTML = addonObj.version
-      }
-      
-      // Create install button that can call backend to download the addon
-      function makeInstallButton(addonObj) {
-        console.log("\tCreated install button for " + addonObj.name)
-        var installButton = document.createElement('button')
-        installButton.innerHTML = "Install " + String(addonObj.name)
-        installButton.onclick = function()
-        {
-          ipcRenderer.send('installAddon', addonObj)
-          //document.getElementById(addonObj.name + "_action").innerHTML = "Downloading..."
-          console.log("User clicked Install, sending installAddon req.")
-        }
-        return installButton
-      }
-
-      // Clears the specified row, "cancelling" the installation
-      function makeCancelButton(row) {
-        console.log("\tCreated cancel button")
-        var cancelButton = document.createElement('button')
-       cancelButton.innerHTML = "Cancel"
-       cancelButton.onclick = function()
-        {
-          _clearAll(row)
-        }
-        return cancelButton
-      }
-      
-      // Clears the row
-      function _clearAll(row) {
-        console.log("\tRow cleared")
-        row.parentNode.removeChild(row)
-      }
       
       // Generic show error in error div function
       function showError(errObj) {

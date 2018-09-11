@@ -2,8 +2,7 @@ import { XMLHttpRequest } from 'xmlhttprequest'
 import { JSDOM } from 'jsdom'
 export function parseCurseforgeDlUrl(addonObj) {
     return new Promise(function(resolve, reject){
-        const pageHTML = ""
-        const req = makeHttpObject();
+        const req = new XMLHttpRequest();
         req.open("GET", addonObj.url+"/download", true);
         req.send(null);
 
@@ -28,15 +27,4 @@ export function parseCurseforgeDlUrl(addonObj) {
             }
         }
     })
-}
-
-// Create HTTP object
-export function makeHttpObject() {
-    try {return new XMLHttpRequest();}
-    catch (error) {}
-    try {return new ActiveXObject("Msxml2.XMLHTTP");}
-    catch (error) {}
-    try {return new ActiveXObject("Microsoft.XMLHTTP");}
-    catch (error) {}
-    throw new Error("Could not create HTTP request object.");
 }

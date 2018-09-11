@@ -2,6 +2,7 @@ import {parseCurseforgeDlUrl} from './curseforge'
 import fs from 'fs'
 import request from 'request-promise'
 import decompress from 'decompress'
+import { mainWindow } from '../main'
 
 // Create HTTP object
 export function makeHttpObject() {
@@ -52,6 +53,7 @@ export function downloadAddon(addonObj, downloadUrl, targetPath) {
             let percentage = parseInt((received_bytes * 100) / total_bytes)
             const updateObj = {'name': addonObj.name, 'dlStatus': percentage} // TODO
             console.log(percentage)
+            mainWindow.webContents.send("updateAddonStatus", updateObj)
         });
     
         req.then((data) => {
@@ -66,15 +68,11 @@ export function extAddonToDir(addonObj, targetPath) {
     console.log(`\tExtracting ${addonObj.name}to dir: ${targetPath}`)
  
     decompress(targetPath, 'C:\\Users\\klam4\\Downloads\\' , {
-        map: file => {
-            file.path = file.path
-            //console.log(file.path)
-            return file
-        }
+        map: file => { return file.path}
     }).then(files => {
         fs.unlink(targetPath, (err) => {
             if (err) throw err;
-            console.log("Deleted " + targetPath)
+            console.log(`Deleted ${targetPath}`)
         });
         
         files.forEach((part, index, files) => {            // Quick and dirty record all addon dirs
