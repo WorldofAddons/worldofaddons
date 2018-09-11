@@ -1,6 +1,7 @@
 // Modules to control application life and create native browser window
 import {app, BrowserWindow} from 'electron'
-import { checkWhichHost, curseForge } from './src/parsePage'
+import {checkWhichHost, curseForge} from './src/parsePage'
+import {installAddon} from './src/installAddon'
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -23,28 +24,6 @@ function createWindow () {
     // when you should delete the corresponding element.
   mainWindow = null
   })
-}
-
-function parsePage(newUrl) {
-  console.log("parsePage() called")
-  const win = new BrowserWindow({show: false})
-  win.loadFile('./src/parsePage.html')
-  console.log("\tHidden parsePage() window created")
-  win.webContents.on('did-finish-load', () => {
-      win.webContents.send('newUrl', newUrl);
-      console.log("\tLoad successful, newUrl sent to parsePage.html")
-  });
-}
-
-function installAddon(addonObj) {
-  console.log("installAddon() called")
-  const win = new BrowserWindow({show: false})
-  win.loadFile('./src/installAddon.html')
-  console.log("\tHidden installAddon() window created")
-  win.webContents.on('did-finish-load', function () {
-      win.webContents.send('addonObj', addonObj);
-      console.log("\tLoad successful, addonObj sent to installAddon.html")
-  });
 }
 
 // This method will be called when Electron has finished
@@ -80,36 +59,22 @@ ipcMain.on('newURL', (e, newURL) => {
   console.log("\tSending URL to be matched with host and parse addon page")
   const urlObj = checkWhichHost(newURL)
   if (urlObj.host === 'curseforge') {
-    curseForge(urlObj)
+    curseForge(urlObj).then(function(value) {
+      mainWindow.webContents.send("newAddonObj", value)
+    }).catch(function(value) {
+        mainWindow.webContents.send("error", value)
+      })
   }
 })
-
-// error listener
-ipcMain.on('error', (event, errorObj) => {
-  console.log("\tSending error message " + errorObj.error)
-  mainWindow.webContents.send("error", errorObj)
-})
-
-// newAddon listener
-ipcMain.on('newAddonObj', (event, newAddonObj) => {
-  console.log("Confirmed new addonObj is valid. Sending to mainWindow")
-  console.log(newAddonObj)
-  mainWindow.webContents.send("newAddonObj", newAddonObj)
-})
-
 
 // installAddon() listener
 ipcMain.on('installAddon', (event, addonObj) => {
   console.log("Recieved request to install addon " + addonObj.name)
-  if (addonObj.hasOwnProperty('error')) {
-    console.log("\tSending error message" + addonObj.error)
-    mainWindow.webContents.send("showError", String(addonObj.error))
-  } else {
-    console.log("\tCalling installAddon()")
-    installAddon(addonObj)
-  }
+  const targetPath = "C:\\Users\\khlam\\Downloads\\" + addonObj.name + ".zip" // change later, set for testing
+  installAddon(addonObj, targetPath)
 })
 
+// Update download progress listener
 ipcMain.on('updateObj', (event, updateObj) => {
   if (updateObj.hasOwnProperty("dlStatus")) {
     console.log("\tDownload Progress for " + updateObj.name + ": " + updateObj.dlStatus)
@@ -120,3 +85,10 @@ ipcMain.on('updateObj', (event, updateObj) => {
 ipcMain.on('downloadComplete', (event, addonObj) => {
   console.log("\tDownload for " + addonObj.name + " completed")
 })
+
+// error listener
+ipcMain.on('error', (event, errorObj) => {
+  console.log("\tSending error message " + errorObj.error)
+  mainWindow.webContents.send("error", errorObj)
+})
+

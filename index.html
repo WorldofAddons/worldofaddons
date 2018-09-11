@@ -70,8 +70,8 @@
         installButton.onclick = function()
         {
           ipcRenderer.send('installAddon', addonObj)
-          document.getElementById(addonObj.name + "_action").innerHTML = "Downloading..."
-          console.log("\tUser clicked Install, sending installAddon req.")
+          //document.getElementById(addonObj.name + "_action").innerHTML = "Downloading..."
+          console.log("User clicked Install, sending installAddon req.")
         }
         return installButton
       }

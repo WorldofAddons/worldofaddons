@@ -1,4 +1,3 @@
-import { ipcRenderer } from 'electron'
 import { XMLHttpRequest } from 'xmlhttprequest'
 import { JSDOM } from 'jsdom'
 
@@ -22,41 +21,43 @@ export function parseCurseforgeUrl(url) {
 }
 
 export function curseForge(urlObj) {
-    let req = makeHttpObject();
-    req.open("GET", urlObj.url + "/files", true);
-    req.send(null)
-
-    req.onreadystatechange = function() {
-        if (req.readyState === 4){
-            let pageHTML = req.responseText
-            let parser = new JSDOM(pageHTML)
-            let page = parser.window.document
-            
-            // Check if URL is 404
-            if (page.getElementsByClassName('error-page').length != 0){
-                const errorObj = {'error': `ERROR: Invalid URL 404 ${urlObj.url}`}
-                return errorObj
+    return new Promise(function(resolve, reject){
+        let req = makeHttpObject();
+        req.open("GET", urlObj.url + "/files", true);
+        req.send(null)
+    
+        req.onreadystatechange = function() {
+            if (req.readyState === 4){
+                let pageHTML = req.responseText
+                let parser = new JSDOM(pageHTML)
+                let page = parser.window.document
+                
+                // Check if URL is 404
+                if (page.getElementsByClassName('error-page').length != 0){
+                    const errorObj = {'error': `ERROR: Invalid URL 404 ${urlObj.url}`}
+                    return errorObj
+                }
+                const version = page.getElementsByClassName('table__content file__name full')[0].innerHTML
+    
+                const addonObj = {
+                    'name': urlObj.name,
+                    'version': version,
+                    'host': urlObj.host,
+                    'url': urlObj.url
+                }
+                console.log(addonObj)
+                return resolve(addonObj)
             }
-            const version = page.getElementsByClassName('table__content file__name full')[0].innerHTML
-
-            const addonObj = {
-                'name': urlObj.name,
-                'version': version,
-                'host': urlObj.host,
-                'url': urlObj.url
+        }
+        req.onloadend = () => {
+            if(req.status !== 200) {
+                const errTxt = `ERROR: URL returned ${req.status} for ${urlObj.url}`
+                console.log(errTxt)
+                const errorObj = {'error': errTxt}
+                return reject(errorObj)
             }
-            console.log(addonObj)
-            return addonObj
-            //ipcRenderer.send('newAddonObj', addonObj)
         }
-    }
-    req.onloadend = () => {
-        if(req.status === 404) {
-            const errorObj = {'error': `ERROR: Invalid URL 404 ${urlObj.url}`}
-            return errorObj
-            //ipcRenderer.send('error', errorObj)
-        }
-    }
+    })
 }
 
 // Create HTTP object
