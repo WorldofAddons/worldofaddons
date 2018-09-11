@@ -21,12 +21,12 @@ export function parseCurseforgeUrl(url) {
 }
 
 export function curseForge(urlObj) {
-    return new Promise(function(resolve, reject){
-        let req = makeHttpObject();
+    return new Promise((resolve, reject) => {
+        let req = new XMLHttpRequest();
         req.open("GET", urlObj.url + "/files", true);
         req.send(null)
     
-        req.onreadystatechange = function() {
+        req.onreadystatechange = () => {
             if (req.readyState === 4){
                 let pageHTML = req.responseText
                 let parser = new JSDOM(pageHTML)
@@ -35,7 +35,7 @@ export function curseForge(urlObj) {
                 // Check if URL is 404
                 if (page.getElementsByClassName('error-page').length != 0){
                     const errorObj = {'error': `ERROR: Invalid URL 404 ${urlObj.url}`}
-                    return errorObj
+                    return reject(errorObj)
                 }
                 const version = page.getElementsByClassName('table__content file__name full')[0].innerHTML
     
@@ -58,15 +58,4 @@ export function curseForge(urlObj) {
             }
         }
     })
-}
-
-// Create HTTP object
-export function makeHttpObject() {
-    try {return new XMLHttpRequest();}
-    catch (error) {}
-    try {return new ActiveXObject("Msxml2.XMLHTTP");}
-    catch (error) {}
-    try {return new ActiveXObject("Microsoft.XMLHTTP");}
-    catch (error) {}
-    throw new Error("Could not create HTTP request object.");
 }
