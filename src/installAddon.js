@@ -1,8 +1,10 @@
-import {parseCurseforgeDlUrl} from './curseforge'
+import {parseDLURL_curseforge} from './curseforge'
 import fs from 'fs'
 import request from 'request-promise'
 import decompress from 'decompress'
 import { mainWindow } from '../main'
+const os = require('os');
+const path = require('path');
 
 // Create HTTP object
 export function makeHttpObject() {
@@ -17,30 +19,35 @@ export function makeHttpObject() {
 
 // Install the addon by chained-promises
 export function installAddon(addonObj, targetPath) {
-    if (addonObj.host = "curseforge") {
-        parseCurseforgeDlUrl(addonObj)
-        .then((curseDownloadUrl) => {
-            return downloadAddon(addonObj, curseDownloadUrl, targetPath)
-        })
-        .then(() => {  // Download the addon using the parsed URL
-            addonObj = extAddonToDir(addonObj, targetPath) // After download is done extract the zip to target dir and delete the old zip
-            console.log(addonObj)
-            return addonObj
-        })           
-        .catch((value) => {
-            return value
-        })
-    }
+    return new Promise((resolve, reject) => {
+
+        // Parse if host is CurseForge
+        if (addonObj.host = "curseforge") {
+            parseDLURL_curseforge(addonObj)
+            .then((curseDownloadURL) => {
+                //console.log(path.join(targetPath, addonObj.name + ".zip"))
+                return downloadAddon(addonObj, curseDownloadURL)
+            })
+            .then(() => {  // Download the addon using the parsed URL
+                return extAddonToDir(addonObj, targetPath) // After download is done extract the zip to target dir and delete the old zip
+            })           
+            .then((finalAddonObj) => {
+                console.log(`\t${finalAddonObj.name} Installed.`)
+                return resolve(finalAddonObj)
+            })
+        }
+        // End of CurseForge
+    })
 }
 
-export function downloadAddon(addonObj, downloadUrl, targetPath) {
+export function downloadAddon(addonObj, downloadURL) {
     return new Promise((resolve, reject) => {
         let req = request({
             method: 'GET',
-            uri: downloadUrl
+            uri: downloadURL
         })
-    
-        req.pipe(fs.createWriteStream(targetPath, {flags: 'w'}))
+        const dlDirectory = path.join(os.tmpdir(), addonObj.name + ".zip") // Download .zip to tempdir
+        req.pipe(fs.createWriteStream(dlDirectory, {flags: 'w'}))
         
         let received_bytes = 0;
         let total_bytes = 0;
@@ -52,12 +59,13 @@ export function downloadAddon(addonObj, downloadUrl, targetPath) {
             received_bytes += chunk.length;
             let percentage = parseInt((received_bytes * 100) / total_bytes)
             const updateObj = {'name': addonObj.name, 'dlStatus': percentage} // TODO
-            console.log(percentage)
+            //console.log(percentage)
             mainWindow.webContents.send("updateAddonStatus", updateObj)
         });
     
         req.then((data) => {
             console.log("\tDownload for " + addonObj.name + " completed.")
+            // send complete message to frontend
             return resolve()
         });
     })
@@ -65,22 +73,24 @@ export function downloadAddon(addonObj, downloadUrl, targetPath) {
 
 // Extracts the addon zip to target dir and delete the old zip, adds subdirs to list in addonObj
 export function extAddonToDir(addonObj, targetPath) {
-    console.log(`\tExtracting ${addonObj.name}to dir: ${targetPath}`)
- 
-    decompress(targetPath, 'C:\\Users\\klam4\\Downloads\\' , {
-        map: file => { return file.path}
-    }).then(files => {
-        fs.unlink(targetPath, (err) => {
-            if (err) throw err;
-            console.log(`Deleted ${targetPath}`)
-        });
+    return new Promise((resolve, reject) => {
+        const addonZip = path.join(os.tmpdir(), addonObj.name + ".zip")
+        console.log(`\tExtracting ${addonObj.name} from ${addonZip} to dir: ${targetPath}`)
         
-        files.forEach((part, index, files) => {            // Quick and dirty record all addon dirs
-            files[index] = files[index].path.split("/")[0];
-        });
-        const addonDirs = Array.from(new Set(files));
-        console.log(addonDirs)
-        addonObj.subdirs = addonDirs
-        return addonObj // TODO: needs to be wrapped in a promise
+        decompress(addonZip, targetPath, {
+            map: file => { return file }
+        }).then(files => {
+            fs.unlink(addonZip, (err) => {
+                if (err) throw err;
+                console.log(`\tDeleted ${addonZip}`)
+            });
+            
+            files.forEach((part, index, files) => {            // Quick and dirty record all addon dirs
+                files[index] = files[index].path.split("/")[0];
+            });
+            const addonDirs = Array.from(new Set(files));
+            addonObj.subdirs = addonDirs
+            return resolve(addonObj)
+        })
     })
 }

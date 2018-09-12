@@ -56,7 +56,7 @@ export class AddonTable extends Component {
   renderRow(addonObj, key) {
     return(
       <tr key={key}>
-        <td>{addonObj.name}</td>
+        <td>{addonObj.displayName}</td>
         <td>{addonObj.host}</td>
         <td>{addonObj.version}</td>
         <td>{addonObj.percentage || 0}%</td>
