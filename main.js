@@ -1,9 +1,13 @@
 // Modules to control application life and create native browser window
 import {app, BrowserWindow} from 'electron'
+import {checkWhichHost, parseAddonDetails_curseforge} from './src/parsePage'
+import {installAddon} from './src/installAddon'
+import {initConfig} from './src/config.js'
+
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
-let mainWindow
+export let mainWindow;
 
 function createWindow () {
   // Create the browser window.
@@ -20,7 +24,7 @@ function createWindow () {
     // Dereference the window object, usually you would store windows
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.
-    mainWindow = null
+  mainWindow = null
   })
 }
 
@@ -48,3 +52,47 @@ app.on('activate', () => {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
+
+let configObj
+initConfig().then((value) => { configObj = value })
+
+const {ipcMain} = require('electron')
+
+// newURL listener
+ipcMain.on('newURL', (e, newURL) => {
+  console.log("Recieved new URL " + newURL)
+  console.log("\tSending URL to be matched with host and parse addon page")
+  const URLObj = checkWhichHost(newURL)
+  if (URLObj.host === 'curseforge') {
+    parseAddonDetails_curseforge(URLObj).then((value) => {
+      mainWindow.webContents.send("newAddonObj", value)
+    }).catch((value) => {
+      mainWindow.webContents.send("error", value)
+    })
+  }
+})
+
+// installAddon() listener
+ipcMain.on('installAddon', (e, addonObj) => {
+  console.log("Recieved request to install addon " + addonObj.name)
+  installAddon(addonObj, configObj.addonDir)
+  .then((finalAddonObj) => {
+    console.log("Final addon Obj: " + JSON.stringify(finalAddonObj))
+  })
+  
+})
+
+// Update download progress listener
+ipcMain.on('updateObj', (event, updateObj) => {
+  if (updateObj.hasOwnProperty("dlStatus")) {
+    console.log("\tDownload Progress for " + updateObj.name + ": " + updateObj.dlStatus)
+    mainWindow.webContents.send("updateAddonStatus", updateObj)
+  }
+})
+
+// error listener
+ipcMain.on('error', (event, errorObj) => {
+  console.log("\tSending error message " + errorObj.error)
+  mainWindow.webContents.send("error", errorObj)
+})
+
