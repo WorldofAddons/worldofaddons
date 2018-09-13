@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { ipcRenderer } from 'electron'
 
-function checkURL(newUrl) {
+function checkURL (newUrl) {
   const isURL = /^(http|https):\/\/[^ "]+$/.test(newUrl)
   if (isURL !== true) {
     ipcRenderer.send('newURL', newUrl)
@@ -12,7 +12,7 @@ function checkURL(newUrl) {
 }
 
 export class GetAddonInput extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
 
     this.state = {
@@ -20,21 +20,21 @@ export class GetAddonInput extends Component {
     }
   }
 
-  onChange(e) {
+  onChange (e) {
     this.setState({ url: e.target.value })
   }
 
-  onGet(e){
+  onGet (e) {
     const { url } = this.state
     if (checkURL(url)) {
       ipcRenderer.send('newURL', url)
     }
   }
 
-  render() {
+  render () {
     return (
       <div>
-        <input value={this.state.url} onChange={this.onChange.bind(this)} type='text'/>
+        <input value={this.state.url} onChange={this.onChange.bind(this)} type='text' />
         <button onClick={this.onGet.bind(this)}>Get Addon</button>
       </div>
     )
