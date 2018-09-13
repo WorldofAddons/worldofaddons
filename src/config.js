@@ -16,7 +16,6 @@ export function initConfig() {
         // If config.json does not exist, create it with blank values
         if (!fs.existsSync(WoAConfig)){
             configObj = {
-                'version': "0.2.0",                                             // WoA Client version
                 'addonDir': "",                                                 // Path to wow addon folder (init to blank for now)
                 'addonRecordFile': path.join(worldOfAddonsDir, "addons.json")   // Path to file storing addon records 
             }
@@ -36,12 +35,11 @@ export function initConfig() {
 export function initAddonList(configObj) {
     return new Promise(function(resolve, reject){
         const addonList = configObj.addonRecordFile
-        let addonListObj;
-                
+
         // If addons.json does not exist, create it with blank values
         if (!fs.existsSync(addonList)){
             fs.writeFile(addonList, "{}", 'utf8')       // Init empty dictonary
-            return resolve(addonListObj)
+            return resolve()
         }
 
         try {
@@ -56,7 +54,6 @@ export function initAddonList(configObj) {
 export function saveToAddonList(configObj, installedDict) {
     return new Promise(function(resolve, reject){
         const addonList = configObj.addonRecordFile
-        let addonListObj;
         if (fs.existsSync(addonList)){
             fs.writeFile(addonList, JSON.stringify(installedDict, null, 2), 'utf8')
             return resolve(installedDict)

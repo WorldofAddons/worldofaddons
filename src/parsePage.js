@@ -54,7 +54,6 @@ export function parseAddonDetails_curseforge(URLObj) {
                     'URL': URLObj.URL,              // Curseforge URL
                     'authors': Array.from(new Set(authors))             // Owners, Authors, contributors
                 }
-                //console.log(addonObj)
                 return resolve(addonObj)
             }
         }
