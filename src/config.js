@@ -4,7 +4,7 @@ const path = require('path');
 
 export function initConfig() {
     return new Promise(function(resolve, reject){
-        const homedir = (process.platform === 'win32') ? process.env.HOMEPATH : process.env.HOME;
+        const homedir = os.homedir()                                    // Fetchs user's homedir
         const worldOfAddonsDir = path.join(homedir, "WorldOfAddons")    // World of Addons stores information in user's home dir
         const WoAConfig = path.join(worldOfAddonsDir, "config.json")    // Saves all config information in config.json
         let configObj;   // Init configObj
@@ -16,11 +16,10 @@ export function initConfig() {
         // If config.json does not exist, create it with blank values
         if (!fs.existsSync(WoAConfig)){
             configObj = {
-                'version': "",          // WoA Client version
-                'addonDir': "",         // Path to wow addon folder (init to blank for now)
-                'addonRecordFile': ""   // Path to file storing addon records 
+                'addonDir': "",                                                 // Path to wow addon folder (init to blank for now)
+                'addonRecordFile': path.join(worldOfAddonsDir, "addons.json")   // Path to file storing addon records 
             }
-            fs.writeFile(WoAConfig, JSON.stringify(configObj), 'utf8')
+            fs.writeFile(WoAConfig, JSON.stringify(configObj, null, 2), 'utf8')
             return resolve(configObj)
         }
     
@@ -30,5 +29,36 @@ export function initConfig() {
             return reject(err);
         }
 
+    })
+}
+
+export function initAddonList(configObj) {
+    return new Promise(function(resolve, reject){
+        const addonList = configObj.addonRecordFile
+
+        // If addons.json does not exist, create it with blank values
+        if (!fs.existsSync(addonList)){
+            fs.writeFile(addonList, "{}", 'utf8')       // Init empty dictonary
+            return resolve()
+        }
+
+        try {
+            return resolve(JSON.parse(fs.readFileSync(addonList, 'utf8')))
+        }catch (err){
+            return reject(err);
+        }
+
+    })
+}
+
+export function saveToAddonList(configObj, installedDict) {
+    return new Promise(function(resolve, reject){
+        const addonList = configObj.addonRecordFile
+        if (fs.existsSync(addonList)){
+            fs.writeFile(addonList, JSON.stringify(installedDict, null, 2), 'utf8')
+            return resolve(installedDict)
+        } else {
+            return reject();
+        }
     })
 }
