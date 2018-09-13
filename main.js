@@ -2,7 +2,7 @@
 import {app, BrowserWindow} from 'electron'
 import {checkWhichHost, parseAddonDetails_curseforge} from './src/parsePage'
 import {installAddon} from './src/installAddon'
-import {initConfig} from './src/config.js'
+import {initConfig, initAddonList, saveToAddonList} from './src/config.js'
 
 
 // Keep a global reference of the window object, if you don't, the window will
@@ -54,7 +54,15 @@ app.on('activate', () => {
 // code. You can also put them in separate files and require them here.
 
 let configObj
-initConfig().then((value) => { configObj = value })
+let installedAddonsObj // Dictonary of all installed addons. Reference addons using "name" as key
+
+initConfig().then((value) => { 
+  configObj = value
+  return value
+}).then((value) => {
+  initAddonList(value).then((value) => { 
+    installedAddonsObj = value})
+})
 
 const {ipcMain} = require('electron')
 
@@ -78,8 +86,11 @@ ipcMain.on('installAddon', (e, addonObj) => {
   installAddon(addonObj, configObj.addonDir)
   .then((finalAddonObj) => {
     console.log("Final addon Obj: " + JSON.stringify(finalAddonObj))
+    installedAddonsObj[finalAddonObj.name] = finalAddonObj
+    return installedAddonsObj
+  }).then((dict) => {
+    saveToAddonList(configObj, dict)
   })
-  
 })
 
 // Update download progress listener

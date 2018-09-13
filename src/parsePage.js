@@ -39,14 +39,22 @@ export function parseAddonDetails_curseforge(URLObj) {
                 }
                 const version = page.getElementsByClassName('table__content file__name full')[0].innerHTML
                 const displayName = page.getElementsByClassName('name')[0].innerHTML
+                
+                const searchAuthors = page.getElementsByClassName("member__name")
+                const authors = []
+                for (let i = 0; i < searchAuthors.length; i++) {
+                    authors.push(String(searchAuthors[i].innerHTML).match(/>(.*)</).pop())
+                }
+
                 const addonObj = {
                     'displayName': displayName,     // Name as displayed on Curseforge
                     'name': URLObj.name,            // name parsed from URL, this should be used to reference the addon within the code
                     'version': version,             // Addon version
                     'host': URLObj.host,            // Addon Host (curseforge)
-                    'URL': URLObj.URL               // Curseforge URL
+                    'URL': URLObj.URL,              // Curseforge URL
+                    'authors': Array.from(new Set(authors))             // Owners, Authors, contributors
                 }
-                // console.log(addonObj)
+                //console.log(addonObj)
                 return resolve(addonObj)
             }
         }
