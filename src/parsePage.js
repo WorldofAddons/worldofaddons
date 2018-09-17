@@ -20,7 +20,7 @@ export function parseURL_curseforge (URL) {
   return errorObj
 }
 
-export function parseAddonDetails_curseforge (URLObj) {
+export function parseAddonDetailsCurseForge (URLObj) {
   return new Promise((resolve, reject) => {
     let req = new XMLHttpRequest()
     req.open('GET', URLObj.URL + '/files', true)
