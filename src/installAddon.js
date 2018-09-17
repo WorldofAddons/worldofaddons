@@ -1,4 +1,4 @@
-import { parseDLURLCurseForge } from "./parseDLURLCurseForge";
+import { parseDLURLCurseForge } from "./curseForge";
 import fs from 'fs'
 import request from 'request-promise'
 import decompress from 'decompress'
