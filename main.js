@@ -1,6 +1,6 @@
 // Modules to control application life and create native browser window
 import { app, BrowserWindow } from 'electron'
-import { checkWhichHost, parseAddonDetails_curseforge } from './src/parsePage'
+import { checkWhichHost, parseAddonDetailsCurseForge } from './src/parsePage'
 import { installAddon } from './src/installAddon'
 import { initConfig } from './src/config.js'
 
@@ -63,7 +63,7 @@ ipcMain.on('newURL', (e, newURL) => {
   console.log('\tSending URL to be matched with host and parse addon page')
   const URLObj = checkWhichHost(newURL)
   if (URLObj.host === 'curseforge') {
-    parseAddonDetails_curseforge(URLObj).then((value) => {
+    parseAddonDetailsCurseForge(URLObj).then((value) => {
       mainWindow.webContents.send('newAddonObj', value)
     }).catch((value) => {
       mainWindow.webContents.send('error', value)

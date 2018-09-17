@@ -1,4 +1,4 @@
-import { parseDLURL_curseforge } from './curseforge'
+import { parseDLURLCurseForge } from "./curseForge";
 import fs from 'fs'
 import request from 'request-promise'
 import decompress from 'decompress'
@@ -9,7 +9,7 @@ import path from 'path'
 // Install the addon by chained-promises
 export function installAddon (addonObj, targetPath) {
   return new Promise((resolve, reject) => {
-    parseDLURL_curseforge(addonObj) // TODO: addonObj will have a download url.
+    parseDLURLCurseForge(addonObj) // TODO: addonObj will have a download url.
       .then((curseDownloadURL) => {
         // console.log(path.join(targetPath, addonObj.name + ".zip"))
         return downloadAddon(addonObj, curseDownloadURL)
@@ -33,15 +33,15 @@ export function downloadAddon (addonObj, downloadURL) {
     const dlDirectory = path.join(os.tmpdir(), addonObj.name + '.zip') // Download .zip to tempdir
     req.pipe(fs.createWriteStream(dlDirectory, { flags: 'w' }))
 
-    let received_bytes = 0
-    let total_bytes = 0
+    let receivedBytes = 0
+    let totalBytes = 0
     req.on('response', (data) => {
-      total_bytes = parseInt(data.headers['content-length'])
+      totalBytes = parseInt(data.headers['content-length'])
     })
 
     req.on('data', (chunk) => {
-      received_bytes += chunk.length
-      let percentage = parseInt((received_bytes * 100) / total_bytes)
+      receivedBytes += chunk.length
+      let percentage = parseInt((receivedBytes * 100) / totalBytes)
       const updateObj = { 'name': addonObj.name, 'dlStatus': percentage }
       mainWindow.webContents.send('updateAddonStatus', updateObj)
     })

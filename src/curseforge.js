@@ -1,6 +1,6 @@
 import { XMLHttpRequest } from 'xmlhttprequest'
 import { JSDOM } from 'jsdom'
-export function parseDLURL_curseforge (addonObj) {
+export function parseDLURLCurseForge (addonObj) {
   return new Promise((resolve, reject) => {
     const req = new XMLHttpRequest()
     req.open('GET', addonObj.URL + '/download', true)
