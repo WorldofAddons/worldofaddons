@@ -20,11 +20,7 @@ function downloadUrlParse (addonObj) {
       const html = parser.window.document
       const downloadUrlAdapter = downloadUrlParserBuilder(addonObj.host)
 
-      downloadUrlAdapter(html).then(url => {
-        return resolve(url)
-      }).catch(err => {
-        return reject(err)
-      })
+      return downloadUrlAdapter(html)
     }
 
     req.onloadend = () => {
