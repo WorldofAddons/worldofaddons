@@ -2,7 +2,7 @@ const fs = require('fs')
 const path = require('path')
 
 export function initConfig () {
-  return new Promise(function (resolve, reject) {
+  return new Promise((resolve, reject) => {
     const homedir = (process.platform === 'win32') ? process.env.HOMEPATH : process.env.HOME
     const worldOfAddonsDir = path.join(homedir, 'WorldOfAddons') // World of Addons stores information in user's home dir
     const WoAConfig = path.join(worldOfAddonsDir, 'config.json') // Saves all config information in config.json

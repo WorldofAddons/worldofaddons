@@ -1,17 +1,17 @@
 import { XMLHttpRequest } from 'xmlhttprequest'
 import { JSDOM } from 'jsdom'
-import { parseParserBuilder } from './pageParserAdapter/index'
+import { detailsParserBuilder } from './pageParserAdapter/index'
 
 export function checkWhichHost (URL) {
   if (URL.startsWith('https://www.curseforge.com/wow/addons/')) {
-    return parseURL_curseforge(URL)
+    return parseURLCurseforge(URL)
   }
   const errorObj = { 'error': "ERROR: Invalid URL '" + URL + "'. Given link does not match parse" }
   return errorObj
 }
 
 // curseforge
-export function parseURL_curseforge (URL) {
+export function parseURLCurseforge (URL) {
   const URLSplit = URL.split('https://www.curseforge.com/wow/addons/')
   if (URLSplit.length === 2) {
     const URLObj = { 'URL': URL, 'host': 'curseforge', 'name': URLSplit[1] }
@@ -31,8 +31,8 @@ export function parseAddonDetails (URLObj) {
       if (req.readyState === 4) {
         const parser = new JSDOM(req.responseText)
         const html = parser.window.document
-        const parseAdapter = parseParserBuilder(URLObj.host)    
-      
+        const parseAdapter = detailsParserBuilder(URLObj.host)
+
         parseAdapter(html).then(result => {
           return resolve({
             ...result,
@@ -47,7 +47,7 @@ export function parseAddonDetails (URLObj) {
       if (req.status !== 200) {
         const errTxt = `ERROR: URL returned ${req.status} for ${URLObj.URL}`
         console.log(errTxt)
-        return reject({ 'error': errTxt })
+        return reject(new Error(errTxt))
       }
     }
   })
