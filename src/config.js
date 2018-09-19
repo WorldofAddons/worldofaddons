@@ -37,7 +37,7 @@ export function initAddonList (configObj) {
     // If addons.json does not exist, create it with blank values
     if (!fs.existsSync(addonList)) {
       fs.writeFile(addonList, '{}', 'utf8') // Init empty dictonary
-      return resolve()
+      return resolve({})
     }
 
     try {
@@ -50,6 +50,9 @@ export function initAddonList (configObj) {
 
 export function saveToAddonList (configObj, installedDict) {
   return new Promise(function (resolve, reject) {
+    console.log(configObj)
+    console.log("\n")
+    console.log(installedDict)
     const addonList = configObj.addonRecordFile
     if (fs.existsSync(addonList)) {
       fs.writeFile(addonList, JSON.stringify(installedDict, null, 2), 'utf8')
