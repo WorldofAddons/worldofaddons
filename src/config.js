@@ -50,9 +50,6 @@ export function initAddonList (configObj) {
 
 export function saveToAddonList (configObj, installedDict) {
   return new Promise(function (resolve, reject) {
-    console.log(configObj)
-    console.log("\n")
-    console.log(installedDict)
     const addonList = configObj.addonRecordFile
     if (fs.existsSync(addonList)) {
       fs.writeFile(addonList, JSON.stringify(installedDict, null, 2), 'utf8')
