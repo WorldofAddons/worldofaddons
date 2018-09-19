@@ -3,7 +3,7 @@ import { app, BrowserWindow } from 'electron'
 import { parseAddonDetails } from './src/parsePage'
 import { checkWhichHost } from './src/checkWhichHost/index'
 import { installAddon } from './src/installAddon'
-import { initConfig } from './src/config.js'
+import { initConfig, initAddonList, saveToAddonList } from './src/config.js'
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -54,7 +54,16 @@ app.on('activate', () => {
 // code. You can also put them in separate files and require them here.
 
 let configObj
-initConfig().then((value) => { configObj = value })
+let installedAddonsObj // Dictonary of all installed addons. Reference addons using "name" as key
+
+initConfig().then((value) => {
+  configObj = value
+  return value
+}).then((value) => {
+  initAddonList(value).then((value) => {
+    installedAddonsObj = value
+  })
+})
 
 const { ipcMain } = require('electron')
 
@@ -63,7 +72,7 @@ ipcMain.on('newURL', (e, newURL) => {
   console.log('Recieved new URL ' + newURL)
   console.log('\tSending URL to be matched with host and parse addon page')
   const URLObj = checkWhichHost(newURL)
-  parseAddonDetails(URLObj).then((addonObj) => {
+  parseAddonDetails(URLObj).then(addonObj => {
     mainWindow.webContents.send('newAddonObj', addonObj)
   }).catch((err) => {
     mainWindow.webContents.send('error', err)
@@ -76,6 +85,10 @@ ipcMain.on('installAddon', (e, addonObj) => {
   installAddon(addonObj, configObj.addonDir)
     .then((finalAddonObj) => {
       console.log('Final addon Obj: ' + JSON.stringify(finalAddonObj))
+      installedAddonsObj[finalAddonObj.name] = finalAddonObj
+      return installedAddonsObj
+    }).then((dict) => {
+      saveToAddonList(configObj, dict)
     })
 })
 

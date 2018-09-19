@@ -1,35 +1,18 @@
-import { XMLHttpRequest } from 'xmlhttprequest'
-import { JSDOM } from 'jsdom'
 import { detailsParserBuilder } from './pageParserAdapter/index'
 
 export function parseAddonDetails (URLObj) {
   return new Promise((resolve, reject) => {
-    let req = new XMLHttpRequest()
-    req.open('GET', URLObj.URL + '/files', true)
-    req.send(null)
-
-    req.onreadystatechange = () => {
-      if (req.readyState === 4) {
-        const parser = new JSDOM(req.responseText)
-        const html = parser.window.document
-        const parseAdapter = detailsParserBuilder(URLObj.host)
-
-        parseAdapter(html).then(result => {
-          return resolve({
-            ...result,
-            ...URLObj
-          })
-        }).catch(err => {
-          return reject(err)
-        })
-      }
-    }
-    req.onloadend = () => {
-      if (req.status !== 200) {
-        const errTxt = `ERROR: URL returned ${req.status} for ${URLObj.URL}`
-        console.log(errTxt)
-        return reject(new Error(errTxt))
-      }
-    }
+    const parseAdapter = detailsParserBuilder(URLObj.host)
+    parseAdapter(URLObj.URL).then(result => {
+      return resolve({
+        'displayName': result.displayName, // Name as displayed on Curseforge
+        'name': URLObj.name, // name parsed from URL, this should be used to reference the addon within the code
+        'version': result.version, // Addon version
+        'host': URLObj.host, // Addon Host (curseforge)
+        'URL': URLObj.URL // Curseforge URL
+      })
+    }).catch(err => {
+      return reject(err)
+    })
   })
 }

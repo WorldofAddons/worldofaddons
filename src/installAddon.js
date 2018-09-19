@@ -5,41 +5,15 @@ import { mainWindow } from '../main'
 import os from 'os'
 import path from 'path'
 
-import { XMLHttpRequest } from 'xmlhttprequest'
-import { JSDOM } from 'jsdom'
 import { downloadUrlParserBuilder } from './pageParserAdapter/index'
-
-function downloadUrlParse (addonObj) {
-  return new Promise((resolve, reject) => {
-    const req = new XMLHttpRequest()
-    req.open('GET', addonObj.URL + '/download', true)
-    req.send(null)
-
-    req.onreadystatechange = () => {
-      const parser = new JSDOM(req.responseText)
-      const html = parser.window.document
-      const downloadUrlAdapter = downloadUrlParserBuilder(addonObj.host)
-
-      return downloadUrlAdapter(html)
-    }
-
-    req.onloadend = () => {
-      if (req.status !== 200) {
-        const errTxt = `ERROR: URL returned ${req.status} for ${addonObj.URL}`
-        console.log(errTxt)
-        return reject(new Error(errTxt))
-      }
-    }
-  })
-}
 
 // Install the addon by chained-promises
 export function installAddon (addonObj, targetPath) {
   return new Promise((resolve, reject) => {
     downloadUrlParse(addonObj) // TODO: addonObj will have a download url.
-      .then((curseDownloadURL) => {
-        // console.log(path.join(targetPath, addonObj.name + ".zip"))
-        return downloadAddon(addonObj, curseDownloadURL)
+      .then(downloadURL => {
+        console.log(path.join(targetPath, addonObj.name + '.zip'))
+        return downloadAddon(addonObj, downloadURL)
       })
       .then(() => { // Download the addon using the parsed URL
         return extAddonToDir(addonObj, targetPath) // After download is done extract the zip to target dir and delete the old zip
@@ -50,6 +24,13 @@ export function installAddon (addonObj, targetPath) {
       }).catch(err => {
         return reject(err)
       })
+  })
+}
+
+function downloadUrlParse (addonObj) {
+  return new Promise((resolve, reject) => {
+    const downloadUrlAdapter = downloadUrlParserBuilder(addonObj.host)
+    return resolve(downloadUrlAdapter(addonObj.URL))
   })
 }
 

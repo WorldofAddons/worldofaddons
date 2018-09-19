@@ -1,4 +1,4 @@
-import curseforge from './curseforge'
+import * as curseforge from './curseforge'
 import { HOSTNAMES } from '../../constants/index'
 
 /**

@@ -2,7 +2,7 @@ export function checkWhichHost (URL) {
   if (URL.startsWith('https://www.curseforge.com/wow/addons/')) {
     return initCurseforgeObj(URL)
   }
-  
+
   const errorObj = { 'error': "ERROR: Invalid URL '" + URL + "'. Given link does not match parse" }
   return errorObj
 }
