@@ -3,7 +3,8 @@ import { app, BrowserWindow } from 'electron'
 import { parseAddonDetails } from './src/parsePage'
 import { checkWhichHost } from './src/checkWhichHost/index'
 import { installAddon } from './src/installAddon'
-import { initConfig, initAddonList, saveToAddonList } from './src/config.js'
+import { initConfig, initAddonList, saveToAddonList } from './src/config'
+import { verifyAddonDict } from './src/updater'
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
