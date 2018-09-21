@@ -4,7 +4,7 @@ import { parseAddonDetails } from './src/parsePage'
 import { checkWhichHost } from './src/checkWhichHost/index'
 import { installAddon } from './src/installAddon'
 import { initConfig, initAddonList, saveToAddonList } from './src/config'
-import { verifyAddonDict } from './src/updater'
+import { fetchAllAddonDirs, integrityCheck} from './src/updater'
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -54,17 +54,54 @@ app.on('activate', () => {
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
 
-let configObj
-let installedAddonsObj // Dictonary of all installed addons. Reference addons using "name" as key
+// --- Initilization Start---
+let configObj           // JSON object that holds application config such as location of addon directory and installed addons file
+let installedAddonsObj  // Dictonary of all installed addons. Reference addons using "name" as key
+let allDirs             // Array of all folders in the addon directory
 
-initConfig().then((value) => {
-  configObj = value
-  return value
-}).then((value) => {
-  initAddonList(value).then((value) => {
+initConfig().then(value => {
+  configObj = value                                   // Sets config settings
+  return configObj
+}).then(configObj => {
+  initAddonList(configObj).then(value => {            // Sets installed Addons dictonary
     installedAddonsObj = value
+    allDirs = fetchAllAddonDirs(configObj.addonDir)   // Reads the contents of addonDir as specified in config
+    return allDirs
+  }).then(value => {
+    //integrityCheck(installedAddonsObj, configObj, allDirs)
+    //installedAddonsObj = verifyAllAddonDirs(installedAddonsObj, allDirs)    // Verifies what addons are installed
+    //saveToAddonList(configObj, installedAddonsObj)                          // If an install status has changed, write to addon config
+    const chokidar = require('chokidar');
+    const watcher = chokidar.watch(configObj.addonDir, {
+      ignored: /(^|[\/\\])\../,
+      persistent: true,
+      depth: 0
+    });
+    var log = console.log.bind(console);
+    // File change listener (checks whether an addon is installed or uninstalled)
+    watcher
+      // Verifies that download was installed
+      .on('addDir', function(path) {
+          console.log("Discovered addon subdir: ", path)
+          integrityCheck(installedAddonsObj, configObj)
+      })
+      // Verifies that download was uninstalled
+      .on('unlinkDir', function(path) {
+          console.log("Subdir deleted: ", path)
+          integrityCheck(installedAddonsObj, configObj)
+      })
+      .on('error', function(error) {
+          console.log('Error happened', error);
+      })
+      .on('ready', onWatcherReady)
+      .on('raw', function(event, path, details) {
+          // This event should be triggered everytime something happens.
+          console.log('Raw event info:', event, path, details);
+      })
+
   })
 })
+//  --- Initilization End---
 
 const { ipcMain } = require('electron')
 
@@ -84,12 +121,12 @@ ipcMain.on('newURL', (e, newURL) => {
 ipcMain.on('installAddon', (e, addonObj) => {
   console.log('Recieved request to install addon ' + addonObj.name)
   installAddon(addonObj, configObj.addonDir)
-    .then((finalAddonObj) => {
-      console.log('Final addon Obj: ' + JSON.stringify(finalAddonObj))
-      installedAddonsObj[finalAddonObj.name] = finalAddonObj
-      return installedAddonsObj
-    }).then((dict) => {
-      saveToAddonList(configObj, dict)
+    .then((newAddon) => {
+      //console.log('Final addon Obj: ' + JSON.stringify(newAddon))
+
+      // Save record that addon should now exist
+      installedAddonsObj[newAddon.name] = newAddon
+      saveToAddonList(configObj, installedAddonsObj)
     })
 })
 

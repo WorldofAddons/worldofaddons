@@ -8,7 +8,6 @@ export function initConfig () {
     const worldOfAddonsDir = path.join(homedir, 'WorldOfAddons') // World of Addons stores information in user's home dir
     const WoAConfig = path.join(worldOfAddonsDir, 'config.json') // Saves all config information in config.json
     let configObj // Init configObj
-    console.log(homedir)
     if (!fs.existsSync(worldOfAddonsDir)) {
       fs.mkdirSync(worldOfAddonsDir)
     }
@@ -49,13 +48,14 @@ export function initAddonList (configObj) {
 }
 
 export function saveToAddonList (configObj, installedDict) {
-  return new Promise(function (resolve, reject) {
-    const addonList = configObj.addonRecordFile
-    if (fs.existsSync(addonList)) {
-      fs.writeFile(addonList, JSON.stringify(installedDict, null, 2), 'utf8')
+  return new Promise(function (resolve) {
+    if (fs.existsSync(configObj.addonRecordFile)) {
+      console.log("saving to addon list")
+      fs.writeFile(configObj.addonRecordFile, JSON.stringify(installedDict, null, 2), 'utf8')
       return resolve(installedDict)
-    } else {
-      return reject(new Error('ERROR: Failed to save addon record. Could not find or create addons.js.'))
+    }
+    else {
+      console.log("something wrong")
     }
   })
 }
