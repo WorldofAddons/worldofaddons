@@ -4,7 +4,7 @@ import { parseAddonDetails } from './src/parsePage'
 import { checkWhichHost } from './src/checkWhichHost/index'
 import { installAddon } from './src/installAddon'
 import { initConfig, initAddonList, saveToAddonList } from './src/config'
-import { fetchAllAddonDirs, integrityCheck} from './src/updater'
+import { integrityCheck} from './src/updater'
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -57,7 +57,6 @@ app.on('activate', () => {
 // --- Initilization Start---
 let configObj           // JSON object that holds application config such as location of addon directory and installed addons file
 let installedAddonsObj  // Dictonary of all installed addons. Reference addons using "name" as key
-let allDirs             // Array of all folders in the addon directory
 
 initConfig().then(value => {
   configObj = value                                   // Sets config settings
@@ -65,19 +64,14 @@ initConfig().then(value => {
 }).then(configObj => {
   initAddonList(configObj).then(value => {            // Sets installed Addons dictonary
     installedAddonsObj = value
-    allDirs = fetchAllAddonDirs(configObj.addonDir)   // Reads the contents of addonDir as specified in config
-    return allDirs
+    return
   }).then(value => {
-    //integrityCheck(installedAddonsObj, configObj, allDirs)
-    //installedAddonsObj = verifyAllAddonDirs(installedAddonsObj, allDirs)    // Verifies what addons are installed
-    //saveToAddonList(configObj, installedAddonsObj)                          // If an install status has changed, write to addon config
     const chokidar = require('chokidar');
     const watcher = chokidar.watch(configObj.addonDir, {
       ignored: /(^|[\/\\])\../,
       persistent: true,
       depth: 0
     });
-    var log = console.log.bind(console);
     // File change listener (checks whether an addon is installed or uninstalled)
     watcher
       // Verifies that download was installed
@@ -93,7 +87,6 @@ initConfig().then(value => {
       .on('error', function(error) {
           console.log('Error happened', error);
       })
-      .on('ready', onWatcherReady)
       .on('raw', function(event, path, details) {
           // This event should be triggered everytime something happens.
           console.log('Raw event info:', event, path, details);
@@ -122,11 +115,9 @@ ipcMain.on('installAddon', (e, addonObj) => {
   console.log('Recieved request to install addon ' + addonObj.name)
   installAddon(addonObj, configObj.addonDir)
     .then((newAddon) => {
-      //console.log('Final addon Obj: ' + JSON.stringify(newAddon))
-
-      // Save record that addon should now exist
       installedAddonsObj[newAddon.name] = newAddon
       saveToAddonList(configObj, installedAddonsObj)
+      integrityCheck(installedAddonsObj, configObj)
     })
 })
 
