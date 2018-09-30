@@ -4,7 +4,7 @@ import { parseAddonDetails } from './src/parsePage'
 import { checkWhichHost } from './src/checkWhichHost/index'
 import { installAddon } from './src/installAddon'
 import { initConfig, initAddonList, saveToAddonList } from './src/config'
-import { integrityCheck} from './src/updater'
+import { integrityCheck, checkUpdate } from './src/updater'
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -55,45 +55,46 @@ app.on('activate', () => {
 // code. You can also put them in separate files and require them here.
 
 // --- Initilization Start---
-let configObj           // JSON object that holds application config such as location of addon directory and installed addons file
-let installedAddonsObj  // Dictonary of all installed addons. Reference addons using "name" as key
+let configObj // JSON object that holds application config such as location of addon directory and installed addons file
+let installedAddonsObj // Dictonary of all installed addons. Reference addons using "name" as key
 
-initConfig().then(value => {
-  configObj = value                                   // Sets config settings
-  return configObj
-}).then(configObj => {
-  initAddonList(configObj).then(value => {            // Sets installed Addons dictonary
-    installedAddonsObj = value
-    return
-  }).then(value => {
-    const chokidar = require('chokidar');
-    const watcher = chokidar.watch(configObj.addonDir, {
-      ignored: /(^|[\/\\])\../,
-      persistent: true,
-      depth: 0
-    });
-    // File change listener (checks whether an addon is installed or uninstalled)
-    watcher
-      // Verifies that download was installed
-      .on('addDir', function(path) {
-          console.log("Discovered addon subdir: ", path)
-          integrityCheck(installedAddonsObj, configObj)
-      })
-      // Verifies that download was uninstalled
-      .on('unlinkDir', function(path) {
-          console.log("Subdir deleted: ", path)
-          integrityCheck(installedAddonsObj, configObj)
-      })
-      .on('error', function(error) {
-          console.log('Error happened', error);
-      })
-      .on('raw', function(event, path, details) {
-          // This event should be triggered everytime something happens.
-          console.log('Raw event info:', event, path, details);
-      })
-
+initConfig()
+  .then(value => {
+    configObj = value // Sets config settings
+    return configObj
   })
-})
+  .then(configObj => {
+    initAddonList(configObj).then(value => { // Sets installed Addons dictonary
+      installedAddonsObj = value
+    })
+      .then(value => {
+        const chokidar = require('chokidar') // Watches wow Addon folder for changes like new addons or deletions
+        const watcher = chokidar.watch(configObj.addonDir, {
+          ignored: /(^|[/\\])\../,
+          persistent: true,
+          depth: 0
+        })
+        watcher
+          .on('addDir', function (path) {
+            if (path !== configObj.addonDir) {
+              console.log('Addon subdir: ', path)
+              integrityCheck(installedAddonsObj, configObj) // Verifies that download was installed
+            }
+          })
+          .on('unlinkDir', function (path) {
+            if (path !== configObj.addonDir) {
+              console.log('Addon deleted: ', path)
+              integrityCheck(installedAddonsObj, configObj) // Verifies that download was uninstalled
+            }
+          })
+          .on('error', function (error) {
+            console.log('ERROR: ', error)
+          })
+          .on('raw', function (event, path, details) {
+            console.log('Raw event:', event, path, details)
+          })
+      })
+  })
 //  --- Initilization End---
 
 const { ipcMain } = require('electron')
@@ -119,6 +120,16 @@ ipcMain.on('installAddon', (e, addonObj) => {
       saveToAddonList(configObj, installedAddonsObj)
       integrityCheck(installedAddonsObj, configObj)
     })
+})
+
+// updateAddon() listener
+ipcMain.on('checkAddonUpdate', (e, addonObj) => {
+  console.log('Recived request to check addon for updates')
+  checkUpdate(addonObj).then(resultObj => {
+    installedAddonsObj[addonObj].version = resultObj.version
+    installedAddonsObj[addonObj].version = resultObj.status
+    saveToAddonList(configObj, installedAddonsObj)
+  })
 })
 
 // Update download progress listener

@@ -2,7 +2,7 @@ import { XMLHttpRequest } from 'xmlhttprequest'
 import { JSDOM } from 'jsdom'
 
 // Creates a JSON object for addons hosted by Curseforge.
-// Parses the addon name from the end of the URL, this name is how the 
+// Parses the addon name from the end of the URL, this name is how the
 // JSON object is referenced by other components
 export function parseUrl (url) {
   const URLSplit = URL.split('https://www.curseforge.com/wow/addons/')
@@ -36,10 +36,10 @@ export function parseAddonDetails (URL) {
         const displayName = page.getElementsByClassName('name')[0].innerHTML
 
         // Fetches the owner/author(s)
-        const searchAuthors = page.getElementsByClassName("member__name")
+        const searchAuthors = page.getElementsByClassName('member__name')
         const authors = []
         for (let i = 0; i < searchAuthors.length; i++) {
-            authors.push(String(searchAuthors[i].innerHTML).match(/>(.*)</).pop())
+          authors.push(String(searchAuthors[i].innerHTML).match(/>(.*)</).pop())
         }
 
         if (!version || !displayName) {
@@ -47,7 +47,7 @@ export function parseAddonDetails (URL) {
         }
 
         return resolve({
-          'authors': authors, 
+          'authors': authors,
           'displayName': displayName, // Name as displayed on Curseforge
           'version': version // Addon version
         })
