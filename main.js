@@ -65,7 +65,20 @@ initConfig()
   })
   .then(configObj => {
     initAddonList(configObj).then(value => { // Sets installed Addons dictonary
+
+      if (configObj.checkUpdateOnStart === true){
+        Object.keys(value).forEach(function(key) {
+          checkUpdate(value[key]).then(resultObj => {
+            value[key].status = resultObj.status
+            console.log(`\tChecking \t${value[key].displayName}\t${value[key].version}\t${value[key].status}`)
+            if (value[key].status === "UPDATE_AVAIL") {
+              saveToAddonList(configObj, value)
+            }
+          })
+        })
+      }
       installedAddonsObj = value
+      return installedAddonsObj
     })
       .then(value => {
         const chokidar = require('chokidar') // Watches wow Addon folder for changes like new addons or deletions

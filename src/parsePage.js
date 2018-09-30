@@ -13,7 +13,7 @@ export function parseAddonDetails (URLObj) {
         'version': result.version, // Addon version
         'host': URLObj.host, // Addon Host
         'URL': URLObj.URL, // Addon URL
-        'authors': result.authors, // Addon Authors
+        'authors': Array.from(new Set(result.authors)), // Addon Authors
         'status': ''
       })
     }).catch(err => {

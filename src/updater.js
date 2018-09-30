@@ -49,7 +49,7 @@ function verifyAllAddonDirs (installedAddonsObj, directoryList) {
 // If an update is available, then set addon status to "Update Available"
 export function checkUpdate (addonObj) {
   return new Promise((resolve) => {
-    parseAddonDetails(addonObj.URL).then(checkedObj => {
+    parseAddonDetails(addonObj).then(checkedObj => {
       if (addonObj.version !== checkedObj.version) {
         checkedObj.status = 'UPDATE_AVAIL'
         resolve(checkedObj)
