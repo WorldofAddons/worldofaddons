@@ -12,13 +12,19 @@ export class AddonTable extends Component {
   }
 
   componentDidMount () {
+    ipcRenderer.on('AddonList', this.initAddonList.bind(this))
     ipcRenderer.on('newAddonObj', this.addRow.bind(this))
     ipcRenderer.on('updateAddonStatus', this.updateDLPercent.bind(this))
   }
 
   componentWillUnmount () {
+    ipcRenderer.removeListener('AddonList', this.initAddonList.bind(this))
     ipcRenderer.removeListener('newAddonObj', this.addRow.bind(this))
     ipcRenderer.removeListener('updateAddonStatus', this.updateDLPercent.bind(this))
+  }
+
+  initAddonList(e, addonList) {
+    this.setState({addonList})
   }
 
   // TODO: refactor this

@@ -78,6 +78,7 @@ initConfig()
         })
       }
       installedAddonsObj = value
+      mainWindow.webContents.send('addonList', installedAddonsObj)
       return installedAddonsObj
     })
       .then(value => {
