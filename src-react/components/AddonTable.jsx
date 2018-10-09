@@ -29,6 +29,7 @@ export class AddonTable extends Component {
     // translate addonObj
     const addonList = []
     Object.keys(addonObj).map(key => {
+      addonObj[key].dlStatus = 100
       addonList.push(addonObj[key])
     })
 
@@ -44,7 +45,7 @@ export class AddonTable extends Component {
       // throw new Error('Newly downloaded addon could not be found.')
     }
     let addon = addonList[idx]
-    addon.percentage = dlStatus
+    addon.dlStatus = dlStatus
 
     const newAddonList = [...addonList]
     newAddonList[idx] = addon
@@ -63,19 +64,27 @@ export class AddonTable extends Component {
     ipcRenderer.send('installAddon', addonObj)
   }
 
-  onRemove () {
+  onUpdate (addonObj) {
+    ipcRenderer.send('updateObj', addonObj)
+  }
 
+  onRemove () {
+    // noop
   }
 
   renderRow (addonObj, key) {
+    const btnTag = addonObj.dlStatus === 100
+      ? <button onClick={() => this.onUpdate(addonObj)}>Update</button>
+      : <button onClick={() => this.onInstall(addonObj)}>Install</button>
+
     return (
       <tr key={key}>
         <td>{addonObj.displayName}</td>
         <td>{addonObj.host}</td>
         <td>{addonObj.version}</td>
-        <td>{addonObj.percentage || 0}%</td>
+        <td>{addonObj.dlStatus}%</td>
         <td>
-          <button onClick={() => this.onInstall(addonObj)}>Install</button>
+          {btnTag}
         </td>
         <td>
           <button onClick={this.onRemove.bind(this)}>Remove</button>

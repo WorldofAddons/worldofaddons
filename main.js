@@ -79,33 +79,33 @@ initConfig()
       installedAddonsObj = value
       return installedAddonsObj
     })
-      .then(value => {
-        const chokidar = require('chokidar') // Watches wow Addon folder for changes like new addons or deletions
-        const watcher = chokidar.watch(configObj.addonDir, {
-          ignored: /(^|[/\\])\../,
-          persistent: true,
-          depth: 0
-        })
-        watcher
-          .on('addDir', function (path) {
-            if (path !== configObj.addonDir) {
-              console.log('Addon subdir: ', path)
-              integrityCheck(installedAddonsObj, configObj) // Verifies that download was installed
-            }
-          })
-          .on('unlinkDir', function (path) {
-            if (path !== configObj.addonDir) {
-              console.log('Addon deleted: ', path)
-              integrityCheck(installedAddonsObj, configObj) // Verifies that download was uninstalled
-            }
-          })
-          .on('error', function (error) {
-            console.log('ERROR: ', error)
-          })
-          .on('raw', function (event, path, details) {
-            console.log('Raw event:', event, path, details)
-          })
+    .then(value => {
+      const chokidar = require('chokidar') // Watches wow Addon folder for changes like new addons or deletions
+      const watcher = chokidar.watch(configObj.addonDir, {
+        ignored: /(^|[/\\])\../,
+        persistent: true,
+        depth: 0
       })
+      watcher
+        .on('addDir', function (path) {
+          if (path !== configObj.addonDir) {
+            console.log('Addon subdir: ', path)
+            integrityCheck(installedAddonsObj, configObj) // Verifies that download was installed
+          }
+        })
+        .on('unlinkDir', function (path) {
+          if (path !== configObj.addonDir) {
+            console.log('Addon deleted: ', path)
+            integrityCheck(installedAddonsObj, configObj) // Verifies that download was uninstalled
+          }
+        })
+        .on('error', function (error) {
+          console.log('ERROR: ', error)
+        })
+        .on('raw', function (event, path, details) {
+          console.log('Raw event:', event, path, details)
+        })
+    })
   })
 //  --- Initilization End---
 
