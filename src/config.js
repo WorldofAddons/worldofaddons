@@ -17,7 +17,7 @@ export function initConfig () {
       configObj = {
         'addonDir': '', // Path to wow addon folder (init to blank for now)
         'addonRecordFile': path.join(worldOfAddonsDir, 'addons.json'), // Path to file storing addon records
-        'checkUpdateOnStart': false  // If true, then check for update on start
+        'checkUpdateOnStart': false // If true, then check for update on start
       }
       fs.writeFile(WoAConfig, JSON.stringify(configObj, null, 2), 'utf8', (err) => { if (err) return reject(err) })
       return resolve(configObj)

@@ -9,21 +9,29 @@ export class AddonTable extends Component {
     this.state = {
       addonList: []
     }
+
+    ipcRenderer.send('windowDoneLoading', {}) // react is done rendering.
   }
 
   componentDidMount () {
-    ipcRenderer.on('AddonList', this.initAddonList.bind(this))
+    ipcRenderer.on('addonList', this.initAddonList.bind(this))
     ipcRenderer.on('newAddonObj', this.addRow.bind(this))
     ipcRenderer.on('updateAddonStatus', this.updateDLPercent.bind(this))
   }
 
   componentWillUnmount () {
-    ipcRenderer.removeListener('AddonList', this.initAddonList.bind(this))
+    ipcRenderer.removeListener('addonList', this.initAddonList.bind(this))
     ipcRenderer.removeListener('newAddonObj', this.addRow.bind(this))
     ipcRenderer.removeListener('updateAddonStatus', this.updateDLPercent.bind(this))
   }
 
-  initAddonList(e, addonList) {
+  initAddonList(e, addonObj) {
+    // translate addonObj
+    const addonList = []
+    Object.keys(addonObj).map(key => {
+      addonList.push(addonObj[key])
+    })
+
     this.setState({addonList})
   }
 

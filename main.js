@@ -18,7 +18,7 @@ function createWindow () {
   mainWindow.loadFile('index.html')
 
   // Open the DevTools.
-  // mainWindow.webContents.openDevTools()
+  mainWindow.webContents.openDevTools()
 
   // Emitted when the window is closed.
   mainWindow.on('closed', () => {
@@ -65,20 +65,18 @@ initConfig()
   })
   .then(configObj => {
     initAddonList(configObj).then(value => { // Sets installed Addons dictonary
-
-      if (configObj.checkUpdateOnStart === true){
-        Object.keys(value).forEach(function(key) {
+      if (configObj.checkUpdateOnStart === true) {
+        Object.keys(value).forEach(function (key) {
           checkUpdate(value[key]).then(resultObj => {
             value[key].status = resultObj.status
             console.log(`\tChecking \t${value[key].displayName}\t${value[key].version}\t${value[key].status}`)
-            if (value[key].status === "UPDATE_AVAIL") {
+            if (value[key].status === 'UPDATE_AVAIL') {
               saveToAddonList(configObj, value)
             }
           })
         })
       }
       installedAddonsObj = value
-      mainWindow.webContents.send('addonList', installedAddonsObj)
       return installedAddonsObj
     })
       .then(value => {
@@ -158,4 +156,9 @@ ipcMain.on('updateObj', (e, updateObj) => {
 ipcMain.on('error', (e, errorObj) => {
   console.log('\tSending error message ' + errorObj.error)
   mainWindow.webContents.send('error', errorObj)
+})
+
+// need to wait for react to finishing building Dom
+ipcMain.on('windowDoneLoading', () => {
+  mainWindow.webContents.send('addonList',installedAddonsObj)
 })
