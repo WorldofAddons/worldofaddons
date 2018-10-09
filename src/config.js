@@ -17,9 +17,9 @@ export function initConfig () {
       configObj = {
         'addonDir': '', // Path to wow addon folder (init to blank for now)
         'addonRecordFile': path.join(worldOfAddonsDir, 'addons.json'), // Path to file storing addon records
-        'checkUpdateOnStart': false  // If true, then check for update on start
+        'checkUpdateOnStart': false // If true, then check for update on start
       }
-      fs.writeFile(WoAConfig, JSON.stringify(configObj, null, 2), 'utf8', (err) => { if (err) return reject(err) })
+      fs.writeFile(WoAConfig, JSON.stringify(configObj, null, 2), 'utf8', (err) => reject(err))
       return resolve(configObj)
     }
     try {
@@ -30,13 +30,13 @@ export function initConfig () {
   })
 }
 
-export function initAddonList (configObj) {
+export function readAddonList (configObj) {
   return new Promise(function (resolve, reject) {
     const addonList = configObj.addonRecordFile
 
     // If addons.json does not exist, create it with blank values
     if (!fs.existsSync(addonList)) {
-      fs.writeFile(addonList, '{}', 'utf8', (err) => { if (err) return reject(err) }) // Init empty dictonary
+      fs.writeFile(addonList, '{}', 'utf8', (err) => reject(err)) // Init empty dictionary
       return resolve({})
     }
 
@@ -52,7 +52,8 @@ export function saveToAddonList (configObj, installedDict) {
   return new Promise(function (resolve, reject) {
     if (fs.existsSync(configObj.addonRecordFile)) {
       console.log('\tUpdating addons.js')
-      fs.writeFile(configObj.addonRecordFile, JSON.stringify(installedDict, null, 2), 'utf8', (err) => { if (err) return reject(err) })
+      const stringInstallDict = JSON.stringify(installedDict, null, 2)
+      fs.writeFile(configObj.addonRecordFile, stringInstallDict, 'utf8', (err) => reject(err))
       return resolve(installedDict)
     }
   })
