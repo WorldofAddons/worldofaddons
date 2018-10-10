@@ -4,7 +4,7 @@ import { AddonTable } from '../components/AddonTable'
 const { app } = window.require('electron').remote
 
 class Dashboard extends React.Component {
-  render() {
+  render () {
     return (
       <div>
         <GetAddonInput />
@@ -13,7 +13,7 @@ class Dashboard extends React.Component {
           Version: {app.getVersion()}
         </p>
       </div>
-    );
+    )
   }
 }
 
