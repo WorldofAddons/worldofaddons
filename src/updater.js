@@ -2,19 +2,34 @@ import fs from 'fs'
 import { saveToAddonList } from './config'
 import { parseAddonDetails } from './parsePage'
 
-const clonedeep = require('lodash.clonedeep')
-
-export function integrityCheck (installedAddonsObj, configObj) {
-  console.log('integ check running')
-  fetchAllAddonDirs(configObj.addonDir).then(dirobj => {
-    verifyAllAddonDirs(installedAddonsObj, dirobj).then(verifyDict => {
-      if (JSON.stringify(installedAddonsObj) !== JSON.stringify(verifyDict)) {
-        saveToAddonList(configObj, verifyDict).then(newDict => {
+export function integrityCheck (installedAddonsDict, configObj) {
+  let changed = false
+  console.log('Checking install integrity')
+  fetchAllAddonDirs(configObj.addonDir)
+    .then(dirList => {
+      for (const [name] of Object.entries(installedAddonsDict)) {
+        // Checks if addon is installed by making sure all subdirs are found in dirlist        
+        if (installedAddonsDict[name].subdirs.every(val => dirList.includes(val)) !== true) {
+          if (installedAddonsDict[name].status !== 'NOT INSTALLED') { // If addon is missing subdirs, then set status to not installed
+            installedAddonsDict[name].status = 'NOT INSTALLED'        
+            changed = true
+          }
+        }else {
+          if (installedAddonsDict[name].status !== 'INSTALLED') { // If addon is not missing subdirs, then set status to installed
+            installedAddonsDict[name].status = 'INSTALLED'
+            changed = true
+          }
+        }
+      }
+      return installedAddonsDict
+    })
+    .then(addonDict => {
+      if (changed === true) {
+        saveToAddonList(configObj, addonDict).then(newDict => {
           return newDict
         })
       }
     })
-  })
 }
 
 // Returns a list of all addon folders in the user's addonDir
@@ -28,35 +43,22 @@ function fetchAllAddonDirs (addonDirPath) {
   })
 }
 
-// Checks if all addons are installed
-function verifyAllAddonDirs (installedAddonsObj, directoryList) {
-  const clone = clonedeep(installedAddonsObj)
-  return new Promise(function (resolve) {
-    for (const [name] of Object.entries(clone)) {
-      if (clone[name].subdirs.every(val => directoryList.includes(val)) === true) {
-        clone[name].status = 'INSTALLED'
-      } else {
-        clone[name].status = 'NOT INSTALLED'
-      }
-    }
-    return resolve(clone)
-  })
-}
-
 // Checks the addon's page for an update by comparing the parsed version
 // value to the JSON dictionary value.
-// Only runs on addons whose statuses are "Installed"
-// If an update is available, then set addon status to "Update Available"
+// Only runs on addons whose statuses are "INSTALLED"
+// If an update is available, then set addon status to "NEWUPDATE"
 export function checkUpdate (addonObj) {
   return new Promise((resolve) => {
-    parseAddonDetails(addonObj).then(checkedObj => {
-      if (addonObj.version !== checkedObj.version) {
-        checkedObj.status = 'UPDATE_AVAIL'
-        resolve(checkedObj)
-      } else {
-        addonObj.status = 'INSTALLED'
-        resolve(addonObj)
-      }
-    })
+    if (addonObj.status !== 'NOT_INSTALLED') {
+      parseAddonDetails(addonObj).then(checkedObj => {
+        if (addonObj.version !== checkedObj.version) {
+          resolve('NEWUPDATE')
+        } else {
+          resolve('INSTALLED')
+        }
+      })
+    } else {
+      console.log(`\t${addonObj.displayName}\t${addonObj.version}\t${addonObj.status} - Not Checking`)
+    }
   })
 }
