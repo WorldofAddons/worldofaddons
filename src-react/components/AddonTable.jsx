@@ -25,7 +25,7 @@ export class AddonTable extends Component {
     ipcRenderer.removeListener('updateAddonStatus', this.updateDLPercent.bind(this))
   }
 
-  initAddonList(e, addonObj) {
+  initAddonList (e, addonObj) {
     // translate addonObj
     const addonList = []
     Object.keys(addonObj).map(key => {
@@ -33,7 +33,7 @@ export class AddonTable extends Component {
       addonList.push(addonObj[key])
     })
 
-    this.setState({addonList})
+    this.setState({ addonList })
   }
 
   // TODO: refactor this
