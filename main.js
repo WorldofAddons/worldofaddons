@@ -3,7 +3,10 @@ import { app, BrowserWindow } from 'electron'
 import { parseAddonDetails } from './src/parsePage'
 import { checkWhichHost } from './src/checkWhichHost/index'
 import { installAddon } from './src/installAddon'
-import { initConfig, initAddonList, saveToAddonList } from './src/config.js'
+import { initConfig, readAddonList, saveToAddonList } from './src/config'
+import { integrityCheck, checkUpdate } from './src/updater'
+
+const chokidar = require('chokidar')
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -17,7 +20,9 @@ function createWindow () {
   mainWindow.loadFile('index.html')
 
   // Open the DevTools.
-  // mainWindow.webContents.openDevTools()
+  if (process.env.ENV === 'dev') {
+    mainWindow.webContents.openDevTools()
+  }
 
   // Emitted when the window is closed.
   mainWindow.on('closed', () => {
@@ -25,6 +30,16 @@ function createWindow () {
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.
     mainWindow = null
+  })
+}
+
+function checkAllUpdates (installedAddonsDict) {
+  Object.keys(installedAddonsDict).forEach(function (key) {
+    checkUpdate(installedAddonsDict[key]).then(checkedStatus => {
+      installedAddonsDict[key].status = checkedStatus
+      saveToAddonList(configObj, installedAddonsDict)
+      console.log(`\tChecking \t${installedAddonsDict[key].displayName}\t${installedAddonsDict[key].version}\t${installedAddonsDict[key].status}`)
+    })
   })
 }
 
@@ -53,23 +68,65 @@ app.on('activate', () => {
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
 
-let configObj
-let installedAddonsObj // Dictonary of all installed addons. Reference addons using "name" as key
+// --- Initialization Start---
+let configObj // JSON object that holds application config such as location of addon directory and installed addons file
+let installedAddonsDict // Dictionary of all installed addons. Reference addons using "name" as key
 
-initConfig().then((value) => {
-  configObj = value
-  return value
-}).then((value) => {
-  initAddonList(value).then((value) => {
-    installedAddonsObj = value
+initConfig()
+  .then(value => {
+    configObj = value // Sets config settings
+    return configObj
   })
-})
+  .then(configObj => {
+    readAddonList(configObj).then(val => {
+      installedAddonsDict = val
+      if (configObj.checkUpdateOnStart === true) {
+        checkAllUpdates(val)
+      }
+      return val
+    })
+    
+    const installedAddonsJsonWatcher = chokidar.watch(configObj.addonRecordFile, { persistent: true }) // Watches for changes in addons.json,
+    installedAddonsJsonWatcher.on('all', function () { // if there are changes then update the installAddonsDict variable.
+      readAddonList(configObj).then(value => {
+        console.log('addons.json changed, updating installedAddonsDict')
+        installedAddonsDict = value
+      })
+    })
+  })
+  .then(val => {
+    const subDirWatcher = chokidar.watch(configObj.addonDir, { // Watches wow Addon folder for new addons or deletions
+      ignored: /(^|[/\\])\../,
+      persistent: true,
+      depth: 0
+    })
+    subDirWatcher
+      .on('addDir', function (path) {
+        if (path !== configObj.addonDir) {
+          console.log('Addon subdir: ', path)
+          integrityCheck(installedAddonsDict, configObj) // Verifies that addon was installed
+        }
+      })
+      .on('unlinkDir', function (path) {
+        if (path !== configObj.addonDir) {
+          console.log('Addon deleted: ', path)
+          integrityCheck(installedAddonsDict, configObj) // Verifies that addon was uninstalled
+        }
+      })
+      .on('error', function (error) {
+        console.log('ERROR: ', error)
+      })
+      .on('raw', function (event, path, details) {
+        console.log('Raw event:', event, path, details)
+      })
+  })
+//  --- Initialization End---
 
 const { ipcMain } = require('electron')
 
 // newURL listener
 ipcMain.on('newURL', (e, newURL) => {
-  console.log('Recieved new URL ' + newURL)
+  console.log('Received new URL ' + newURL)
   console.log('\tSending URL to be matched with host and parse addon page')
   const URLObj = checkWhichHost(newURL)
   parseAddonDetails(URLObj).then(addonObj => {
@@ -81,15 +138,23 @@ ipcMain.on('newURL', (e, newURL) => {
 
 // installAddon() listener
 ipcMain.on('installAddon', (e, addonObj) => {
-  console.log('Recieved request to install addon ' + addonObj.name)
+  console.log('Received request to install addon ' + addonObj.name)
   installAddon(addonObj, configObj.addonDir)
-    .then((finalAddonObj) => {
-      console.log('Final addon Obj: ' + JSON.stringify(finalAddonObj))
-      installedAddonsObj[finalAddonObj.name] = finalAddonObj
-      return installedAddonsObj
-    }).then((dict) => {
-      saveToAddonList(configObj, dict)
+    .then((newAddon) => {
+      installedAddonsDict[newAddon.name] = newAddon
+      saveToAddonList(configObj, installedAddonsDict)
+      integrityCheck(installedAddonsDict, configObj)
     })
+})
+
+// updateAddon() listener
+ipcMain.on('checkAddonUpdate', (e, addonObj) => {
+  console.log('Received request to check addon for updates')
+  checkUpdate(addonObj).then(resultObj => {
+    installedAddonsDict[addonObj].version = resultObj.version
+    installedAddonsDict[addonObj].status = resultObj.status
+    saveToAddonList(configObj, installedAddonsDict)
+  })
 })
 
 // Update download progress listener
@@ -104,4 +169,9 @@ ipcMain.on('updateObj', (e, updateObj) => {
 ipcMain.on('error', (e, errorObj) => {
   console.log('\tSending error message ' + errorObj.error)
   mainWindow.webContents.send('error', errorObj)
+})
+
+// need to wait for react to finishing building Dom
+ipcMain.on('windowDoneLoading', () => {
+  mainWindow.webContents.send('addonList', installedAddonsDict)
 })
