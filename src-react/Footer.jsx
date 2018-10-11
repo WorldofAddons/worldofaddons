@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom'
 import { shell } from 'electron'
 const { app } = window.require('electron').remote
 
-class Footer extends React.PureComponent {
+export class Footer extends React.PureComponent {
     openIssues () {
         // TODO: dangerous?
         shell.openExternal('https://github.com/WorldofAddons/worldofaddons/issues/new')
@@ -13,7 +13,7 @@ class Footer extends React.PureComponent {
         return (
         <div className="footer-copyright">
             <div className="container">
-                {app.getVersion()}
+                Version: {app.getVersion()}
             <a 
                 className="grey-text text-lighten-4 right"
                 onClick={this.openIssues.bind(this)}>
@@ -32,5 +32,3 @@ class Footer extends React.PureComponent {
         )
     }
 }
-
-ReactDOM.render(<Footer />, document.getElementById('footer'))

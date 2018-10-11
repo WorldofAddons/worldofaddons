@@ -3,7 +3,7 @@ import { GetAddonInput } from '../components/GetAddonInput'
 import { AddonTable } from '../components/AddonTable'
 
 
-class Dashboard extends React.Component {
+export class Dashboard extends React.Component {
   render () {
     return (
       <div className='row section card-panel'>
@@ -13,5 +13,3 @@ class Dashboard extends React.Component {
     )
   }
 }
-
-module.exports = Dashboard
