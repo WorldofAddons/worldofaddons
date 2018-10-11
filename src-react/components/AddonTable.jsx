@@ -94,12 +94,27 @@ export class AddonTable extends Component {
     )
   }
 
+  renderEmptyBody () {
+    return (
+      <tbody>
+        <tr>
+          <td align='center' colSpan={6}>
+            <h4>No Addons</h4>
+          </td>
+        </tr>
+      </tbody>
+    )
+  }
+
   render () {
+    const { addonList } = this.state
+    const tag = addonList.length === 0 ? this.renderEmptyBody() : this.renderBody()
+
     return (
       <div key='addon-table'>
         <table>
           {this.renderHeader()}
-          {this.renderBody()}
+          {tag}
         </table>
       </div>
     )

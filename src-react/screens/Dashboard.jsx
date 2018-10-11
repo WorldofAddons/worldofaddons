@@ -6,7 +6,7 @@ const { app } = window.require('electron').remote
 class Dashboard extends React.Component {
   render () {
     return (
-      <div>
+      <div className='row section card-panel'>
         <GetAddonInput />
         <AddonTable />
         <p>

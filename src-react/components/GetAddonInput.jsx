@@ -26,16 +26,39 @@ export class GetAddonInput extends Component {
 
   onGet (e) {
     const { url } = this.state
-    if (checkURL(url)) {
+    if (url !== '' && checkURL(url)) {
       ipcRenderer.send('newURL', url)
     }
   }
 
+  renderButton () {
+    return (
+      <div className='col s2'>
+        <button 
+          className='btn-small waves-effect waves-light' 
+          onClick={this.onGet.bind(this)}>
+          Add
+        </button>
+      </div>
+    )
+  }
+
+  renderInput () {
+    return (
+      <div className='col s10'>
+        <div className='input-field'>
+          <label htmlFor="addonInput">Addon url</label>
+          <input id='addonInput' value={this.state.url} onChange={this.onChange.bind(this)} type='text' />
+        </div>
+      </div>
+    )
+  }
+
   render () {
     return (
-      <div>
-        <input value={this.state.url} onChange={this.onChange.bind(this)} type='text' />
-        <button onClick={this.onGet.bind(this)}>Get Addon</button>
+      <div className='row valign-wrapper'>
+        {this.renderButton()}
+        {this.renderInput()}
       </div>
     )
   }
