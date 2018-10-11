@@ -74,8 +74,8 @@ export class AddonTable extends Component {
 
   renderRow (addonObj, key) {
     const btnTag = addonObj.dlStatus === 100
-      ? <button onClick={() => this.onUpdate(addonObj)}>Update</button>
-      : <button onClick={() => this.onInstall(addonObj)}>Install</button>
+      ? <button className='btn-small waves-effect waves-light' onClick={() => this.onUpdate(addonObj)}>Update</button>
+      : <button className='btn-small waves-effect waves-light' onClick={() => this.onInstall(addonObj)}>Install</button>
 
     return (
       <tr key={key}>
@@ -87,7 +87,10 @@ export class AddonTable extends Component {
           {btnTag}
         </td>
         <td>
-          <button onClick={this.onRemove.bind(this)}>Remove</button>
+          <button className='btn-small waves-effect waves-light' 
+            onClick={this.onRemove.bind(this)}>
+            Remove
+          </button>
         </td>
       </tr>
     )
