@@ -138,7 +138,7 @@ export class AddonTable extends Component {
 
     return (
       <div key='addon-table'>
-        <table>
+        <table className='striped'>
           {this.renderHeader()}
           {tag}
         </table>

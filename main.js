@@ -5,6 +5,7 @@ import { checkWhichHost } from './src/checkWhichHost/index'
 import { installAddon } from './src/installAddon'
 import { initConfig, readAddonList, saveToAddonList } from './src/config'
 import { integrityCheck, checkUpdate } from './src/updater'
+import { MIN_WINDOW_SIZE } from './constants/index'
 
 const chokidar = require('chokidar')
 
@@ -13,8 +14,10 @@ const chokidar = require('chokidar')
 export let mainWindow
 
 function createWindow () {
+  const windowSizeConstaints = 
   // Create the browser window.
-  mainWindow = new BrowserWindow({ width: 800, height: 600 })
+  mainWindow = new BrowserWindow(MIN_WINDOW_SIZE)
+  mainWindow.setMinimumSize(MIN_WINDOW_SIZE.width, MIN_WINDOW_SIZE.height)
 
   // and load the index.html of the app.
   mainWindow.loadFile('index.html')
