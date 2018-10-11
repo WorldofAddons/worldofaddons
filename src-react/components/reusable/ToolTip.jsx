@@ -4,8 +4,9 @@ export class ToolTip extends React.Component {
   render() {
     const { tip, label, position } = this.props
 
+    // TODO: addd tooltip
     return (
-      <a className="tooltipped" data-position={position || 'top'} data-tooltip={tip}>{label}</a>
+      <div></div>
     )
   }
 }
