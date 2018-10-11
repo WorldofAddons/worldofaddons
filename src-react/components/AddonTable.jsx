@@ -16,13 +16,13 @@ export class AddonTable extends Component {
   componentDidMount () {
     ipcRenderer.on('addonList', this.initAddonList.bind(this))
     ipcRenderer.on('newAddonObj', this.addRow.bind(this))
-    ipcRenderer.on('updateAddonStatus', this.updateDLPercent.bind(this))
+    ipcRenderer.on('updateAddonDL', this.updateDLPercent.bind(this))
   }
 
   componentWillUnmount () {
     ipcRenderer.removeListener('addonList', this.initAddonList.bind(this))
     ipcRenderer.removeListener('newAddonObj', this.addRow.bind(this))
-    ipcRenderer.removeListener('updateAddonStatus', this.updateDLPercent.bind(this))
+    ipcRenderer.removeListener('updateAddonDL', this.updateDLPercent.bind(this))
   }
 
   initAddonList (e, addonObj) {
@@ -51,6 +51,7 @@ export class AddonTable extends Component {
     newAddonList[idx] = addon
 
     this.setState({ addonList: newAddonList })
+    this.renderRow(addon, idx)
   }
 
   addRow (e, newAddon) {
@@ -60,12 +61,19 @@ export class AddonTable extends Component {
     this.setState({ addonList })
   }
 
+  // Sends request to install addon
   onInstall (addonObj) {
     ipcRenderer.send('installAddon', addonObj)
   }
 
-  onUpdate (addonObj) {
-    ipcRenderer.send('updateObj', addonObj)
+  // Sends request to check addon for updates
+  onCheckUpdate (addonObj) {
+    ipcRenderer.send('checkAddonUpdate', addonObj)
+  }
+
+  // Sends request to install an update
+  onInstallUpdate (addonObj) {
+    ipcRenderer.send('installUpdate', addonObj)
   }
 
   onRemove () {
@@ -73,16 +81,33 @@ export class AddonTable extends Component {
   }
 
   renderRow (addonObj, key) {
-    const btnTag = addonObj.dlStatus === 100
-      ? <button onClick={() => this.onUpdate(addonObj)}>Update</button>
-      : <button onClick={() => this.onInstall(addonObj)}>Install</button>
+    let btnTag
+    let dlStatus
+    switch (addonObj.status) {
+      case 'INSTALLED':
+        btnTag = <button onClick={() => this.onCheckUpdate(addonObj)}>Check Update</button>
+        break;
+      case 'NEW UPDATE':
+        btnTag = <button onClick={() => this.onInstallUpdate(addonObj)}>Update</button>
+        break;
+      default:
+        btnTag = <button onClick={() => this.onInstall(addonObj)}>Install</button>
+    }
+
+    if (addonObj.dlStatus !== 100) {
+      dlStatus = <td>{addonObj.dlStatus}</td>
+      if ( (addonObj.dlStatus >= 0) && (addonObj.dlStatus > 100) ){ // Currently downloading something so hide the install button
+        btnTag = ""
+      }
+    }
 
     return (
       <tr key={key}>
         <td>{addonObj.displayName}</td>
         <td>{addonObj.host}</td>
         <td>{addonObj.version}</td>
-        <td>{addonObj.dlStatus}%</td>
+        <td>{addonObj.status}</td>
+        {dlStatus}
         <td>
           {btnTag}
         </td>
@@ -109,7 +134,7 @@ export class AddonTable extends Component {
   }
 
   renderBody () {
-    const tags = this.state.addonList.map((a, i) => this.renderRow(a, i))
+    const tags = this.state.addonList.map((a, i) => this.renderRow(a, i)) 
     return (
       <tbody>
         {tags}

@@ -1,6 +1,7 @@
 import fs from 'fs'
 import { saveToAddonList } from './config'
 import { parseAddonDetails } from './parsePage'
+import { mainWindow } from '../main'
 
 export function integrityCheck (installedAddonsDict, configObj) {
   let changed = false
@@ -16,6 +17,7 @@ export function integrityCheck (installedAddonsDict, configObj) {
           }
         }else {
           if (installedAddonsDict[name].status !== 'INSTALLED') { // If addon is not missing subdirs, then set status to installed
+            console.log(name, installedAddonsDict[name].status)
             installedAddonsDict[name].status = 'INSTALLED'
             changed = true
           }
@@ -23,9 +25,10 @@ export function integrityCheck (installedAddonsDict, configObj) {
       }
       return installedAddonsDict
     })
-    .then(addonDict => {
+    .then(installedAddonsDict => {
       if (changed === true) {
-        saveToAddonList(configObj, addonDict).then(newDict => {
+        saveToAddonList(configObj, installedAddonsDict).then(newDict => {
+          mainWindow.webContents.send('addonList', newDict)
           return newDict
         })
       }
@@ -46,13 +49,14 @@ function fetchAllAddonDirs (addonDirPath) {
 // Checks the addon's page for an update by comparing the parsed version
 // value to the JSON dictionary value.
 // Only runs on addons whose statuses are "INSTALLED"
-// If an update is available, then set addon status to "NEWUPDATE"
+// If an update is available, then set addon status to "NEW UPDATE"
 export function checkUpdate (addonObj) {
   return new Promise((resolve) => {
     if (addonObj.status !== 'NOT_INSTALLED') {
       parseAddonDetails(addonObj).then(checkedObj => {
         if (addonObj.version !== checkedObj.version) {
-          resolve('NEWUPDATE')
+          console.log(`\tUpdate found: ${addonObj.displayName}\t${addonObj.version}\t${checkedObj.version}`)
+          resolve('NEW UPDATE')
         } else {
           resolve('INSTALLED')
         }
