@@ -25,6 +25,8 @@ function createWindow () {
   // Open the DevTools.
   if (process.env.ENV === 'dev') {
     mainWindow.webContents.openDevTools()
+  } else {
+    mainWindow.setMenu(null)
   }
 
   // Emitted when the window is closed.
