@@ -20,7 +20,9 @@ function createWindow () {
   mainWindow.loadFile('index.html')
 
   // Open the DevTools.
-  // mainWindow.webContents.openDevTools()
+  if (process.env.ENV === 'dev') {
+    mainWindow.webContents.openDevTools()
+  }
 
   // Emitted when the window is closed.
   mainWindow.on('closed', () => {
@@ -77,9 +79,11 @@ initConfig()
   })
   .then(configObj => {
     readAddonList(configObj).then(val => {
+      installedAddonsDict = val
       if (configObj.checkUpdateOnStart === true) {
         checkAllUpdates(val)
       }
+      return val
     })
     
     const installedAddonsJsonWatcher = chokidar.watch(configObj.addonRecordFile, { persistent: true }) // Watches for changes in addons.json,
@@ -165,4 +169,9 @@ ipcMain.on('updateObj', (e, updateObj) => {
 ipcMain.on('error', (e, errorObj) => {
   console.log('\tSending error message ' + errorObj.error)
   mainWindow.webContents.send('error', errorObj)
+})
+
+// need to wait for react to finishing building Dom
+ipcMain.on('windowDoneLoading', () => {
+  mainWindow.webContents.send('addonList', installedAddonsDict)
 })
