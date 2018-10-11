@@ -9,31 +9,16 @@ export class AddonTable extends Component {
     this.state = {
       addonList: []
     }
-
-    ipcRenderer.send('windowDoneLoading', {}) // react is done rendering.
   }
 
   componentDidMount () {
-    ipcRenderer.on('addonList', this.initAddonList.bind(this))
     ipcRenderer.on('newAddonObj', this.addRow.bind(this))
     ipcRenderer.on('updateAddonStatus', this.updateDLPercent.bind(this))
   }
 
   componentWillUnmount () {
-    ipcRenderer.removeListener('addonList', this.initAddonList.bind(this))
     ipcRenderer.removeListener('newAddonObj', this.addRow.bind(this))
     ipcRenderer.removeListener('updateAddonStatus', this.updateDLPercent.bind(this))
-  }
-
-  initAddonList (e, addonObj) {
-    // translate addonObj
-    const addonList = []
-    Object.keys(addonObj).map(key => {
-      addonObj[key].dlStatus = 100
-      addonList.push(addonObj[key])
-    })
-
-    this.setState({ addonList })
   }
 
   // TODO: refactor this
@@ -45,7 +30,7 @@ export class AddonTable extends Component {
       // throw new Error('Newly downloaded addon could not be found.')
     }
     let addon = addonList[idx]
-    addon.dlStatus = dlStatus
+    addon.percentage = dlStatus
 
     const newAddonList = [...addonList]
     newAddonList[idx] = addon
@@ -64,27 +49,19 @@ export class AddonTable extends Component {
     ipcRenderer.send('installAddon', addonObj)
   }
 
-  onUpdate (addonObj) {
-    ipcRenderer.send('updateObj', addonObj)
-  }
-
   onRemove () {
-    // noop
+
   }
 
   renderRow (addonObj, key) {
-    const btnTag = addonObj.dlStatus === 100
-      ? <button onClick={() => this.onUpdate(addonObj)}>Update</button>
-      : <button onClick={() => this.onInstall(addonObj)}>Install</button>
-
     return (
       <tr key={key}>
         <td>{addonObj.displayName}</td>
         <td>{addonObj.host}</td>
         <td>{addonObj.version}</td>
-        <td>{addonObj.dlStatus}%</td>
+        <td>{addonObj.percentage || 0}%</td>
         <td>
-          {btnTag}
+          <button onClick={() => this.onInstall(addonObj)}>Install</button>
         </td>
         <td>
           <button onClick={this.onRemove.bind(this)}>Remove</button>

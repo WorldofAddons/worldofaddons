@@ -8,6 +8,7 @@ export function initConfig () {
     const worldOfAddonsDir = path.join(homedir, 'WorldOfAddons') // World of Addons stores information in user's home dir
     const WoAConfig = path.join(worldOfAddonsDir, 'config.json') // Saves all config information in config.json
     let configObj // Init configObj
+    console.log(homedir)
     if (!fs.existsSync(worldOfAddonsDir)) {
       fs.mkdirSync(worldOfAddonsDir)
     }
@@ -16,10 +17,9 @@ export function initConfig () {
     if (!fs.existsSync(WoAConfig)) {
       configObj = {
         'addonDir': '', // Path to wow addon folder (init to blank for now)
-        'addonRecordFile': path.join(worldOfAddonsDir, 'addons.json'), // Path to file storing addon records
-        'checkUpdateOnStart': false // If true, then check for update on start
+        'addonRecordFile': path.join(worldOfAddonsDir, 'addons.json') // Path to file storing addon records
       }
-      fs.writeFile(WoAConfig, JSON.stringify(configObj, null, 2), 'utf8', (err) => reject(err))
+      fs.writeFile(WoAConfig, JSON.stringify(configObj, null, 2), 'utf8')
       return resolve(configObj)
     }
     try {
@@ -30,13 +30,13 @@ export function initConfig () {
   })
 }
 
-export function readAddonList (configObj) {
+export function initAddonList (configObj) {
   return new Promise(function (resolve, reject) {
     const addonList = configObj.addonRecordFile
 
     // If addons.json does not exist, create it with blank values
     if (!fs.existsSync(addonList)) {
-      fs.writeFile(addonList, '{}', 'utf8', (err) => reject(err)) // Init empty dictionary
+      fs.writeFile(addonList, '{}', 'utf8') // Init empty dictonary
       return resolve({})
     }
 
@@ -50,11 +50,12 @@ export function readAddonList (configObj) {
 
 export function saveToAddonList (configObj, installedDict) {
   return new Promise(function (resolve, reject) {
-    if (fs.existsSync(configObj.addonRecordFile)) {
-      console.log('\tUpdating addons.js')
-      const stringInstallDict = JSON.stringify(installedDict, null, 2)
-      fs.writeFile(configObj.addonRecordFile, stringInstallDict, 'utf8', (err) => reject(err))
+    const addonList = configObj.addonRecordFile
+    if (fs.existsSync(addonList)) {
+      fs.writeFile(addonList, JSON.stringify(installedDict, null, 2), 'utf8')
       return resolve(installedDict)
+    } else {
+      return reject(new Error('ERROR: Failed to save addon record. Could not find or create addons.js.'))
     }
   })
 }

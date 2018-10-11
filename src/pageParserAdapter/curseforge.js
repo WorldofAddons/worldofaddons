@@ -1,9 +1,6 @@
 import { XMLHttpRequest } from 'xmlhttprequest'
 import { JSDOM } from 'jsdom'
 
-// Creates a JSON object for addons hosted by Curseforge.
-// Parses the addon name from the end of the URL, this name is how the
-// JSON object is referenced by other components
 export function parseUrl (url) {
   const URLSplit = URL.split('https://www.curseforge.com/wow/addons/')
   if (URLSplit.length === 2) {
@@ -12,8 +9,6 @@ export function parseUrl (url) {
   return { 'error': `Invalid URL ${url}` }
 }
 
-// This function goes to the URL https://www.curseforge.com/wow/addons/<addon name>/files
-// to parse the version number, addon display name, and addon authors
 export function parseAddonDetails (URL) {
   return new Promise((resolve, reject) => {
     let req = new XMLHttpRequest()
@@ -28,26 +23,14 @@ export function parseAddonDetails (URL) {
         if (page.getElementsByClassName('error-page').length !== 0) {
           return reject(new Error('Invalid in curseforge parser.'))
         }
-
-        // Fetches the curseforge addon version
         const version = page.getElementsByClassName('table__content file__name full')[0].innerHTML
-
-        // Fetches the curseforge addon display name
         const displayName = page.getElementsByClassName('name')[0].innerHTML
-
-        // Fetches the owner/author(s)
-        const searchAuthors = page.getElementsByClassName('member__name')
-        const authors = []
-        for (let i = 0; i < searchAuthors.length; i++) {
-          authors.push(String(searchAuthors[i].innerHTML).match(/>(.*)</).pop())
-        }
 
         if (!version || !displayName) {
           return reject(new Error('curseforge parser could not parse url.'))
         }
 
         return resolve({
-          'authors': authors,
           'displayName': displayName, // Name as displayed on Curseforge
           'version': version // Addon version
         })
@@ -64,9 +47,6 @@ export function parseAddonDetails (URL) {
   })
 }
 
-// This function fetches the direct download link to the addon hosted by Curseforge
-// On successful parse it will return a string containing the URL
-// This URL seems to be unique to the addon version
 export function parseDownloadURL (URL) {
   return new Promise((resolve, reject) => {
     const req = new XMLHttpRequest()
