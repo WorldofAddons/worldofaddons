@@ -77,12 +77,16 @@ export class AddonTable extends Component {
       ? <button className='btn-small waves-effect waves-light' onClick={() => this.onUpdate(addonObj)}>Update</button>
       : <button className='btn-small waves-effect waves-light' onClick={() => this.onInstall(addonObj)}>Install</button>
 
+    const statusText = addonObj.dlStatus === 100 
+      ? 'Ready'
+      : `%${addonObj.dlStatus}`
+
     return (
       <tr key={key}>
         <td>{addonObj.displayName}</td>
         <td>{addonObj.host}</td>
         <td>{addonObj.version}</td>
-        <td>{addonObj.dlStatus}%</td>
+        <td>{statusText}</td>
         <td>
           {btnTag}
         </td>
