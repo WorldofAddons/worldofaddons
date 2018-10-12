@@ -30,6 +30,8 @@
     "lodash.clonedeep": "^4.5.0",
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
+    "react-redux": "^5.0.7",
+    "redux": "^4.0.0",
     "request-promise": "^4.2.2",
     "xmlhttprequest": "^1.8.0"
   }
