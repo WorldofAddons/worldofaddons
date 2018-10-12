@@ -1,7 +1,8 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { ipcRenderer } from 'electron'
-import { getAddonList } from '../../redux/selectors/index.selectors'
+import { getAddonList } from '../../redux/selectors/index'
+import { ipcSendAction } from '../../redux/actions/index'
 import { AddonTable } from '../../components/dashboard/AddonTable'
 
 class AddonTableContainer extends React.Component {
@@ -19,8 +20,8 @@ const mapStateToProps = (state) => {
 // mix of dispatch and non dispatch functions
 const mapDispatchToProps = (dispatch) => {
   return {
-    onInstall: (addonObj) => {ipcRenderer.send('installAddon', addonObj)},
-    onUpdate: (addonObj) => {ipcRenderer.send('updateObj', addonObj)},
+    onInstall: (addonObj) => {dispatch(ipcSendAction('installAddon', addonObj))},
+    onUpdate: (addonObj) => {dispatch(ipcSendAction('updateObj', addonObj))},
     onRemove: () => { /* NOOP */}
   }
 }
