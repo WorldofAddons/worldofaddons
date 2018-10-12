@@ -14,7 +14,7 @@ export let mainWindow
 
 function createWindow () {
   // Create the browser window.
-  mainWindow = new BrowserWindow({ width: 800, height: 600 })
+  mainWindow = new BrowserWindow({ width: 800, height: 600 , icon: __dirname + './assets/200x200.png'})
 
   // and load the index.html of the app.
   mainWindow.loadFile('index.html')
@@ -40,7 +40,6 @@ function checkAllUpdates (installedAddonsDict, configObj) {
         installedAddonsDict[key].status = checkedStatus
         saveToAddonList(configObj, installedAddonsDict)
       }
-      console.log(`\tChecking \t${installedAddonsDict[key].displayName}\t${installedAddonsDict[key].version}\t${installedAddonsDict[key].status}`)
     })
   })
 }
@@ -156,7 +155,6 @@ ipcMain.on('installUpdate', (e, addonObj) => {
     installAddon(addonObj, configObj.addonDir)
     .then((newAddon) => {
       installedAddonsDict[newAddon.name] = newAddon
-      //saveToAddonList(configObj, installedAddonsDict)
       integrityCheck(installedAddonsDict, configObj)
     })
   })
@@ -164,10 +162,14 @@ ipcMain.on('installUpdate', (e, addonObj) => {
 
 // checkAddonUpdate() listener
 ipcMain.on('checkAddonUpdate', (e, addonObj) => {
-  console.log('Received request to check addon for updates')
-  checkUpdate(addonObj).then(resultObj => {
-    installedAddonsDict[addonObj.name].status = resultObj.status
-    saveToAddonList(configObj, installedAddonsDict)
+  console.log(`Received request to check ${addonObj.name} for updates`)
+  checkUpdate(addonObj).then(updateStatus => {
+    if (installedAddonsDict[addonObj.name].status !== updateStatus) {
+      console.log("here")
+      console.log(installedAddonsDict[addonObj.name].status, updateStatus)
+      installedAddonsDict[addonObj.name].status = updateStatus
+      saveToAddonList(configObj, installedAddonsDict)
+    }
   })
 })
 

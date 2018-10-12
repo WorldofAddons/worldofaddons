@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { ipcRenderer } from 'electron'
+import { ipcRenderer, shell } from 'electron'
 
 // TODO: Optimize memory consumption by getting rid of addonList in state.
 export class AddonTable extends Component {
@@ -96,15 +96,15 @@ export class AddonTable extends Component {
 
     if (addonObj.dlStatus !== 100) {
       dlStatus = <td>{addonObj.dlStatus}</td>
-      if ( (addonObj.dlStatus >= 0) && (addonObj.dlStatus > 100) ){ // Currently downloading something so hide the install button
+      if ( (addonObj.dlStatus >= 0) && (addonObj.dlStatus < 100) ){ // Currently downloading something so hide the install button
         btnTag = ""
       }
     }
 
     return (
       <tr key={key}>
-        <td>{addonObj.displayName}</td>
         <td>{addonObj.host}</td>
+        <td><a href="#" onClick = {() => shell.openExternal(addonObj.URL)}>{addonObj.displayName}</a></td>
         <td>{addonObj.version}</td>
         <td>{addonObj.status}</td>
         {dlStatus}
@@ -122,8 +122,8 @@ export class AddonTable extends Component {
     return (
       <thead>
         <tr>
-          <th>Name</th>
           <th>Host</th>
+          <th>Name</th>
           <th>Version</th>
           <th>Status</th>
           <th />

@@ -58,6 +58,7 @@ export function checkUpdate (addonObj) {
           console.log(`\tUpdate found: ${addonObj.displayName}\t${addonObj.version}\t${checkedObj.version}`)
           resolve('NEW UPDATE')
         } else {
+          console.log(`\tAddon ${addonObj.displayName} [${addonObj.version}] is latest version`)
           resolve('INSTALLED')
         }
       })
