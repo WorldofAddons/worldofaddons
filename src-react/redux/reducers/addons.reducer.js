@@ -25,7 +25,7 @@ const initDlStatus = (state) => {
 
 const initialStateDict = {}
 const dict = (state = initialStateDict, action) => {
-  let newState = {state} // TODO: fix with deep clone
+  let newState = state // TODO: fix with deep clone
   switch (action.type) {
     case 'addonList':
       newState = action.data

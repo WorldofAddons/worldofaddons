@@ -1,14 +1,18 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { createStore } from 'redux'
+import { createStore, applyMiddleware } from 'redux'
 import { Provider } from 'react-redux'
+import logger from 'redux-logger'
 
 import reducers from './redux/reducers/index'
 import { Dashboard } from './screens/Dashboard'
 import { Footer } from './Footer'
 import IpcListener from './redux/IpcListener'
 
-const store = createStore(reducers)
+const store = createStore(
+  reducers,
+  applyMiddleware(logger)
+)
 const electronChannels = [
   'addonList',
   'newAddonObj',
