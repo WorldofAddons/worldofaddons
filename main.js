@@ -142,7 +142,6 @@ ipcMain.on('installAddon', (e, addonObj) => {
   installAddon(addonObj, configObj.addonDir)
     .then((newAddon) => {
       installedAddonsDict[newAddon.name] = newAddon
-      //saveToAddonList(configObj, installedAddonsDict)
       integrityCheck(installedAddonsDict, configObj)
     })
 })
@@ -165,7 +164,6 @@ ipcMain.on('checkAddonUpdate', (e, addonObj) => {
   console.log(`Received request to check ${addonObj.name} for updates`)
   checkUpdate(addonObj).then(updateStatus => {
     if (installedAddonsDict[addonObj.name].status !== updateStatus) {
-      console.log("here")
       console.log(installedAddonsDict[addonObj.name].status, updateStatus)
       installedAddonsDict[addonObj.name].status = updateStatus
       saveToAddonList(configObj, installedAddonsDict)
@@ -193,6 +191,15 @@ ipcMain.on('uninstallAddon', (e, addonObj) => {
   installedAddonsDict = uninstallAddon(addonObj, configObj, installedAddonsDict)
   saveToAddonList(configObj, installedAddonsDict)
   mainWindow.webContents.send('addonList', installedAddonsDict)
+  mainWindow.webContents.send('newAddonObj', {
+    'displayName': addonObj.displayName,
+    'name': addonObj.name,
+    'version': addonObj.version,
+    'host': addonObj.host,
+    'URL': addonObj.URL,
+    'authors': addonObj.authors,
+    'status': 'NOT INSTALLED'
+  })
 })
 
 // need to wait for react to finishing building Dom
