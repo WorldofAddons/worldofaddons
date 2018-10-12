@@ -41,7 +41,8 @@ export function readAddonList (configObj) {
     }
 
     try {
-      return resolve(JSON.parse(fs.readFileSync(addonList, 'utf8')))
+      let addonFile = JSON.parse(fs.readFileSync(addonList, 'utf8'))
+      return resolve(addonFile)
     } catch (err) {
       return reject(err)
     }
