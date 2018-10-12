@@ -35,7 +35,7 @@ const dict = (state = initialStateDict, action) => {
       newState[action.data.name].dlStatus = 0
       return newState
     case 'updateAddonStatus':
-      newState[action.data.name] = action.data
+      newState[action.data.name].dlStatus = action.data.dlStatus // TODO: name isnt being sent back?
       return newState
     default:
       return state
