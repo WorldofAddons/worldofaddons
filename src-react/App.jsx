@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom'
 import { createStore } from 'redux'
 import { Provider } from 'react-redux'
 
-import reducers from './reducers/index'
+import reducers from './redux/reducers/index'
 import { Dashboard } from './screens/Dashboard'
 import { Footer } from './Footer'
 
