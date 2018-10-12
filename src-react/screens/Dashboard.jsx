@@ -1,6 +1,6 @@
 import React from 'react'
-import { GetAddonInput } from '../components/GetAddonInput'
-import { AddonTable } from '../components/AddonTable'
+import { GetAddonInput } from '../components/dashboard/GetAddonInput'
+import { AddonTable } from '../components/dashboard/AddonTable'
 
 
 export class Dashboard extends React.Component {
