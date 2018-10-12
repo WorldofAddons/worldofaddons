@@ -1,17 +1,15 @@
 import React, { Component } from 'react'
-import { ipcRenderer } from 'electron'
 
 function checkURL (newUrl) {
   const isURL = /^(http|https):\/\/[^ "]+$/.test(newUrl)
   if (isURL !== true) {
-    ipcRenderer.send('newURL', newUrl)
     const errorObj = { 'error': "ERROR: Invalid URL '" + newUrl + "'" }
     console.error(errorObj) // TODO: display error to user
   }
   return isURL
 }
 
-export class GetAddonInput extends Component {
+export class AddonInput extends Component {
   constructor (props) {
     super(props)
 
@@ -24,10 +22,11 @@ export class GetAddonInput extends Component {
     this.setState({ url: e.target.value })
   }
 
-  onGet (e) {
+  onSubmit (e) {
     const { url } = this.state
+
     if (url !== '' && checkURL(url)) {
-      ipcRenderer.send('newURL', url)
+      this.props.onSubmit(url)
     }
   }
 
@@ -36,8 +35,8 @@ export class GetAddonInput extends Component {
       <div className='col s2'>
         <button 
           className='btn-small waves-effect waves-light' 
-          onClick={this.onGet.bind(this)}>
-          Add
+          onClick={this.onSubmit.bind(this)}>
+          {this.props.buttonLabel}
         </button>
       </div>
     )
@@ -47,7 +46,7 @@ export class GetAddonInput extends Component {
     return (
       <div className='col s10'>
         <div className='input-field'>
-          <label htmlFor="addonInput">Addon url</label>
+          <label htmlFor="addonInput">{this.props.inputLabel}</label>
           <input id='addonInput' value={this.state.url} onChange={this.onChange.bind(this)} type='text' />
         </div>
       </div>

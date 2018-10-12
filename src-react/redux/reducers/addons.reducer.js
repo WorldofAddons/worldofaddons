@@ -8,7 +8,7 @@ const nameList = (state = initialStateNameList, action) => {
       return Object.keys(action.data).map(key => action.data[key].name)
     case 'newAddonObj':
       newState = [...state]
-      newState.push(action.name)
+      newState.push(action.data.name)
       return newState
     default:
       return state
@@ -32,6 +32,7 @@ const dict = (state = initialStateDict, action) => {
       return initDlStatus(newState)
     case 'newAddonObj':
       newState[action.data.name] = action.data
+      newState[action.data.name].dlStatus = 0
       return newState
     case 'updateAddonStatus':
       newState[action.data.name] = action.data
