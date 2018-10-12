@@ -1,22 +1,20 @@
 {
   "name": "world-of-addons",
-  "version": "0.3.1",
-  "description": "A minimal Electron application",
+  "version": "0.4.0",
+  "description": "Open source addon manager for World of Warcraft. Install, update, and manage all your WoW addons in a single lightweight application.",
   "main": "main.js",
   "scripts": {
     "start": "ENV=dev electron .",
     "linter": "standard --fix"
   },
-  "repository": "https://github.com/electron/electron-quick-start",
+  "repository": "https://github.com/WorldofAddons/worldofaddons",
   "keywords": [
-    "Electron",
-    "quick",
-    "start",
-    "tutorial",
-    "demo"
+    "wow",
+    "addons",
+    "manager"
   ],
-  "author": "GitHub",
-  "license": "CC0-1.0",
+  "author": "World of Addons Team",
+  "license": "GPL-3.0-or-later",
   "devDependencies": {
     "electron": "^2.0.10",
     "electron-prebuilt-compile": "^2.0.7"
