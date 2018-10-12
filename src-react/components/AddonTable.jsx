@@ -76,8 +76,8 @@ export class AddonTable extends Component {
     ipcRenderer.send('installUpdate', addonObj)
   }
 
-  onRemove () {
-    // noop
+  onRemove (addonObj) {
+    ipcRenderer.send('uninstallAddon', addonObj)
   }
 
   renderRow (addonObj, key) {
@@ -112,7 +112,7 @@ export class AddonTable extends Component {
           {btnTag}
         </td>
         <td>
-          <button onClick={this.onRemove.bind(this)}>Remove</button>
+          <button onClick={() => this.onRemove(addonObj)}>Remove</button>
         </td>
       </tr>
     )

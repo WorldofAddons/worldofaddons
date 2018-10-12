@@ -5,7 +5,7 @@ import { checkWhichHost } from './src/checkWhichHost/index'
 import { installAddon } from './src/installAddon'
 import { initConfig, readAddonList, saveToAddonList } from './src/config'
 import { integrityCheck, checkUpdate } from './src/updater'
-
+import { uninstallAddon } from './src/uninstallAddon'
 const chokidar = require('chokidar')
 
 // Keep a global reference of the window object, if you don't, the window will
@@ -185,6 +185,14 @@ ipcMain.on('DLProgress', (e, DLAddon) => {
 ipcMain.on('error', (e, errorObj) => {
   console.log('\tSending error message ' + errorObj.error)
   mainWindow.webContents.send('error', errorObj)
+})
+
+// uninstall addon listener
+ipcMain.on('uninstallAddon', (e, addonObj) => {
+  console.log(`Received request to delete ${addonObj.name}`)
+  installedAddonsDict = uninstallAddon(addonObj, configObj, installedAddonsDict)
+  saveToAddonList(configObj, installedAddonsDict)
+  mainWindow.webContents.send('addonList', installedAddonsDict)
 })
 
 // need to wait for react to finishing building Dom
