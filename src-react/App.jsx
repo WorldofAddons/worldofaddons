@@ -6,14 +6,21 @@ import { Provider } from 'react-redux'
 import reducers from './redux/reducers/index'
 import { Dashboard } from './screens/Dashboard'
 import { Footer } from './Footer'
+import IpcListener from './redux/IpcListener'
 
 const store = createStore(reducers)
+const electronChannels = [
+  'addonList',
+  'newAddonObj',
+  'updateAddonStatus'
+]
 
 class App extends React.Component {
   render () {
     return (
         <div>
           <Dashboard />
+          <IpcListener channels={electronChannels}/>
         </div>
     )
   }
