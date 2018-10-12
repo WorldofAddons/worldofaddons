@@ -1,6 +1,6 @@
 import React from 'react'
 import { GetAddonInput } from '../components/dashboard/GetAddonInput'
-import { AddonTable } from '../components/dashboard/AddonTable'
+import AddonTableContainer from '../modules/dashboard/AddonTableContainer'
 
 
 export class Dashboard extends React.Component {
@@ -8,7 +8,7 @@ export class Dashboard extends React.Component {
     return (
       <div className='row section card-panel'>
         <GetAddonInput />
-        <AddonTable />
+        <AddonTableContainer />
       </div>
     )
   }

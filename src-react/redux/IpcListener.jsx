@@ -2,7 +2,6 @@ import { connect } from 'react-redux'
 import React, { Component } from 'react'
 import { ipcRenderer } from 'electron'
 
-
 const sendToReducerAction = (type, data) => {
   return {type, data}
 }

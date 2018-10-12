@@ -1,64 +1,7 @@
 import React, { Component } from 'react'
 import { ipcRenderer } from 'electron'
 
-// TODO: Optimize memory consumption by getting rid of addonList in state.
 export class AddonTable extends Component {
-  constructor (props) {
-    super(props)
-
-    this.state = {
-      addonList: []
-    }
-
-    ipcRenderer.send('windowDoneLoading', {}) // react is done rendering.
-  }
-
-  componentDidMount () {
-    ipcRenderer.on('addonList', this.initAddonList.bind(this))
-    ipcRenderer.on('newAddonObj', this.addRow.bind(this))
-    ipcRenderer.on('updateAddonStatus', this.updateDLPercent.bind(this))
-  }
-
-  componentWillUnmount () {
-    ipcRenderer.removeListener('addonList', this.initAddonList.bind(this))
-    ipcRenderer.removeListener('newAddonObj', this.addRow.bind(this))
-    ipcRenderer.removeListener('updateAddonStatus', this.updateDLPercent.bind(this))
-  }
-
-  initAddonList (e, addonObj) {
-    // translate addonObj
-    const addonList = []
-    Object.keys(addonObj).map(key => {
-      addonObj[key].dlStatus = 100
-      addonList.push(addonObj[key])
-    })
-
-    this.setState({ addonList })
-  }
-
-  // TODO: refactor this
-  updateDLPercent (e, updateObj) {
-    const { name, dlStatus } = updateObj
-    let { addonList } = this.state
-    let idx = addonList.findIndex(a => a.name === name)
-    if (idx === -1) {
-      // throw new Error('Newly downloaded addon could not be found.')
-    }
-    let addon = addonList[idx]
-    addon.dlStatus = dlStatus
-
-    const newAddonList = [...addonList]
-    newAddonList[idx] = addon
-
-    this.setState({ addonList: newAddonList })
-  }
-
-  addRow (e, newAddon) {
-    let { addonList } = this.state
-    console.log(newAddon)
-    addonList.push(newAddon)
-    this.setState({ addonList })
-  }
 
   onInstall (addonObj) {
     ipcRenderer.send('installAddon', addonObj)
@@ -116,7 +59,7 @@ export class AddonTable extends Component {
   }
 
   renderBody () {
-    const tags = this.state.addonList.map((a, i) => this.renderRow(a, i))
+    const tags = this.props.addonList.map((a, i) => this.renderRow(a, i))
     return (
       <tbody>
         {tags}
@@ -137,7 +80,7 @@ export class AddonTable extends Component {
   }
 
   render () {
-    const { addonList } = this.state
+    const { addonList } = this.props
     const tag = addonList.length === 0 ? this.renderEmptyBody() : this.renderBody()
 
     return (
