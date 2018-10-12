@@ -2,23 +2,26 @@ import React, { Component } from 'react'
 import { ipcRenderer } from 'electron'
 
 export class AddonTable extends Component {
-
-  onInstall (addonObj) {
-    ipcRenderer.send('installAddon', addonObj)
-  }
-
-  onUpdate (addonObj) {
-    ipcRenderer.send('updateObj', addonObj)
-  }
-
-  onRemove () {
-    // noop
+  renderHeader () {
+    return (
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Host</th>
+          <th>Version</th>
+          <th>Status</th>
+          <th />
+          <th />
+        </tr>
+      </thead>
+    )
   }
 
   renderRow (addonObj, key) {
+    const { onUpdate, onInstall, onRemove } = this.props
     const btnTag = addonObj.dlStatus === 100
-      ? <button className='btn-small waves-effect waves-light' onClick={() => this.onUpdate(addonObj)}>Update</button>
-      : <button className='btn-small waves-effect waves-light' onClick={() => this.onInstall(addonObj)}>Install</button>
+      ? <button className='btn-small waves-effect waves-light' onClick={() => onUpdate(addonObj)}>Update</button>
+      : <button className='btn-small waves-effect waves-light' onClick={() => onInstall(addonObj)}>Install</button>
 
     const statusText = addonObj.dlStatus === 100 
       ? 'Ready'
@@ -35,26 +38,11 @@ export class AddonTable extends Component {
         </td>
         <td>
           <button className='btn-small waves-effect waves-light' 
-            onClick={this.onRemove.bind(this)}>
+            onClick={onRemove.bind(this)}>
             Remove
           </button>
         </td>
       </tr>
-    )
-  }
-
-  renderHeader () {
-    return (
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Host</th>
-          <th>Version</th>
-          <th>Status</th>
-          <th />
-          <th />
-        </tr>
-      </thead>
     )
   }
 
