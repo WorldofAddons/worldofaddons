@@ -6,17 +6,18 @@ import { installAddon } from './src/installAddon'
 import { initConfig, readAddonList, saveToAddonList } from './src/config'
 import { integrityCheck, checkUpdate } from './src/updater'
 import { MIN_WINDOW_SIZE } from './constants/index'
-
-const chokidar = require('chokidar')
+import { uninstallAddon } from './src/uninstallAddon'
+import chokidar from 'chokidar'
+import _ from 'lodash'
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 export let mainWindow
 
 function createWindow () {
-  const windowSizeConstaints = 
   // Create the browser window.
-  mainWindow = new BrowserWindow(MIN_WINDOW_SIZE)
+  const windowSettings = _.extend(MIN_WINDOW_SIZE, { icon: __dirname + './assets/200x200.png' })
+  mainWindow = new BrowserWindow(windowSettings)
   mainWindow.setMinimumSize(MIN_WINDOW_SIZE.width, MIN_WINDOW_SIZE.height)
 
   // and load the index.html of the app.
@@ -38,12 +39,13 @@ function createWindow () {
   })
 }
 
-function checkAllUpdates (installedAddonsDict) {
+function checkAllUpdates (installedAddonsDict, configObj) {
   Object.keys(installedAddonsDict).forEach(function (key) {
     checkUpdate(installedAddonsDict[key]).then(checkedStatus => {
-      installedAddonsDict[key].status = checkedStatus
-      saveToAddonList(configObj, installedAddonsDict)
-      console.log(`\tChecking \t${installedAddonsDict[key].displayName}\t${installedAddonsDict[key].version}\t${installedAddonsDict[key].status}`)
+      if (installedAddonsDict[key].status !== checkedStatus){
+        installedAddonsDict[key].status = checkedStatus
+        saveToAddonList(configObj, installedAddonsDict)
+      }
     })
   })
 }
@@ -86,15 +88,14 @@ initConfig()
     readAddonList(configObj).then(val => {
       installedAddonsDict = val
       if (configObj.checkUpdateOnStart === true) {
-        checkAllUpdates(val)
+        checkAllUpdates(val, configObj)
       }
       return val
     })
-    
     const installedAddonsJsonWatcher = chokidar.watch(configObj.addonRecordFile, { persistent: true }) // Watches for changes in addons.json,
     installedAddonsJsonWatcher.on('all', function () { // if there are changes then update the installAddonsDict variable.
       readAddonList(configObj).then(value => {
-        console.log('addons.json changed, updating installedAddonsDict')
+        console.log('Save/change detected in addons.json, updating installedAddonsDict')
         installedAddonsDict = value
       })
     })
@@ -147,26 +148,40 @@ ipcMain.on('installAddon', (e, addonObj) => {
   installAddon(addonObj, configObj.addonDir)
     .then((newAddon) => {
       installedAddonsDict[newAddon.name] = newAddon
-      saveToAddonList(configObj, installedAddonsDict)
       integrityCheck(installedAddonsDict, configObj)
     })
 })
 
-// updateAddon() listener
+// update addon listener, fetches new version number and downloads the addon
+ipcMain.on('installUpdate', (e, addonObj) => {
+  console.log('Received request to update addon ' + addonObj.name)
+  const URLObj = checkWhichHost(addonObj.URL)
+  parseAddonDetails(URLObj).then(addonObj => {
+    installAddon(addonObj, configObj.addonDir)
+    .then((newAddon) => {
+      installedAddonsDict[newAddon.name] = newAddon
+      integrityCheck(installedAddonsDict, configObj)
+    })
+  })
+})
+
+// checkAddonUpdate() listener
 ipcMain.on('checkAddonUpdate', (e, addonObj) => {
-  console.log('Received request to check addon for updates')
-  checkUpdate(addonObj).then(resultObj => {
-    installedAddonsDict[addonObj].version = resultObj.version
-    installedAddonsDict[addonObj].status = resultObj.status
-    saveToAddonList(configObj, installedAddonsDict)
+  console.log(`Received request to check ${addonObj.name} for updates`)
+  checkUpdate(addonObj).then(updateStatus => {
+    if (installedAddonsDict[addonObj.name].status !== updateStatus) {
+      console.log(installedAddonsDict[addonObj.name].status, updateStatus)
+      installedAddonsDict[addonObj.name].status = updateStatus
+      saveToAddonList(configObj, installedAddonsDict)
+    }
   })
 })
 
 // Update download progress listener
-ipcMain.on('updateObj', (e, updateObj) => {
-  if (updateObj.hasOwnProperty('dlStatus')) {
-    console.log('\tDownload Progress for ' + updateObj.name + ': ' + updateObj.dlStatus)
-    mainWindow.webContents.send('updateAddonStatus', updateObj)
+ipcMain.on('DLProgress', (e, DLAddon) => {
+  if (DLAddon.hasOwnProperty('dlStatus')) {
+    console.log('\tDownload Progress for ' + DLAddon.name + ': ' + DLAddon.dlStatus)
+    mainWindow.webContents.send('updateAddonDL', DLAddon)
   }
 })
 
@@ -174,6 +189,23 @@ ipcMain.on('updateObj', (e, updateObj) => {
 ipcMain.on('error', (e, errorObj) => {
   console.log('\tSending error message ' + errorObj.error)
   mainWindow.webContents.send('error', errorObj)
+})
+
+// uninstall addon listener
+ipcMain.on('uninstallAddon', (e, addonObj) => {
+  console.log(`Received request to delete ${addonObj.name}`)
+  installedAddonsDict = uninstallAddon(addonObj, configObj, installedAddonsDict)
+  saveToAddonList(configObj, installedAddonsDict)
+  mainWindow.webContents.send('addonList', installedAddonsDict)
+  mainWindow.webContents.send('newAddonObj', {
+    'displayName': addonObj.displayName,
+    'name': addonObj.name,
+    'version': addonObj.version,
+    'host': addonObj.host,
+    'URL': addonObj.URL,
+    'authors': addonObj.authors,
+    'status': 'NOT INSTALLED'
+  })
 })
 
 // need to wait for react to finishing building Dom

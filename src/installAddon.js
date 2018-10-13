@@ -53,13 +53,12 @@ export function downloadAddon (addonObj, downloadURL) {
       receivedBytes += chunk.length
       let percentage = parseInt((receivedBytes * 100) / totalBytes)
       const updateObj = { 'name': addonObj.name, 'dlStatus': percentage }
-      mainWindow.webContents.send('updateAddonStatus', updateObj)
+      mainWindow.webContents.send('updateAddonDL', updateObj)
     })
 
     req.then((data) => {
       console.log('\tDownload for ' + addonObj.name + ' completed.')
-      // send complete message to frontend
-      return resolve()
+      return resolve()      // send complete message to frontend
     })
   })
 }
