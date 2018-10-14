@@ -4,7 +4,7 @@
   "description": "Open source addon manager for World of Warcraft. Install, update, and manage all your WoW addons in a single lightweight application.",
   "main": "main.js",
   "scripts": {
-    "start": "ENV=dev electron .",
+    "start": "NODE_ENV=dev electron .",
     "linter": "standard --fix"
   },
   "repository": "https://github.com/WorldofAddons/worldofaddons",
