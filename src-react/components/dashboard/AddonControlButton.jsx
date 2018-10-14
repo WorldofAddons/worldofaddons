@@ -6,7 +6,7 @@ import React from 'react'
  */
 export const AddonControlButton = (addonObj, {onInstall, onInstallUpdate, onCheckUpdate}) => {
   
-  switch (status) {
+  switch (addonObj.status) {
     case 'INSTALLED':
       return <button className='btn-small waves-effect waves-light'
                onClick={() => onCheckUpdate(addonObj)}>Check Update</button>

@@ -19,7 +19,7 @@ export class AddonTable extends Component {
 
   renderRow (addonObj, key) {
     const statusText = addonObj.dlStatus === 100 
-      ? 'Ready'
+      ? addonObj.status
       : `%${addonObj.dlStatus}`
 
     return (
