@@ -20,8 +20,10 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     onInstall: (addonObj) => {dispatch(ipcSendAction('installAddon', addonObj))},
+    onCheckUpdate: (addonObj) => {dispatch(ipcSendAction('checkAddonUpdate', addonObj))},
     onUpdate: (addonObj) => {dispatch(ipcSendAction('updateObj', addonObj))},
-    onRemove: () => { /* NOOP */}
+    onInstallUpdate: (addonObj) => {dispatch(ipcSendAction('installUpdate', addonObj))},
+    onRemove: (addonObj) => {dispatch(ipcSendAction('uninstallAddon', addonObj))}
   }
 }
 

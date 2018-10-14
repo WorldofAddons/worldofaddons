@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { ipcRenderer } from 'electron'
+import { AddonControlButton } from './AddonControlButton'
 
 export class AddonTable extends Component {
   renderHeader () {
@@ -18,11 +18,6 @@ export class AddonTable extends Component {
   }
 
   renderRow (addonObj, key) {
-    const { onUpdate, onInstall, onRemove } = this.props
-    const btnTag = addonObj.dlStatus === 100
-      ? <button className='btn-small waves-effect waves-light' onClick={() => onUpdate(addonObj)}>Update</button>
-      : <button className='btn-small waves-effect waves-light' onClick={() => onInstall(addonObj)}>Install</button>
-
     const statusText = addonObj.dlStatus === 100 
       ? 'Ready'
       : `%${addonObj.dlStatus}`
@@ -34,11 +29,12 @@ export class AddonTable extends Component {
         <td>{addonObj.version}</td>
         <td>{statusText}</td>
         <td>
-          {btnTag}
+          {AddonControlButton(addonObj, this.props)}
         </td>
         <td>
-          <button className='btn-small waves-effect waves-light' 
-            onClick={onRemove.bind(this)}>
+          <button 
+            className='btn-small waves-effect waves-light' 
+            onClick={() => this.props.onRemove(addonObj)}>
             Remove
           </button>
         </td>
