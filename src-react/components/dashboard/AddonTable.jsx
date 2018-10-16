@@ -17,6 +17,21 @@ export class AddonTable extends Component {
     )
   }
 
+  // TODO create seperate row component.
+  renderDownloadRow(addonObj, key) {
+    const { dlStatus } = addonObj
+    const loaderStlye = `width: ${dlStatus || 0}%`
+    return (
+      <tr key={key} >
+          <td align='center' colSpan={6}>
+            <div class="progress">
+                <div class="determinate" style={loaderStlye}></div>
+            </div>
+          </td>
+      </tr>
+    )
+  }
+
   renderRow (addonObj, key) {
     const statusText = addonObj.dlStatus === 100 
       ? addonObj.status
@@ -43,7 +58,11 @@ export class AddonTable extends Component {
   }
 
   renderBody () {
-    const tags = this.props.addonList.map((a, i) => this.renderRow(a, i))
+    const tags = this.props.addonList.map((a, i) => {
+      return a.dlStatus === 100 
+        ? this.renderRow(a, i)
+        : this.renderDownloadRow(a,i)
+    })
     return (
       <tbody>
         {tags}
