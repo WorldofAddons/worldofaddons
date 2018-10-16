@@ -3,7 +3,7 @@ import { GetAddonInput } from '../components/GetAddonInput'
 import { AddonTable } from '../components/AddonTable'
 const { app } = window.require('electron').remote
 
-class Dashboard extends React.Component {
+export class Dashboard extends React.Component {
   render () {
     return (
       <div>
@@ -16,5 +16,3 @@ class Dashboard extends React.Component {
     )
   }
 }
-
-module.exports = Dashboard
