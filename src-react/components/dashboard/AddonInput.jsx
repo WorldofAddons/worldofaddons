@@ -56,8 +56,8 @@ export class AddonInput extends Component {
   render () {
     return (
       <div className='row valign-wrapper'>
-        {this.renderButton()}
         {this.renderInput()}
+        {this.renderButton()}
       </div>
     )
   }
