@@ -59,11 +59,15 @@ const electronRendererConfig = {
       template: './index.html',
       filename: 'index.html'
     }),
-    new MiniCssExtractPlugin({
+    new MiniCssExtractPlugin({// TODO: fix css bundling
       filename: "[name].css",
       chunkFilename: "[id].css"
     })
   ]
+}
+
+const jestConfig = { // TODO: start jest config.
+
 }
 
 module.exports = [ electronMainConfig, electronRendererConfig ]
