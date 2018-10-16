@@ -2,11 +2,12 @@ import fs from 'fs'
 import path from 'path'
 const os = require('os')
 
+const homedir = os.homedir() // Fetchs user's homedir
+export const worldOfAddonsDir = path.join(homedir, 'WorldOfAddons') // World of Addons stores information in user's home dir
+export const WoAConfig = path.join(worldOfAddonsDir, 'config.json') // Saves all config information in config.json
+
 export function initConfig () {
   return new Promise(function (resolve, reject) {
-    const homedir = os.homedir() // Fetchs user's homedir
-    const worldOfAddonsDir = path.join(homedir, 'WorldOfAddons') // World of Addons stores information in user's home dir
-    const WoAConfig = path.join(worldOfAddonsDir, 'config.json') // Saves all config information in config.json
     let configObj // Init configObj
     if (!fs.existsSync(worldOfAddonsDir)) {
       fs.mkdirSync(worldOfAddonsDir)
