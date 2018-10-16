@@ -1,0 +1,14 @@
+body {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+    background-color: #D3D3D3;
+}
+
+main {
+    flex: 1 0 auto;
+}
+
+.container {
+    width: 95%;
+}
