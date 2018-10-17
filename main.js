@@ -5,10 +5,8 @@ import { checkWhichHost } from './src/checkWhichHost/index'
 import { installAddon } from './src/installAddon'
 import { initConfig, readAddonList, saveToAddonList } from './src/config'
 import { integrityCheck, checkUpdate } from './src/updater'
-import { MIN_WINDOW_SIZE } from './constants/index'
 import { uninstallAddon } from './src/uninstallAddon'
-import chokidar from 'chokidar'
-import _ from 'lodash'
+const chokidar = require('chokidar')
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -16,9 +14,7 @@ export let mainWindow
 
 function createWindow () {
   // Create the browser window.
-  const windowSettings = _.extend(MIN_WINDOW_SIZE, { icon: __dirname + './assets/200x200.png' })
-  mainWindow = new BrowserWindow(windowSettings)
-  mainWindow.setMinimumSize(MIN_WINDOW_SIZE.width, MIN_WINDOW_SIZE.height)
+  mainWindow = new BrowserWindow({ width: 800, height: 600 , icon: __dirname + './assets/200x200.png'})
 
   // and load the index.html of the app.
   mainWindow.loadFile('index.html')
@@ -26,8 +22,6 @@ function createWindow () {
   // Open the DevTools.
   if (process.env.ENV === 'dev') {
     mainWindow.webContents.openDevTools()
-  } else {
-    mainWindow.setMenu(null)
   }
 
   // Emitted when the window is closed.
