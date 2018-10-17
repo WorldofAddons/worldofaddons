@@ -1,15 +1,20 @@
 import React from 'react'
-import AddonInputContainer from '../modules/dashboard/AddonInputContainer'
-import AddonTableContainer from '../modules/dashboard/AddonTableContainer'
+import { GetAddonInput } from '../components/GetAddonInput'
+import { AddonTable } from '../components/AddonTable'
+const { app } = window.require('electron').remote
 
-
-export class Dashboard extends React.Component {
+class Dashboard extends React.Component {
   render () {
     return (
-      <div className='row section card-panel'>
-        <AddonInputContainer />
-        <AddonTableContainer />
+      <div>
+        <GetAddonInput />
+        <AddonTable />
+        <p>
+          Version: {app.getVersion()}
+        </p>
       </div>
     )
   }
 }
+
+module.exports = Dashboard
