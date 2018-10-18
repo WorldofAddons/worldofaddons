@@ -6,7 +6,7 @@
   "scripts": {
     "start": "NODE_ENV=dev electron .",
     "linter": "standard --fix",
-    "test": "jest",
+    "test": "jest --config=jest.config.json",
     "build": "webpack --mode development"
   },
   "repository": "https://github.com/WorldofAddons/worldofaddons",
@@ -22,6 +22,8 @@
     "@babel/preset-env": "^7.1.0",
     "@babel/preset-react": "^7.0.0",
     "babel-cli": "^6.26.0",
+    "babel-core": "^7.0.0-bridge.0",
+    "babel-jest": "^23.6.0",
     "babel-loader": "^8.0.4",
     "chai": "^4.2.0",
     "css-loader": "^1.0.0",
@@ -29,19 +31,20 @@
     "html-webpack-plugin": "^3.2.0",
     "jest": "^23.6.0",
     "mini-css-extract-plugin": "^0.4.4",
+    "regenerator-runtime": "^0.12.1",
     "webpack": "^4.20.2",
     "webpack-cli": "^3.1.2",
     "webpack-node-externals": "^1.7.2"
   },
   "dependencies": {
-    "react": "^16.5.2",
-    "react-dom": "^16.5.2",
     "chokidar": "^2.0.4",
     "decompress": "^4.2.0",
     "electron": "^3.0.4",
     "jsdom": "^12.0.0",
     "lodash": "^4.17.11",
     "lodash.clonedeep": "^4.5.0",
+    "react": "^16.5.2",
+    "react-dom": "^16.5.2",
     "request-promise": "^4.2.2",
     "standard": "^12.0.1",
     "xmlhttprequest": "^1.8.0"
