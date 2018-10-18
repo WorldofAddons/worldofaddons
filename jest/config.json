@@ -1,0 +1,9 @@
+{
+  "verbose": true,
+  "collectCoverage": true,
+  "globals": {},
+  "testMatch": [ "**/__tests__/**/*.js?(x)", "**/?(*.)(spec|test).js?(x)" ],
+  "testPathIgnorePatterns": [ "/node_modules/" ],
+  "setupFiles": [ "./Setup.js" ],
+  "setupTestFrameworkScriptFile": "./SetupFramework.js"
+}
