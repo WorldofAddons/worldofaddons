@@ -3,5 +3,6 @@
   "collectCoverage": true,
   "globals": {},
   "testMatch": [ "**/__tests__/**/*.js?(x)", "**/?(*.)(spec|test).js?(x)" ],
-  "testPathIgnorePatterns": [ "/node_modules/", "/dist/" ]
+  "testPathIgnorePatterns": [ "/node_modules/", "/dist/" ],
+  "setupTestFrameworkScriptFile": "./jest.TestFrameworkSetup.js"
 }
