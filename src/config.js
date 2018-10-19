@@ -1,9 +1,9 @@
 import fs from 'fs'
 import path from 'path'
-const os = require('os')
+import os from 'os'
 
 export function initConfig () {
-  return new Promise(function (resolve, reject) {
+  return new Promise((resolve, reject) => {
     const homedir = os.homedir() // Fetchs user's homedir
     const worldOfAddonsDir = path.join(homedir, 'WorldOfAddons') // World of Addons stores information in user's home dir
     const WoAConfig = path.join(worldOfAddonsDir, 'config.json') // Saves all config information in config.json
@@ -31,7 +31,7 @@ export function initConfig () {
 }
 
 export function readAddonList (configObj) {
-  return new Promise(function (resolve, reject) {
+  return new Promise((resolve, reject) => {
     const addonList = configObj.addonRecordFile
 
     // If addons.json does not exist, create it with blank values
