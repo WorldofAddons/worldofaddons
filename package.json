@@ -7,7 +7,8 @@
     "start": "NODE_ENV=dev electron .",
     "linter": "standard --fix",
     "test": "jest --config=jest.config.json",
-    "build": "webpack --mode development"
+    "build": "webpack --mode development",
+    "build:hot": "webpack --watch --mode development"
   },
   "repository": "https://github.com/WorldofAddons/worldofaddons",
   "keywords": [
