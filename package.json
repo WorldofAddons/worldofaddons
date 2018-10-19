@@ -4,7 +4,7 @@
   "description": "Open source addon manager for World of Warcraft. Install, update, and manage all your WoW addons in a single lightweight application.",
   "main": "dist/main.bundle.js",
   "scripts": {
-    "start": "NODE_ENV=dev electron .",
+    "start": "cross-env ENV=\"dev\" electron .",
     "linter": "standard --fix",
     "test": "jest --config=jest.config.json",
     "build": "webpack --mode development",
@@ -38,7 +38,9 @@
     "webpack-node-externals": "^1.7.2"
   },
   "dependencies": {
+    "browser-resolve": "^1.11.3",
     "chokidar": "^2.0.4",
+    "cross-env": "^5.2.0",
     "decompress": "^4.2.0",
     "electron": "^3.0.4",
     "jsdom": "^12.0.0",

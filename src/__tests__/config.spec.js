@@ -1,5 +1,6 @@
 import fs from 'fs'
 import {initConfig} from '../config'
+import path from 'path'
 
 describe('initConfig function', () => {
   describe('WHEN checking a config', () => {
@@ -11,7 +12,7 @@ describe('initConfig function', () => {
           let promise = initConfig()
           return promise.then(result => {
             expect(result.addonDir).toEqual('')
-            expect(result.addonRecordFile).toEqual(`${mockHomeDir}/WorldOfAddons/addons.json`)
+            expect(result.addonRecordFile).toEqual(path.join(mockHomeDir, 'WorldOfAddons','addons.json'))
             expect(result.checkUpdateOnStart).toEqual(false)
           })
       })
@@ -19,8 +20,8 @@ describe('initConfig function', () => {
 
     describe('GIVEN a config exists', () => {
       const mockConfig = {
-        addonDir: `${mockHomeDir}/WorldOfAddons`,
-        addonRecordFile: `${mockHomeDir}/WorldOfAddons/addons.json`,
+        addonDir: mockInstallDir,
+        addonRecordFile: path.join(mockHomeDir, 'WorldOfAddons','addons.json'),
         checkUpdateOnStart: true
       }
       beforeAll(() => {

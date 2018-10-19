@@ -16,8 +16,8 @@ export function integrityCheck (installedAddonsDict, configObj) {
             changed = true
           }
         }else {
-          if (installedAddonsDict[name].status !== 'INSTALLED') { // If addon is not missing subdirs, then set status to installed
-            console.log(name, installedAddonsDict[name].status)
+          if (installedAddonsDict[name].status !== 'INSTALLED' && installedAddonsDict[name].status !== 'NEW UPDATE') { // If addon is not missing subdirs
+            console.log(name, installedAddonsDict[name].status) //  and it doesn't need an update then set status to installed
             installedAddonsDict[name].status = 'INSTALLED'
             changed = true
           }

@@ -20,8 +20,10 @@ function createWindow () {
   mainWindow.loadFile('dist/src-react/index.html')
 
   // Open the DevTools.
-  if (process.env.NODE_ENV === 'dev') {
+  if (process.env.ENV === 'dev') {
     mainWindow.webContents.openDevTools()
+  } else {
+    mainWindow.setMenu(null)
   }
 
   // Emitted when the window is closed.

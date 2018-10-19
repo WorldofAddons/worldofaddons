@@ -1,5 +1,6 @@
 import fs from 'fs'
 import os from 'os'
+import path from 'path'
 
 // module mocks ***************************************/
 jest.mock('fs')
@@ -18,7 +19,9 @@ const NOOP = () => {} // classical no operation function
 /*** *************************************************/
 
 // Pre-Mocked modules ********************************/
-const mockHomeDir = 'C:/User/home'
+const mockHomeDir = path.join('C:','User','home')
+const mockInstallDir = path.join('C:','Program Files (x86)','World of Warcraft','Interface','AddOns')
+
 os.homedir.mockReturnValue(mockHomeDir)
 // fs module - anything that can create things
 fs.WriteStream.mockImplementation(NOOP)
@@ -41,4 +44,5 @@ global.mockReadFile = mockReadFile
 global.mockWriteFile = mockWriteFile
 global.NOOP = NOOP
 global.mockHomeDir = mockHomeDir
+global.mockInstallDir = mockInstallDir
 /*** ***********************************************/
