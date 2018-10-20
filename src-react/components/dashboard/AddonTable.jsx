@@ -20,11 +20,11 @@ export class AddonTable extends Component {
   renderRow (addonObj, key) {
     status = addonObj.status
     if (addonObj.dlStatus !== 100) {  // If the addon has a dlStatus, that means it's being downloaded
-      if ( (addonObj.dlStatus >= 0) && (addonObj.dlStatus < 100) ){ // Currently downloading something so hide the install button
+      if ( (addonObj.dlStatus >= 0) && (addonObj.dlStatus < 100) ){ // Currently downloading something
         status = addonObj.dlStatus
       }
     }else if (addonObj.dlStatus === 100) { // Addon has finished downloading and is being unzipped and moved
-      status = "Finalizing"
+      status = "Finalizing" // This message should be replaced by "INSTALLED"
     }
 
     return (
@@ -38,7 +38,7 @@ export class AddonTable extends Component {
         </td>
         <td>
           <button 
-            className='btn-small waves-effect waves-light  deep-orange darken-4' 
+            className='btn-small waves-effect waves-light deep-orange darken-4' 
             onClick={() => this.props.onRemove(addonObj)}>
             <i className="material-icons">delete_forever</i>
           </button>

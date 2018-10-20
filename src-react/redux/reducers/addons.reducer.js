@@ -6,33 +6,29 @@ const nameList = (state = initialStateNameList, action) => {
   switch (action.type) {
     case 'addonList':
       return Object.keys(action.data).map(key => action.data[key].name)
-    case 'newAddonObj':
+    case 'modAddonObj':
       newState = [...state]
-      newState.push(action.data.name)
+      let idx = newState.findIndex(a => a.name === name)
+      if (idx === -1) {
+        newState.push(action.data.name) // If name cannot be found then push it
+      }else {
+        newState[idx] = addonObj // Otherwise, update its entry in the list
+      }
       return newState
     default:
       return state
   }
 }
 
-// TODO: this will be removed in the future.
-const initDlStatus = (state) => {
-  const newState = state
-  const nameList = Object.keys(state).map(key => state[key].name)
-  nameList.forEach(name => newState[name].dlStatus = 100)
-  return newState
-}
 
 const initialStateDict = {}
 const dict = (state = initialStateDict, action) => {
   let newState = state // TODO: fix with deep clone
   switch (action.type) {
     case 'addonList':
-      newState = action.data
-      return initDlStatus(newState)
-    case 'newAddonObj':
+      return action.data
+    case 'modAddonObj':
       newState[action.data.name] = action.data
-      newState[action.data.name].dlStatus = 0
       return newState
     case 'updateAddonStatus':
       newState[action.data.name].dlStatus = action.data.dlStatus // TODO: name isnt being sent back?

@@ -15,7 +15,7 @@ const store = createStore(
 )
 const electronChannels = [
   'addonList',
-  'newAddonObj',
+  'modAddonObj',
   'updateAddonStatus'
 ]
 
