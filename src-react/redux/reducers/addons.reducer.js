@@ -8,10 +8,8 @@ const nameList = (state = initialStateNameList, action) => {
       return Object.keys(action.data).map(key => action.data[key].name)
     case 'modAddonObj':
       newState = [...state]
-      let idx = newState.findIndex(a => a.name === action.data.name)
-      console.log(idx)
-      if (idx === -1) {
-        newState.push(action.data.name) // If name cannot be found then push its name
+      if (newState.findIndex(a => a === action.data.name) === -1) {
+        newState.push(action.data.name)
       }
       return newState
     default:
