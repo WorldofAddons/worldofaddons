@@ -16,7 +16,7 @@ const store = createStore(
 const electronChannels = [
   'addonList',
   'modAddonObj',
-  'updateAddonStatus'
+  'updateAddonDL'
 ]
 
 class Adder extends React.Component {

@@ -27,8 +27,9 @@ const dict = (state = initialStateDict, action) => {
     case 'modAddonObj':
       newState[action.data.name] = action.data
       return newState
-    case 'updateAddonStatus':
-      newState[action.data.name].dlStatus = action.data.dlStatus // TODO: name isnt being sent back?
+    case 'updateAddonDL':
+      const {dlStatus, name} = action.data
+      newState[name].dlStatus = dlStatus // TODO: name isnt being sent back?
       return newState
     default:
       return state

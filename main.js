@@ -173,14 +173,6 @@ ipcMain.on('checkAddonUpdate', (e, addonObj) => {
   })
 })
 
-// Update download progress listener
-ipcMain.on('DLProgress', (e, DLAddon) => {
-  if (DLAddon.hasOwnProperty('dlStatus')) {
-    console.log('\tDownload Progress for ' + DLAddon.name + ': ' + DLAddon.dlStatus)
-    mainWindow.webContents.send('updateAddonDL', DLAddon)
-  }
-})
-
 // error listener
 ipcMain.on('error', (e, errorObj) => {
   console.log('\tSending error message ' + errorObj.error)
