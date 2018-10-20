@@ -32,35 +32,26 @@ export class AddonInput extends Component {
 
   renderButton () {
     return (
-      <div className='col s2'>
         <button 
           className='btn-small waves-effect waves-light light-blue darken-4' 
           onClick={this.onSubmit.bind(this)}>
           {this.props.buttonLabel}
         </button>
-      </div>
     )
   }
 
   renderInput () {
     return (
-        <div className='input-field col s8 black-text'>
-          <nav>
-              <form>
-                <div class="input-field white ">
-                <input id='addonInput' value={this.state.url} onChange={this.onChange.bind(this)} type='text' type="search" required/>
-                <label htmlFor="addonInput">{this.props.inputLabel}</label>
-                </div>
-              </form>
-          </nav>
-        </div>
+      <div className="col s8">
+        <input placeholder={this.props.inputLabel} id='addonInput' value={this.state.url} onChange={this.onChange.bind(this)} type='text'/>
+      </div>
     )
   }
 
   render () {
     return (
       <div className='row'>
-        <form class="col s10 offset-s2">
+        <form className="col s10 offset-s2">
           {this.renderInput()}
           {this.renderButton()}
         </form>

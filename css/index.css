@@ -1,14 +1,11 @@
-body {
-    display: flex;
-    min-height: 100vh;
-    flex-direction: column;
-    background-color: #D3D3D3;
-}
-
-main {
-    flex: 1 0 auto;
-}
-
-.container {
-    width: 95%;
+input[type=text], select {
+    width: 100% !important;
+    padding: 12px 20px !important;
+    margin: 8px 0 !important;
+    display: inline-block !important;
+    border: 1px solid white !important;
+    border-radius: 4px !important;
+    box-sizing: border-box !important;
+    color: white;
+    background-color: black !important;
 }
