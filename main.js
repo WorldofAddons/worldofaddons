@@ -22,14 +22,14 @@ function createWindow () {
 
   // and load the index.html of the app.
   mainWindow.loadFile('index.html')
-
+/*
   // Open the DevTools.
   if (process.env.ENV === 'dev') {
     mainWindow.webContents.openDevTools()
   } else {
     mainWindow.setMenu(null)
   }
-
+*/
   // Emitted when the window is closed.
   mainWindow.on('closed', () => {
     // Dereference the window object, usually you would store windows

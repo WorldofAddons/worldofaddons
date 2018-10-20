@@ -4,38 +4,43 @@ import { AddonControlButton } from './AddonControlButton'
 export class AddonTable extends Component {
   renderHeader () {
     return (
-      <thead>
+      <thead className="grey-text">
         <tr>
-          <th>Name</th>
-          <th>Host</th>
-          <th>Version</th>
-          <th>Status</th>
-          <th />
-          <th />
+          <th width="5%"></th>
+          <th width="5%"></th>
+          <th width="50%"></th>
+          <th width="15%"></th>
+          <th width="15%"></th>
+          <th width="15%"></th>
         </tr>
       </thead>
     )
   }
 
   renderRow (addonObj, key) {
-    const statusText = addonObj.dlStatus === 100 
-      ? addonObj.status
-      : `%${addonObj.dlStatus}`
+    status = addonObj.status
+    if (addonObj.dlStatus !== 100) {  // If the addon has a dlStatus, that means it's being downloaded
+      if ( (addonObj.dlStatus >= 0) && (addonObj.dlStatus < 100) ){ // Currently downloading something so hide the install button
+        status = addonObj.dlStatus
+      }
+    }else if (addonObj.dlStatus === 100) { // Addon has finished downloading and is being unzipped and moved
+      status = "Finalizing"
+    }
 
     return (
       <tr key={key}>
-        <td>{addonObj.displayName}</td>
         <td>{addonObj.host}</td>
+        <td>{status}</td>
+        <td>{addonObj.displayName}</td>
         <td>{addonObj.version}</td>
-        <td>{statusText}</td>
         <td>
           {AddonControlButton(addonObj, this.props)}
         </td>
         <td>
           <button 
-            className='btn-small waves-effect waves-light' 
+            className='btn-small waves-effect waves-light  deep-orange darken-4' 
             onClick={() => this.props.onRemove(addonObj)}>
-            Remove
+            <i className="material-icons">delete_forever</i>
           </button>
         </td>
       </tr>
@@ -69,7 +74,7 @@ export class AddonTable extends Component {
 
     return (
       <div key='addon-table'>
-        <table className='striped'>
+        <table width="100%" className=''>
           {this.renderHeader()}
           {tag}
         </table>

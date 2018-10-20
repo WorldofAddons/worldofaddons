@@ -5,7 +5,7 @@ import { Provider } from 'react-redux'
 import logger from 'redux-logger'
 
 import reducers from './redux/reducers/index'
-import { Dashboard } from './screens/Dashboard'
+import { NavBar, Dashboard } from './screens/Dashboard'
 import { Footer } from './Footer'
 import IpcListener from './redux/IpcListener'
 
@@ -19,6 +19,16 @@ const electronChannels = [
   'updateAddonStatus'
 ]
 
+class Adder extends React.Component {
+  render () {
+    return (
+      <div>
+        <NavBar/>
+      </div>
+    )
+  }
+}
+
 class App extends React.Component {
   render () {
     return (
@@ -29,6 +39,6 @@ class App extends React.Component {
     )
   }
 }
-
+ReactDOM.render(<Provider store={store}><Adder/></Provider>,document.getElementById('searchBar'))
 ReactDOM.render(<Provider store={store}><App/></Provider>,document.getElementById('root'))
-ReactDOM.render(<Footer />, document.getElementById('footer'))
+//ReactDOM.render(<Footer />, document.getElementById('footer'))

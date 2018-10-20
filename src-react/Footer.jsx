@@ -5,7 +5,6 @@ const { app } = window.require('electron').remote
 
 export class Footer extends React.PureComponent {
   openIssues() {
-    // TODO: dangerous?
     shell.openExternal('https://github.com/WorldofAddons/worldofaddons/issues/new')
   }
 
@@ -33,7 +32,7 @@ export class Footer extends React.PureComponent {
 
   render() {
     return (
-      <div className='grey page-footer'>
+      <div className='grey darken-3 page-footer'>
         {this.renderCopyright()}
       </div>
     )
