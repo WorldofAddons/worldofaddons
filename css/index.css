@@ -1,4 +1,4 @@
-input[type=text], select {
+.textInput {
     width: 100% !important;
     padding: 12px 20px !important;
     margin: 8px 0 !important;

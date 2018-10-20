@@ -192,6 +192,7 @@ ipcMain.on('uninstallAddon', (e, addonObj) => {
   console.log(`Received request to delete ${addonObj.name}`)
   installedAddonsDict = uninstallAddon(addonObj, configObj, installedAddonsDict)
   saveToAddonList(configObj, installedAddonsDict)
+  console.log(addonObj.name)
   mainWindow.webContents.send('modAddonObj', {
     'displayName': addonObj.displayName,
     'name': addonObj.name,

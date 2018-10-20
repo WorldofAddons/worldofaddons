@@ -34,7 +34,12 @@ export class AddonInput extends Component {
     return (
         <button 
           className='btn-small waves-effect waves-light light-blue darken-4' 
-          onClick={this.onSubmit.bind(this)}>
+          onClick= {
+            e => {
+                this.onSubmit()
+                e.preventDefault()
+            }
+          }>
           {this.props.buttonLabel}
         </button>
     )
@@ -43,7 +48,7 @@ export class AddonInput extends Component {
   renderInput () {
     return (
       <div className="col s8">
-        <input placeholder={this.props.inputLabel} id='addonInput' value={this.state.url} onChange={this.onChange.bind(this)} type='text'/>
+        <input placeholder={this.props.inputLabel} id='addonInput' value={this.state.url} onChange={this.onChange.bind(this)} type='text' className='textInput'/>
       </div>
     )
   }
