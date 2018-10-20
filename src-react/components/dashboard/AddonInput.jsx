@@ -44,20 +44,26 @@ export class AddonInput extends Component {
 
   renderInput () {
     return (
-      <div className='col s10'>
-        <div className='input-field'>
-          <label htmlFor="addonInput">{this.props.inputLabel}</label>
-          <input id='addonInput' value={this.state.url} onChange={this.onChange.bind(this)} type='text' />
+        <div className='input-field col s8 black-text'>
+          <nav>
+              <form>
+                <div class="input-field white ">
+                <input id='addonInput' value={this.state.url} onChange={this.onChange.bind(this)} type='text' type="search" required/>
+                <label htmlFor="addonInput">{this.props.inputLabel}</label>
+                </div>
+              </form>
+          </nav>
         </div>
-      </div>
     )
   }
 
   render () {
     return (
-      <div className='row valign-wrapper'>
-        {this.renderInput()}
-        {this.renderButton()}
+      <div className='row'>
+        <form class="col s10 offset-s2">
+          {this.renderInput()}
+          {this.renderButton()}
+        </form>
       </div>
     )
   }
