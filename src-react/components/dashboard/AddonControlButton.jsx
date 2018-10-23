@@ -9,7 +9,7 @@ export const AddonControlButton = (addonObj, {onInstall, onInstallUpdate, onChec
     case 'INSTALLED': // Check update button
       return <button className='btn-small waves-effect waves-light light-blue darken-4'
                onClick={() => onCheckUpdate(addonObj)}><i className="material-icons">autorenew</i></button>
-    case 'NEW UPDATE': // Install update Button
+    case 'NEW_UPDATE': // Install update Button
       return <button className='btn-small waves-effect waves-light amber darken-4'
                onClick={() => onInstallUpdate(addonObj)}><i className="material-icons">cloud_download</i></button>
     default: // Install Button

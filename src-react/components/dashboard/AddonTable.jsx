@@ -18,19 +18,17 @@ export class AddonTable extends Component {
   }
 
   renderRow (addonObj, key) {
-    let status = addonObj.dlStatus || 0 // dlStatus is optional in obj.
-    let textStatus = "Un-Installed"
-
-    if (addonObj.status === 'INSTALLED') { // Addon has finished downloading and is being unzipped and moved
-      textStatus = "Installed"
-    } else if ((status > 0) && (status < 100)) {
-      textStatus = `%${status}`
+    let status = addonObj.status // dlStatus is optional in obj.
+    if ((addonObj.dlStatus !== 100) && (addonObj.dlStatus >= 0) && (addonObj.dlStatus < 100)) { // Currently downloading something, display %v
+        status = `%${addonObj.dlStatus }`         
+    }else if (addonObj.dlStatus === 100) { // Addon has finished downloading and is being unzipped and moved
+      status = "Finalizing"
     }
 
     return (
       <tr key={key}>
         <td>{addonObj.host}</td>
-        <td>{textStatus}</td>
+        <td>{status}</td>
         <td>{addonObj.displayName}</td>
         <td>{addonObj.version}</td>
         <td>
