@@ -28,7 +28,7 @@ export function integrityCheck (installedAddonsDict, configObj) {
     .then(installedAddonsDict => {
       if (changed === true) {
         saveToAddonList(configObj, installedAddonsDict).then(newDict => {
-          mainWindow.webContents.send('addonList', newDict)
+          //mainWindow.webContents.send('addonList', newDict)
           return newDict
         })
       }

@@ -20,8 +20,6 @@ export class AddonTable extends Component {
   renderRow (addonObj, key) {
     let status = addonObj.dlStatus || 0
 
-    //let status = addonObj.status
-  
     if ((addonObj.dlStatus >= 0) && (addonObj.dlStatus < 100)) {  // If the addon has a dlStatus, that means it's being downloaded
         status = addonObj.dlStatus
     }

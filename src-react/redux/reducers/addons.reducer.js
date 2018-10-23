@@ -1,4 +1,5 @@
 import { combineReducers } from 'redux'
+import clonedeep from 'lodash.clonedeep'
 
 const initialStateNameList = []
 const nameList = (state = initialStateNameList, action) => {
@@ -20,7 +21,8 @@ const nameList = (state = initialStateNameList, action) => {
 
 const initialStateDict = {}
 const dict = (state = initialStateDict, action) => {
-  let newState = state // TODO: fix with deep clone
+  let newState = clonedeep(state)
+
   switch (action.type) {
     case 'addonList':
       return action.data
