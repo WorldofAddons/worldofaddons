@@ -6,32 +6,9 @@
     <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
     <link type="text/css" rel="stylesheet" href="./css/index.css">
   </head>
-  <body class="blue-grey lighten-5">
-    <nav>
-        <div id="searchBar" class="nav-wrapper grey darken-4"></div>
-    </nav>
     <main id="root" class="container"></main>
     <footer id="footer"></footer>
-    <div id="error"></div>
-
-    <script>
-      const { ipcRenderer } = require('electron')
-           
-      // TODO: remove into react component
-      ipcRenderer.on('error', function(event, errObj){
-        showError(errObj)
-      })
-      
-      // Generic show error in error div function
-      function showError(errObj) {
-        if (errObj.hasOwnProperty("error")) {
-          console.log(errObj.error)
-          document.getElementById("error").innerHTML = errObj.error
-          return true
-        }
-        return false
-      }
-    </script>
+    <div id="error"><!-- TODO add error handling for error channel. --></div>
 
     <script>
       import './src-react/App.jsx'
