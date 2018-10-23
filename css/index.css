@@ -2,10 +2,15 @@
     width: 100%;
     padding: 12px 20px;
     margin: 8px 0;
-    display: inline-block; /* TODO: Use flexbox.*/
+    display: inline-flex;
     border: 1px solid white;
     border-radius: 4px;
     box-sizing: border-box;
     color: white;
     background-color: black;
+}
+
+.addButton {
+    margin: 10px -17px;
+    display: inline-flex;
 }

@@ -32,11 +32,14 @@ export class AddonInput extends Component {
 
   renderButton () {
     return (
+      <div className="col s2">
         <button 
-          className='btn-small waves-effect waves-light light-blue darken-4' 
+          className='btn-small waves-effect waves-light light-blue darken-4 addButton' 
           onClick= {this.onSubmit.bind(this)}>
           {this.props.buttonLabel}
         </button>
+      </div>
+
     )
   }
 
