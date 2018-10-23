@@ -34,12 +34,7 @@ export class AddonInput extends Component {
     return (
         <button 
           className='btn-small waves-effect waves-light light-blue darken-4' 
-          onClick= {
-            e => {
-                this.onSubmit()
-                e.preventDefault()
-            }
-          }>
+          onClick= {this.onSubmit.bind(this)}>
           {this.props.buttonLabel}
         </button>
     )
@@ -55,11 +50,11 @@ export class AddonInput extends Component {
 
   render () {
     return (
-      <div className='row'>
-        <form className="col s10 offset-s2">
+      <div className='row nav-wrapper grey darken-4'>
+        <div className="col s10 offset-s2">
           {this.renderInput()}
           {this.renderButton()}
-        </form>
+        </div>
       </div>
     )
   }
