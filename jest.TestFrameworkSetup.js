@@ -15,6 +15,9 @@ function mockReadFile(DataObj) {
 function mockWriteFile(DataObj) {
   fs.writeFile.mockImplementation(() => { return DataObj })
 }
+function mockDirectories(DataObj) {
+  fs.mkdir.mockImplementation(() => { return DataObj })
+}
 const NOOP = () => {} // classical no operation function
 /*** *************************************************/
 
@@ -27,6 +30,7 @@ os.homedir.mockReturnValue(mockHomeDir)
 fs.WriteStream.mockImplementation(NOOP)
 fs.mkdir.mockImplementation(NOOP)
 fs.mkdirSync.mockImplementation(NOOP)
+fs.readdirSync.mockImplementation(NOOP)
 fs.chmod.mockImplementation(NOOP)
 fs.chmodSync.mockImplementation(NOOP)
 fs.chown.mockImplementation(NOOP)
@@ -42,6 +46,7 @@ fs.copyFileSync.mockImplementation(NOOP)
 // Testing globals *********************************/
 global.mockReadFile = mockReadFile
 global.mockWriteFile = mockWriteFile
+global.mockDirectories = mockDirectories
 global.NOOP = NOOP
 global.mockHomeDir = mockHomeDir
 global.mockInstallDir = mockInstallDir

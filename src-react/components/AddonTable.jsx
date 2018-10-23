@@ -104,7 +104,7 @@ export class AddonTable extends Component {
     return (
       <tr key={key}>
         <td>{addonObj.host}</td>
-        <td><a href="#" onClick = {() => shell.openExternal(addonObj.URL)}>{addonObj.displayName}</a></td>
+        <td><a href="#" onClick = {() => shell.openExternal(addonObj.url)}>{addonObj.displayName}</a></td>
         <td>{addonObj.version}</td>
         <td>{addonObj.status}</td>
         {dlStatus}

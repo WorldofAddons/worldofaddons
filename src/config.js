@@ -51,11 +51,9 @@ export function readAddonList (configObj) {
 
 export function saveToAddonList (configObj, installedDict) {
   return new Promise(function (resolve, reject) {
-    if (fs.existsSync(configObj.addonRecordFile)) {
-      console.log('\tUpdating addons.js')
-      const stringInstallDict = JSON.stringify(installedDict, null, 2)
-      fs.writeFile(configObj.addonRecordFile, stringInstallDict, 'utf8', (err) => reject(err))
-      return resolve(installedDict)
-    }
+    console.log('\tUpdating addons.js')
+    const stringInstallDict = JSON.stringify(installedDict, null, 2)
+    fs.writeFile(configObj.addonRecordFile, stringInstallDict, 'utf8', (err) => reject(err))
+    return resolve(installedDict)
   })
 }

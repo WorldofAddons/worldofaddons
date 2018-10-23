@@ -5,7 +5,7 @@ function checkURL (newUrl) {
   const isURL = /^(http|https):\/\/[^ "]+$/.test(newUrl)
   if (isURL !== true) {
     ipcRenderer.send('newURL', newUrl)
-    const errorObj = { 'error': "ERROR: Invalid URL '" + newUrl + "'" }
+    const errorObj = { 'error': "ERROR: Invalid url '" + newUrl + "'" }
     console.error(errorObj) // TODO: display error to user
   }
   return isURL

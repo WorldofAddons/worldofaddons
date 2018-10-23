@@ -2,29 +2,29 @@ import { XMLHttpRequest } from 'xmlhttprequest'
 import { JSDOM } from 'jsdom'
 
 // Creates a JSON object for addons hosted by Curseforge.
-// Parses the addon name from the end of the URL, this name is how the
+// Parses the addon name from the end of the url, this name is how the
 // JSON object is referenced by other components
 export function parseUrl (url) {
-  const URLSplit = URL.split('https://www.curseforge.com/wow/addons/')
+  const URLSplit = url.split('https://www.curseforge.com/wow/addons/')
   if (URLSplit.length === 2) {
-    return { 'URL': url, 'host': 'curseforge', 'name': URLSplit[1] }
+    return { 'url': url, 'host': 'curseforge', 'name': URLSplit[1] }
   }
-  return { 'error': `Invalid URL ${url}` }
+  return { 'error': `Invalid url ${url}` }
 }
 
-// This function goes to the URL https://www.curseforge.com/wow/addons/<addon name>/files
+// This function goes to the url https://www.curseforge.com/wow/addons/<addon name>/files
 // to parse the version number, addon display name, and addon authors
-export function parseAddonDetails (URL) {
+export function parseAddonDetails (url) {
   return new Promise((resolve, reject) => {
     let req = new XMLHttpRequest()
-    req.open('GET', URL + '/files', true)
+    req.open('GET', url + '/files', true)
     req.send(null)
     req.onreadystatechange = () => {
       if (req.readyState === 4) {
         let html = req.responseText
         let parser = new JSDOM(html)
         let page = parser.window.document
-        // Check if URL is 404
+        // Check if url is 404
         if (page.getElementsByClassName('error-page').length !== 0) {
           return reject(new Error('Invalid in curseforge parser.'))
         }
@@ -56,7 +56,7 @@ export function parseAddonDetails (URL) {
 
     req.onloadend = () => {
       if (req.status !== 200) {
-        const errTxt = `ERROR: URL returned ${req.status} for ${URL}`
+        const errTxt = `ERROR: url returned ${req.status} for ${url}`
         console.log(errTxt)
         return reject(new Error(errTxt))
       }
@@ -65,12 +65,12 @@ export function parseAddonDetails (URL) {
 }
 
 // This function fetches the direct download link to the addon hosted by Curseforge
-// On successful parse it will return a string containing the URL
-// This URL seems to be unique to the addon version
-export function parseDownloadURL (URL) {
+// On successful parse it will return a string containing the url
+// This url seems to be unique to the addon version
+export function parseDownloadURL (url) {
   return new Promise((resolve, reject) => {
     const req = new XMLHttpRequest()
-    req.open('GET', URL + '/download', true)
+    req.open('GET', url + '/download', true)
     req.send(null)
 
     req.onreadystatechange = () => {
@@ -91,7 +91,7 @@ export function parseDownloadURL (URL) {
 
     req.onloadend = () => {
       if (req.status !== 200) {
-        const errTxt = `ERROR: URL returned ${req.status} for ${URL}`
+        const errTxt = `ERROR: url returned ${req.status} for ${url}`
         console.log(errTxt)
         return reject(new Error(errTxt))
       }
