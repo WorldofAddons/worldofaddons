@@ -64,22 +64,11 @@ describe('uninstallAddon function', () => {
                 }
                 
                 describe('GIVEN an addon directory exists in the addon install directory', () => {
-                    let subDir0Item0 = path.join(mockInstallDir, "subdir0", "foo.txt")
-                    let subDir0Item1 = path.join(mockInstallDir, "subdir0", "bar.txt")
-                    let subDir1Item0 = path.join(mockInstallDir, "subdir1", "0.txt")
-                    let subDir2Item0 = path.join(mockInstallDir, "subdir2", "1.txt")
-                    let subdirOfWow_Addon1 = path.join(mockInstallDir, "subdirOfWow Addon1", "addon.txt")
-                    const mockFs = {
-                        subDir0Item0 : 'foo',
-                        subDir0Item1 : 'bar',
-                        subDir1Item0 : 'The number zero',
-                        subDir2Item0 : 'The number one',
-                        subdirOfWow_Addon1 : 'addon content, this should not get deleted'
-                    }
+                    // Needs to properly test function uninstallAddon(), this 
+                    // requires something like simulating a filesystem in memory
                     beforeEach(() => {
                         fs.existsSync.mockReturnValue(true)
                         fs.readdirSync.mockReturnValue(true)
-                        mockDirectories(mockFs);
                     })
     
                     it('THEN should delete a-good-wow-addon from the addon dictionary and remove subdir0, subdir1 and subdir2', () => {
