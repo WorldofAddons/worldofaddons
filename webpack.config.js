@@ -22,6 +22,7 @@ const electronMainConfig = {
   module: {
     rules:[ jsRule ]
   },
+  devtool: 'source-map',
   plugins: [ ]
 }
 
@@ -35,9 +36,15 @@ const htmlRule = {
   ]
 }
 
-const cssRule = {
+const cssRule = { // TODO: fix css bundling
   test: /\.css$/,
-  use: [MiniCssExtractPlugin.loader, "css-loader"]
+  use: [
+    {
+    loader: MiniCssExtractPlugin.loader,
+    options: { publicPath: './css' }
+    },
+  "css-loader"
+  ]
 }
 
 const electronRendererConfig = {
@@ -49,19 +56,19 @@ const electronRendererConfig = {
     filename: 'app.bundle.js'
   },
   module: {
-    rules:[ jsRule, htmlRule, cssRule ]
+    rules:[ jsRule, htmlRule ]
   },
   resolve: {
     extensions: [ '.js', '.jsx']
   },
+  devtool: 'source-map',
   plugins: [
     new htmlWebPackPlugin({
       template: './index.html',
       filename: 'index.html'
     }),
     new MiniCssExtractPlugin({// TODO: fix css bundling
-      filename: "[name].css",
-      chunkFilename: "[id].css"
+      filename: "style.bundle.css"
     })
   ]
 }
