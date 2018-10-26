@@ -17,11 +17,13 @@ function createWindow () {
   mainWindow = new BrowserWindow({ width: 800, height: 600 , icon: __dirname + './assets/200x200.png'})
 
   // and load the index.html of the app.
-  mainWindow.loadFile('index.html')
+  mainWindow.loadFile('dist/src-react/index.html')
 
   // Open the DevTools.
   if (process.env.ENV === 'dev') {
     mainWindow.webContents.openDevTools()
+  } else {
+    mainWindow.setMenu(null)
   }
 
   // Emitted when the window is closed.

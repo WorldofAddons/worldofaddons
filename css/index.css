@@ -1,16 +1,31 @@
 .textInput {
-    width: 100%;
-    padding: 12px 20px;
-    margin: 8px 0;
-    display: inline-flex;
-    border: 1px solid white;
-    border-radius: 4px;
-    box-sizing: border-box;
-    color: white;
-    background-color: black;
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-flex;
+  border: 1px solid white;
+  border-radius: 4px;
+  box-sizing: border-box;
+  color: white;
+  background-color: black;
 }
 
 .addButton {
-    margin: 10px -17px;
-    display: inline-flex;
+  margin: 10px -17px;
+  display: inline-flex;
+}
+
+body {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+  background-color: #D3D3D3;
+}
+
+main {
+  flex: 1 0 auto;
+}
+
+.container {
+  width: 95%;
 }

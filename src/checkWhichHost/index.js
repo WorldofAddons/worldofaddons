@@ -4,7 +4,7 @@ export function checkWhichHost (URL) {
     return initCurseforgeObj(URL)
   }
 
-  const errorObj = { 'error': "ERROR: Invalid URL '" + URL + "'. Given link does not match parse" }
+  const errorObj = { 'error': `Invalid URL '${URL}'. Given link does not match parse` }
   return errorObj
 }
 
@@ -17,6 +17,6 @@ function initCurseforgeObj (URL) {
     const URLObj = { 'URL': URL, 'host': 'curseforge', 'name': URLSplit[1] }
     return URLObj
   }
-  const errorObj = { 'error': "ERROR: Invalid URL '" + URL + "'." }
+  const errorObj = { 'error': `Invalid URL '${URL}'.` }
   return errorObj
 }

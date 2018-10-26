@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom'
 import { createStore, applyMiddleware } from 'redux'
 import { Provider } from 'react-redux'
 import logger from 'redux-logger'
+import {Dashboard} from './screens/Dashboard'
 
 import reducers from './redux/reducers/index'
 import { Dashboard } from './screens/Dashboard'
