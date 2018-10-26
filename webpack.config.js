@@ -66,8 +66,4 @@ const electronRendererConfig = {
   ]
 }
 
-const jestConfig = { // TODO: start jest config.
-
-}
-
 module.exports = [ electronMainConfig, electronRendererConfig ]
