@@ -9,7 +9,7 @@ class AddonInputContainer extends React.Component {
       <AddonInput
         {...this.props}
         buttonLabel='Add'
-        inputLabel='Addon URL'
+        inputLabel="Enter a new addon's URL"
       />
     )
   }

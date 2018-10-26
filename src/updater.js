@@ -13,12 +13,14 @@ export function integrityCheck (installedAddonsDict, configObj) {
         if (installedAddonsDict[name].subdirs.every(val => dirList.includes(val)) !== true) {
           if (installedAddonsDict[name].status !== 'NOT INSTALLED') { // If addon is missing subdirs, then set status to not installed
             installedAddonsDict[name].status = 'NOT INSTALLED'        
+            mainWindow.webContents.send('modAddonObj', installedAddonsDict[name])
             changed = true
           }
         }else {
           if (installedAddonsDict[name].status !== 'INSTALLED' && installedAddonsDict[name].status !== 'NEW_UPDATE') { // If addon is not missing subdirs, then set status to installed
             console.log(name, installedAddonsDict[name].status)
             installedAddonsDict[name].status = 'INSTALLED'
+            mainWindow.webContents.send('modAddonObj', installedAddonsDict[name])
             changed = true
           }
         }
@@ -28,7 +30,6 @@ export function integrityCheck (installedAddonsDict, configObj) {
     .then(installedAddonsDict => {
       if (changed === true) {
         saveToAddonList(configObj, installedAddonsDict).then(newDict => {
-          mainWindow.webContents.send('addonList', newDict)
           return newDict
         })
       }

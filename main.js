@@ -129,7 +129,9 @@ ipcMain.on('newURL', (e, newURL) => {
   console.log('\tSending URL to be matched with host and parse addon page')
   const URLObj = checkWhichHost(newURL)
   parseAddonDetails(URLObj).then(addonObj => {
-    mainWindow.webContents.send('modAddonObj', addonObj)
+    if (!installedAddonsDict.hasOwnProperty(addonObj.name)) {
+      mainWindow.webContents.send('modAddonObj', addonObj)
+    }
   }).catch((err) => {
     mainWindow.webContents.send('error', err)
   })
