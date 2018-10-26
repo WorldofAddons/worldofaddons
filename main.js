@@ -14,7 +14,7 @@ export let mainWindow
 
 function createWindow () {
   // Create the browser window.
-  mainWindow = new BrowserWindow({ width: 800, height: 600 , icon: __dirname + './assets/200x200.png'})
+  mainWindow = new BrowserWindow({ width: 800, height: 600 , icon: 'assets/200x200.png'})
 
   // and load the index.html of the app.
   mainWindow.loadFile('dist/src-react/index.html')
@@ -118,9 +118,6 @@ initConfig()
       .on('error', function (error) {
         console.log('ERROR: ', error)
       })
-      .on('raw', function (event, path, details) {
-        console.log('Raw event:', event, path, details)
-      })
   })
 //  --- Initialization End---
 
@@ -132,7 +129,7 @@ ipcMain.on('newURL', (e, newURL) => {
   console.log('\tSending URL to be matched with host and parse addon page')
   const URLObj = checkWhichHost(newURL)
   parseAddonDetails(URLObj).then(addonObj => {
-    mainWindow.webContents.send('newAddonObj', addonObj)
+    mainWindow.webContents.send('modAddonObj', addonObj)
   }).catch((err) => {
     mainWindow.webContents.send('error', err)
   })
@@ -169,16 +166,13 @@ ipcMain.on('checkAddonUpdate', (e, addonObj) => {
       console.log(installedAddonsDict[addonObj.name].status, updateStatus)
       installedAddonsDict[addonObj.name].status = updateStatus
       saveToAddonList(configObj, installedAddonsDict)
+    }else {
+      mainWindow.webContents.send('addonNoUpdate', {
+        'name': addonObj.name,
+        'status': 'NO UPDATE'
+      })
     }
   })
-})
-
-// Update download progress listener
-ipcMain.on('DLProgress', (e, DLAddon) => {
-  if (DLAddon.hasOwnProperty('dlStatus')) {
-    console.log('\tDownload Progress for ' + DLAddon.name + ': ' + DLAddon.dlStatus)
-    mainWindow.webContents.send('updateAddonDL', DLAddon)
-  }
 })
 
 // error listener
@@ -192,15 +186,15 @@ ipcMain.on('uninstallAddon', (e, addonObj) => {
   console.log(`Received request to delete ${addonObj.name}`)
   installedAddonsDict = uninstallAddon(addonObj, configObj, installedAddonsDict)
   saveToAddonList(configObj, installedAddonsDict)
-  mainWindow.webContents.send('addonList', installedAddonsDict)
-  mainWindow.webContents.send('newAddonObj', {
+  console.log(addonObj.name)
+  mainWindow.webContents.send('modAddonObj', {
     'displayName': addonObj.displayName,
     'name': addonObj.name,
     'version': addonObj.version,
     'host': addonObj.host,
     'URL': addonObj.URL,
     'authors': addonObj.authors,
-    'status': 'NOT INSTALLED'
+    'status': 'NOT_INSTALLED'
   })
 })
 

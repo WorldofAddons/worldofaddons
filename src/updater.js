@@ -16,8 +16,8 @@ export function integrityCheck (installedAddonsDict, configObj) {
             changed = true
           }
         }else {
-          if (installedAddonsDict[name].status !== 'INSTALLED' && installedAddonsDict[name].status !== 'NEW UPDATE') { // If addon is not missing subdirs
-            console.log(name, installedAddonsDict[name].status) //  and it doesn't need an update then set status to installed
+          if (installedAddonsDict[name].status !== 'INSTALLED' && installedAddonsDict[name].status !== 'NEW_UPDATE') { // If addon is not missing subdirs, then set status to installed
+            console.log(name, installedAddonsDict[name].status)
             installedAddonsDict[name].status = 'INSTALLED'
             changed = true
           }
@@ -56,7 +56,7 @@ export function checkUpdate (addonObj) {
       parseAddonDetails(addonObj).then(checkedObj => {
         if (addonObj.version !== checkedObj.version) {
           console.log(`\tUpdate found: ${addonObj.displayName}\t${addonObj.version}\t${checkedObj.version}`)
-          resolve('NEW UPDATE')
+          resolve('NEW_UPDATE')
         } else {
           console.log(`\tAddon ${addonObj.displayName} [${addonObj.version}] is latest version`)
           resolve('INSTALLED')
