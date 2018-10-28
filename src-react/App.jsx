@@ -11,7 +11,8 @@ const store = configureStore()
 const electronChannels = [
   'addonList',
   'modAddonObj',
-  'updateAddonDL'
+  'updateAddonDL',
+  'delAddonObj'
 ]
 
 class App extends React.Component {

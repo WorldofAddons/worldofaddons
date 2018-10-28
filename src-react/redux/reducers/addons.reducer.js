@@ -13,6 +13,13 @@ const nameList = (state = initialStateNameList, action) => {
         newState.push(action.data.name)
       }
       return newState
+    case 'delAddonObj':
+      newState = [...state]
+      let idx = newState.indexOf(action.data.name)
+      if (idx !== -1) {
+        newState.splice(idx, 1)
+      }
+      return newState
     default:
       return state
   }
@@ -32,6 +39,9 @@ const dict = (state = initialStateDict, action) => {
     case 'updateAddonDL':
       const {dlStatus, name} = action.data
       newState[name].dlStatus = dlStatus // TODO: name isnt being sent back?
+      return newState
+    case 'delAddonObj':
+      delete newState[name]
       return newState
     default:
       return state
