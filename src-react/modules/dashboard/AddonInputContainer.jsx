@@ -22,7 +22,9 @@ const mapStateToProps = (state) => {
 // mix of dispatch and non dispatch functions
 const mapDispatchToProps = (dispatch) => {
   return {
-    onSubmit: (url) => {dispatch(ipcSendAction('newURL', url))}
+    onSubmit: (url) => {
+      dispatch(ipcSendAction('newURL', url))
+    }
   }
 }
 

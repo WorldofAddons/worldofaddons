@@ -26,14 +26,13 @@ export class AddonInput extends Component {
     const { url } = this.state
     if (url !== '' && checkURL(url)) {
       this.props.onSubmit(url)
-      document.getElementById('addonInput').value = ''
     }
   }
 
   renderInput () {
     return (
-      <div className="col s10">
-        <input placeholder={this.props.inputLabel} id='addonInput' value={this.state.url} onChange={this.onChange.bind(this)} onKeyPress={this.onSubmit.bind(this)} type='search' className='textInput'/>
+      <div className="browser-default col s10">
+        <input id='addonInput' className='browser-default urlInput' type='text' placeholder={this.props.inputLabel} value={this.state.url} onChange={this.onChange.bind(this)} onKeyPress={this.onSubmit.bind(this)}/>
       </div>
     )
   }

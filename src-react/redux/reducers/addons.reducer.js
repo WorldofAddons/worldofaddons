@@ -15,7 +15,7 @@ const nameList = (state = initialStateNameList, action) => {
       return newState
     case 'delAddonObj':
       newState = [...state]
-      let idx = newState.indexOf(action.data.name)
+      const idx = newState.indexOf(action.data.name)
       if (idx !== -1) {
         newState.splice(idx, 1)
       }

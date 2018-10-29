@@ -186,10 +186,11 @@ ipcMain.on('error', (e, errorObj) => {
 // uninstall addon listener
 ipcMain.on('uninstallAddon', (e, addonObj) => {
   console.log(`Received request to delete ${addonObj.name}`)
-  try {
+  if (addonObj.status === "" || addonObj.status === "NOT_INSTALLED") {
+    mainWindow.webContents.send('delAddonObj', addonObj)
+  } else {
     installedAddonsDict = uninstallAddon(addonObj, configObj, installedAddonsDict)
     saveToAddonList(configObj, installedAddonsDict)
-    console.log(addonObj.name)
     mainWindow.webContents.send('modAddonObj', {
       'displayName': addonObj.displayName,
       'name': addonObj.name,
@@ -200,9 +201,6 @@ ipcMain.on('uninstallAddon', (e, addonObj) => {
       'status': 'NOT_INSTALLED'
     })
   }
-  catch(err) {
-    mainWindow.webContents.send('delAddonObj', addonObj)
-  }  
 })
 
 // need to wait for react to finishing building Dom
