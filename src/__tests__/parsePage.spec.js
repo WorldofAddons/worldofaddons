@@ -19,8 +19,8 @@ describe('parseAddonDetails function', () => {
         })
         describe('WHEN using an invalid test URLObj', () => {
             it('THEN should return an error', () => {
-            const validURLObj = { 'url': 'https://www.curseforge.com/wow/addons/test-addon', 'host': 'curseforge', 'name': 'test-addon' }
-            let promise = parseAddonDetails(validURLObj)
+            const invalidURLObj = { 'url': 'https://www.curseforge.com/wow/addons/test-addon', 'host': 'curseforge', 'name': 'test-addon' }
+            let promise = parseAddonDetails(invalidURLObj)
             expect(promise).rejects.toThrow('Invalid URL.');
             })
         })
