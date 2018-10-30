@@ -1,10 +1,11 @@
 // Modules to control application life and create native browser window
 import { app, BrowserWindow } from 'electron'
 import { parseAddonDetails } from './src/parsePage'
-import { checkWhichHost } from './src/checkWhichHost/index'
+import { checkWhichHost } from './src/checkHost'
 import { installAddon } from './src/installAddon'
 import { initConfig, readAddonList, saveToAddonList } from './src/config'
-import { integrityCheck, checkUpdate } from './src/updater'
+import { checkUpdate } from './src/updateAddon'
+import { integrityCheck } from './src/integrityCheck'
 import { uninstallAddon } from './src/uninstallAddon'
 const chokidar = require('chokidar')
 
@@ -125,8 +126,8 @@ const { ipcMain } = require('electron')
 
 // newURL listener
 ipcMain.on('newURL', (e, newURL) => {
-  console.log('Received new URL ' + newURL)
-  console.log('\tSending URL to be matched with host and parse addon page')
+  console.log('Received new url ' + newURL)
+  console.log('\tSending url to be matched with host and parse addon page')
   const URLObj = checkWhichHost(newURL)
   parseAddonDetails(URLObj).then(addonObj => {
     if (!installedAddonsDict.hasOwnProperty(addonObj.name)) {
@@ -150,7 +151,7 @@ ipcMain.on('installAddon', (e, addonObj) => {
 // update addon listener, fetches new version number and downloads the addon
 ipcMain.on('installUpdate', (e, addonObj) => {
   console.log('Received request to update addon ' + addonObj.name)
-  const URLObj = checkWhichHost(addonObj.URL)
+  const URLObj = checkWhichHost(addonObj.url)
   parseAddonDetails(URLObj).then(addonObj => {
     installAddon(addonObj, configObj.addonDir)
     .then((newAddon) => {
@@ -189,17 +190,17 @@ ipcMain.on('uninstallAddon', (e, addonObj) => {
   if (addonObj.status === "" || addonObj.status === "NOT_INSTALLED") {
     mainWindow.webContents.send('delAddonObj', addonObj)
   } else {
-    installedAddonsDict = uninstallAddon(addonObj, configObj, installedAddonsDict)
-    saveToAddonList(configObj, installedAddonsDict)
     mainWindow.webContents.send('modAddonObj', {
       'displayName': addonObj.displayName,
       'name': addonObj.name,
       'version': addonObj.version,
       'host': addonObj.host,
-      'URL': addonObj.URL,
+      'url': addonObj.url,
       'authors': addonObj.authors,
       'status': 'NOT_INSTALLED'
     })
+    installedAddonsDict = uninstallAddon(addonObj, configObj, installedAddonsDict)
+    saveToAddonList(configObj, installedAddonsDict)
   }
 })
 

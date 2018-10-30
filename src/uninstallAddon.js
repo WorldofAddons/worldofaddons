@@ -15,7 +15,7 @@ export function uninstallAddon(addonObj, configObj, installedAddonsDict) {
 function deleteSubdirs(dirList, configObj) {
     dirList.forEach(dir => { 
         let dirToDel = path.join(configObj.addonDir, dir)
-        if (fs.existsSync(dirToDel) && (dirToDel !== configObj.addon)) {
+        if (fs.existsSync(dirToDel) && (dirToDel !== configObj.addonDir)) {
             console.log(`\tDeleted ${dirToDel}`)
             rmDirRecursive(dirToDel)
         }

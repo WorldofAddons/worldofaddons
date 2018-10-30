@@ -15,7 +15,7 @@ export function installAddon (addonObj, targetPath) {
         console.log(path.join(targetPath, addonObj.name + '.zip'))
         return downloadAddon(addonObj, downloadURL)
       })
-      .then(() => { // Download the addon using the parsed URL
+      .then(() => { // Download the addon using the parsed url
         return extAddonToDir(addonObj, targetPath) // After download is done extract the zip to target dir and delete the old zip
       })
       .then((finalAddonObj) => {
@@ -30,7 +30,7 @@ export function installAddon (addonObj, targetPath) {
 function downloadUrlParse (addonObj) {
   return new Promise((resolve, reject) => {
     const downloadUrlAdapter = downloadUrlParserBuilder(addonObj.host)
-    return resolve(downloadUrlAdapter(addonObj.URL))
+    return resolve(downloadUrlAdapter(addonObj.url))
   })
 }
 
