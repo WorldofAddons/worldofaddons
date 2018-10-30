@@ -6,13 +6,13 @@ import { detailsParserBuilder } from './pageParserAdapter/index'
 export function parseAddonDetails (URLObj) {
   return new Promise((resolve, reject) => {
     const parseAdapter = detailsParserBuilder(URLObj.host)
-    parseAdapter(URLObj.URL).then(result => {
+    parseAdapter(URLObj.url).then(result => {
       return resolve({
         'displayName': result.displayName, // Addon name as displayed on the host website
-        'name': URLObj.name, // Addon name parsed from URL, this should be used to reference the addon within the code
+        'name': URLObj.name, // Addon name parsed from url, this should be used to reference the addon within the code
         'version': result.version, // Addon version
         'host': URLObj.host, // Addon Host
-        'URL': URLObj.URL, // Addon URL
+        'url': URLObj.url, // Addon url
         'authors': Array.from(new Set(result.authors)), // Addon Authors
         'status': ''
       })
