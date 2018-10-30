@@ -8,10 +8,10 @@ export class AddonTable extends Component {
         <tr>
           <th width="5%"></th>
           <th width="5%"></th>
-          <th width="50%"></th>
+          <th width="65%"></th>
           <th width="15%"></th>
-          <th width="15%"></th>
-          <th width="15%"></th>
+          <th width="5%"></th>
+          <th width="5%"></th>
         </tr>
       </thead>
     )
@@ -29,14 +29,14 @@ export class AddonTable extends Component {
       <tr key={key}>
         <td>{addonObj.host}</td>
         <td>{status}</td>
-        <td>{addonObj.displayName}</td>
-        <td>{addonObj.version}</td>
+        <td className="colAddonName">{addonObj.displayName}</td>
+        <td className="colVersion">{addonObj.version}</td>
         <td>
           {AddonControlButton(addonObj, this.props)}
         </td>
         <td>
           <button 
-            className='btn-small waves-effect waves-light deep-orange darken-4' 
+            className='btn-flat btn-small' 
             onClick={() => this.props.onRemove(addonObj)}>
             <i className="material-icons">delete_forever</i>
           </button>

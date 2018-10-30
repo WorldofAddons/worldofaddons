@@ -9,7 +9,7 @@ class AddonInputContainer extends React.Component {
       <AddonInput
         {...this.props}
         buttonLabel='Add'
-        inputLabel='Addon URL'
+        inputLabel="Enter a new addon's URL"
       />
     )
   }
@@ -22,7 +22,9 @@ const mapStateToProps = (state) => {
 // mix of dispatch and non dispatch functions
 const mapDispatchToProps = (dispatch) => {
   return {
-    onSubmit: (url) => {dispatch(ipcSendAction('newURL', url))}
+    onSubmit: (url) => {
+      dispatch(ipcSendAction('newURL', url))
+    }
   }
 }
 

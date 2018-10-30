@@ -11,13 +11,15 @@ export function integrityCheck (installedAddonsDict, configObj) {
         for (const [name] of Object.entries(installedAddonsDict)) { // Checks if addon is installed by making sure all subdirs are found in dirlist     
           if (installedAddonsDict[name].subdirs.every(val => dirList.includes(val)) !== true) {
             if (installedAddonsDict[name].status !== 'NOT INSTALLED') { // If addon is missing subdirs, then set status to not installed
-              installedAddonsDict[name].status = 'NOT INSTALLED'        
+              installedAddonsDict[name].status = 'NOT INSTALLED'
+              mainWindow.webContents.send('modAddonObj', installedAddonsDict[name])        
               changed = true
             }
           }else {
-            if (installedAddonsDict[name].status !== 'INSTALLED' && installedAddonsDict[name].status !== 'NEW UPDATE') { // If addon is not missing subdirs
+            if (installedAddonsDict[name].status !== 'INSTALLED' && installedAddonsDict[name].status !== 'NEW_UPDATE') { // If addon is not missing subdirs
               console.log(name, installedAddonsDict[name].status) //  and it doesn't need an update then set status to installed
               installedAddonsDict[name].status = 'INSTALLED'
+              mainWindow.webContents.send('modAddonObj', installedAddonsDict[name])
               changed = true
             }
           }
@@ -27,7 +29,7 @@ export function integrityCheck (installedAddonsDict, configObj) {
       .then(installedAddonsDict => {
         if (changed === true) {
           saveToAddonList(configObj, installedAddonsDict).then(newDict => {
-            mainWindow.webContents.send('addonList', newDict)
+            //mainWindow.webContents.send('addonList', newDict)
             return newDict
           })
         }

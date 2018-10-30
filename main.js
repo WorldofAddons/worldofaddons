@@ -130,7 +130,9 @@ ipcMain.on('newURL', (e, newURL) => {
   console.log('\tSending url to be matched with host and parse addon page')
   const URLObj = checkWhichHost(newURL)
   parseAddonDetails(URLObj).then(addonObj => {
-    mainWindow.webContents.send('modAddonObj', addonObj)
+    if (!installedAddonsDict.hasOwnProperty(addonObj.name)) {
+      mainWindow.webContents.send('modAddonObj', addonObj)
+    }
   }).catch((err) => {
     mainWindow.webContents.send('error', err)
   })
@@ -185,18 +187,21 @@ ipcMain.on('error', (e, errorObj) => {
 // uninstall addon listener
 ipcMain.on('uninstallAddon', (e, addonObj) => {
   console.log(`Received request to delete ${addonObj.name}`)
-  installedAddonsDict = uninstallAddon(addonObj, configObj, installedAddonsDict)
-  saveToAddonList(configObj, installedAddonsDict)
-  console.log(addonObj.name)
-  mainWindow.webContents.send('modAddonObj', {
-    'displayName': addonObj.displayName,
-    'name': addonObj.name,
-    'version': addonObj.version,
-    'host': addonObj.host,
-    'url': addonObj.url,
-    'authors': addonObj.authors,
-    'status': 'NOT_INSTALLED'
-  })
+  if (addonObj.status === "" || addonObj.status === "NOT_INSTALLED") {
+    mainWindow.webContents.send('delAddonObj', addonObj)
+  } else {
+    mainWindow.webContents.send('modAddonObj', {
+      'displayName': addonObj.displayName,
+      'name': addonObj.name,
+      'version': addonObj.version,
+      'host': addonObj.host,
+      'url': addonObj.url,
+      'authors': addonObj.authors,
+      'status': 'NOT_INSTALLED'
+    })
+    installedAddonsDict = uninstallAddon(addonObj, configObj, installedAddonsDict)
+    saveToAddonList(configObj, installedAddonsDict)
+  }
 })
 
 // need to wait for react to finishing building Dom

@@ -4,7 +4,9 @@ import path from 'path'
 // This function removes the specified addonObj from the installedAddonsDict and
 // cleans the addon's subdirectories
 export function uninstallAddon(addonObj, configObj, installedAddonsDict) {
-    deleteSubdirs(addonObj.subdirs, configObj)
+    if (addonObj.hasOwnProperty('subdirs') && addonObj.subdirs.length != 0) {
+        deleteSubdirs(addonObj.subdirs, configObj)
+    }
     delete installedAddonsDict[addonObj.name]
     return installedAddonsDict
 }
