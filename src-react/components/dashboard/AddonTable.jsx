@@ -2,21 +2,6 @@ import React, { Component } from 'react'
 import { AddonControlButton } from './AddonControlButton'
 
 export class AddonTable extends Component {
-  renderHeader () {
-    return (
-      <thead className="grey-text">
-        <tr>
-          <th width="5%"></th>
-          <th width="5%"></th>
-          <th width="65%"></th>
-          <th width="15%"></th>
-          <th width="5%"></th>
-          <th width="5%"></th>
-        </tr>
-      </thead>
-    )
-  }
-
   renderRow (addonObj, key) {
     let status = addonObj.status // dlStatus is optional in obj.
     if ((addonObj.dlStatus !== 100) && (addonObj.dlStatus >= 0) && (addonObj.dlStatus < 100)) { // Currently downloading something, display %v
@@ -27,16 +12,14 @@ export class AddonTable extends Component {
 
     return (
       <tr key={key}>
-        <td>{addonObj.host}</td>
-        <td>{status}</td>
-        <td className="colAddonName">{addonObj.displayName}</td>
-        <td className="colVersion">{addonObj.version}</td>
-        <td>
-          {AddonControlButton(addonObj, this.props)}
-        </td>
-        <td>
+        <td width="5%">{addonObj.host}</td>
+        <td width="5%">{status}</td>
+        <td width="65%" className="colAddonName">{addonObj.displayName}</td>
+        <td width="15%" className="colVersion">{addonObj.version}</td>
+        <td width="5%"> {AddonControlButton(addonObj, this.props)} </td>
+        <td width="5%">
           <button 
-            className='btn-flat btn-small' 
+            className='waves-effect waves-red btn-flat btn-small' 
             onClick={() => this.props.onRemove(addonObj)}>
             <i className="material-icons">delete_forever</i>
           </button>
@@ -72,8 +55,7 @@ export class AddonTable extends Component {
 
     return (
       <div key='addon-table'>
-        <table width="100%" className=''>
-          {this.renderHeader()}
+        <table width="100%" className='highlight'>
           {tag}
         </table>
       </div>
