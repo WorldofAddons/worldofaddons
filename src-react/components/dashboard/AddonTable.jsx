@@ -5,23 +5,23 @@ export class AddonTable extends Component {
   renderRow (addonObj, key) {
     let status = addonObj.status // dlStatus is optional in obj.
     if ((addonObj.dlStatus !== 100) && (addonObj.dlStatus >= 0) && (addonObj.dlStatus < 100)) { // Currently downloading something, display %v
-        status = `%${addonObj.dlStatus }`         
-    }else if (addonObj.dlStatus === 100) { // Addon has finished downloading and is being unzipped and moved
-      status = "Finalizing"
+      status = `%${addonObj.dlStatus}`
+    } else if (addonObj.dlStatus === 100) { // Addon has finished downloading and is being unzipped and moved
+      status = 'Finalizing'
     }
 
     return (
       <tr key={key}>
-        <td width="5%">{addonObj.host}</td>
-        <td width="5%">{status}</td>
-        <td width="65%" className="colAddonName">{addonObj.displayName}</td>
-        <td width="15%" className="colVersion">{addonObj.version}</td>
-        <td width="5%"> {AddonControlButton(addonObj, this.props)} </td>
-        <td width="5%">
-          <button 
-            className='waves-effect waves-red btn-flat btn-small' 
+        <td width='5%'>{addonObj.host}</td>
+        <td width='5%'>{status}</td>
+        <td width='65%' className='colAddonName'>{addonObj.displayName}</td>
+        <td width='15%' className='colVersion'>{addonObj.version}</td>
+        <td width='5%'> {AddonControlButton(addonObj, this.props)} </td>
+        <td width='5%'>
+          <button
+            className='waves-effect waves-red btn-flat btn-small'
             onClick={() => this.props.onRemove(addonObj)}>
-            <i className="material-icons">delete_forever</i>
+            <i className='material-icons'>delete_forever</i>
           </button>
         </td>
       </tr>
@@ -55,7 +55,7 @@ export class AddonTable extends Component {
 
     return (
       <div key='addon-table'>
-        <table width="100%" className='highlight'>
+        <table width='100%' className='highlight'>
           {tag}
         </table>
       </div>

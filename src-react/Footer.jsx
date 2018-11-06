@@ -4,25 +4,25 @@ import { shell } from 'electron'
 const { app } = window.require('electron').remote
 
 export class Footer extends React.PureComponent {
-  openIssues() {
+  openIssues () {
     shell.openExternal('https://github.com/WorldofAddons/worldofaddons/issues/new')
   }
 
-  renderIssuesBtn() {
+  renderIssuesBtn () {
     return (
       <button
         className='btn-small waves-effect waves-light right'
         onClick={this.openIssues.bind(this)}
       >
         Report a Bug
-        </button>
+      </button>
     )
   }
 
-  renderCopyright() {
+  renderCopyright () {
     return (
-      <div className="footer-copyright">
-        <div className="container">
+      <div className='footer-copyright'>
+        <div className='container'>
           Version: {app.getVersion()}
           {this.renderIssuesBtn()}
         </div>
@@ -30,7 +30,7 @@ export class Footer extends React.PureComponent {
     )
   }
 
-  render() {
+  render () {
     return (
       <div className='grey darken-3 page-footer'>
         {this.renderCopyright()}

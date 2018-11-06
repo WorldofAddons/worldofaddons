@@ -31,8 +31,8 @@ export class AddonInput extends Component {
 
   renderInput () {
     return (
-      <div className="browser-default">
-        <input id='addonInput' className='browser-default urlInput navBarItem' type='text' placeholder={this.props.inputLabel} value={this.state.url} onChange={this.onChange.bind(this)} onKeyPress={this.onSubmit.bind(this)}/>
+      <div className='browser-default'>
+        <input id='addonInput' className='browser-default urlInput navBarItem' type='text' placeholder={this.props.inputLabel} value={this.state.url} onChange={this.onChange.bind(this)} onKeyPress={this.onSubmit.bind(this)} />
       </div>
     )
   }
@@ -40,7 +40,7 @@ export class AddonInput extends Component {
   render () {
     return (
       <div className='row nav-wrapper white z-depth-2'>
-        <div className="col s8 offset-s2">
+        <div className='col s8 offset-s2'>
           {this.renderInput()}
         </div>
       </div>

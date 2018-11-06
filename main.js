@@ -15,7 +15,7 @@ export let mainWindow
 
 function createWindow () {
   // Create the browser window.
-  mainWindow = new BrowserWindow({ width: 800, height: 600 , icon: 'assets/200x200.png'})
+  mainWindow = new BrowserWindow({ width: 800, height: 600, icon: 'assets/200x200.png' })
 
   // and load the index.html of the app.
   mainWindow.loadFile('dist/src-react/index.html')
@@ -39,7 +39,7 @@ function createWindow () {
 function checkAllUpdates (installedAddonsDict, configObj) {
   Object.keys(installedAddonsDict).forEach(function (key) {
     checkUpdate(installedAddonsDict[key]).then(checkedStatus => {
-      if (installedAddonsDict[key].status !== checkedStatus){
+      if (installedAddonsDict[key].status !== checkedStatus) {
         installedAddonsDict[key].status = checkedStatus
         saveToAddonList(configObj, installedAddonsDict)
       }
@@ -154,10 +154,10 @@ ipcMain.on('installUpdate', (e, addonObj) => {
   const URLObj = checkWhichHost(addonObj.url)
   parseAddonDetails(URLObj).then(addonObj => {
     installAddon(addonObj, configObj.addonDir)
-    .then((newAddon) => {
-      installedAddonsDict[newAddon.name] = newAddon
-      integrityCheck(installedAddonsDict, configObj)
-    })
+      .then((newAddon) => {
+        installedAddonsDict[newAddon.name] = newAddon
+        integrityCheck(installedAddonsDict, configObj)
+      })
   })
 })
 
@@ -169,7 +169,7 @@ ipcMain.on('checkAddonUpdate', (e, addonObj) => {
       console.log(installedAddonsDict[addonObj.name].status, updateStatus)
       installedAddonsDict[addonObj.name].status = updateStatus
       saveToAddonList(configObj, installedAddonsDict)
-    }else {
+    } else {
       mainWindow.webContents.send('addonNoUpdate', {
         'name': addonObj.name,
         'status': 'NO UPDATE'
@@ -187,7 +187,7 @@ ipcMain.on('error', (e, errorObj) => {
 // uninstall addon listener
 ipcMain.on('uninstallAddon', (e, addonObj) => {
   console.log(`Received request to delete ${addonObj.name}`)
-  if (addonObj.status === "" || addonObj.status === "NOT_INSTALLED") {
+  if (addonObj.status === '' || addonObj.status === 'NOT_INSTALLED') {
     mainWindow.webContents.send('delAddonObj', addonObj)
   } else {
     mainWindow.webContents.send('modAddonObj', {
@@ -205,7 +205,7 @@ ipcMain.on('uninstallAddon', (e, addonObj) => {
 })
 
 ipcMain.on('getSettings', () => {
-  console.log("settings clicked")
+  console.log('settings clicked')
   mainWindow.webContents.send('modSettings', configObj)
 })
 

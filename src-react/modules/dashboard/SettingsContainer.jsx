@@ -1,34 +1,31 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import { getSettings } from '../../redux/selectors/index'
 import { ipcSendAction } from '../../redux/actions/index'
-import { AddonInput } from '../../components/dashboard/AddonInput'
+import { SettingsModal } from '../../components/dashboard/SettingsModal'
 
-class AddonInputContainer extends React.Component {
+class SettingsContainer extends React.Component {
   render () {
     return (
-      <AddonInput
-        {...this.props}
-        buttonLabel='Add'
-        inputLabel="Enter a new addon's URL"
-      />
+      <SettingsModal {...this.props} />
     )
   }
 }
 
 const mapStateToProps = (state) => {
-  return {}
+  return {
+    settings: getSettings(state)
+  }
 }
 
 // mix of dispatch and non dispatch functions
 const mapDispatchToProps = (dispatch) => {
   return {
-    onSubmit: (url) => {
-      dispatch(ipcSendAction('newURL', url))
-    }
+    onSettings: () => { dispatch(ipcSendAction('getSettings', null)) }
   }
 }
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(AddonInputContainer)
+)(SettingsContainer)
