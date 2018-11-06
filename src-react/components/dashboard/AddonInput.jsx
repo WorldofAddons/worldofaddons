@@ -37,22 +37,11 @@ export class AddonInput extends Component {
     )
   }
 
-  renderModal () {
-    return (
-      <div className='navBarItem'>
-        <button className='waves-effect waves-green btn-flat btn-small' onClick={() => this.props.onSettings()}><i className="material-icons">settings</i></button>
-      </div>
-    )
-  }
-
   render () {
     return (
       <div className='row nav-wrapper white z-depth-2'>
         <div className="col s8 offset-s2">
           {this.renderInput()}
-        </div>
-        <div className="col s1 offset-s1">
-          {this.renderModal()}
         </div>
       </div>
     )

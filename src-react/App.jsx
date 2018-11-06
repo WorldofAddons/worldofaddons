@@ -4,6 +4,7 @@ import { Provider } from 'react-redux'
 
 import { Dashboard } from './screens/Dashboard'
 import AddonInputContainer from './modules/dashboard/AddonInputContainer'
+import { SettingsModal } from './components/dashboard/SettingsModal'
 import IpcListener from './redux/IpcListener'
 import configureStore from './configureStore'
 
@@ -22,6 +23,7 @@ class App extends React.Component {
       <Provider store={store}>
         <div>
           <AddonInputContainer/>
+          <SettingsModal  />
           <div>
             <Dashboard />
             <IpcListener channels={electronChannels}/>
