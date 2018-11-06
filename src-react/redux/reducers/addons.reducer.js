@@ -1,6 +1,16 @@
 import { combineReducers } from 'redux'
 import clonedeep from 'lodash.clonedeep'
 
+const initialSettingState = {}
+const settings = (state = initialSettingState, action) => {
+  switch(action.type){
+    case 'modSettings':
+      return action.data
+    default:
+      return state
+  }
+}
+
 const initialStateNameList = []
 const nameList = (state = initialStateNameList, action) => {
   let newState
@@ -29,7 +39,6 @@ const nameList = (state = initialStateNameList, action) => {
 const initialStateDict = {}
 const dict = (state = initialStateDict, action) => {
   let newState = clonedeep(state)
-
   switch (action.type) {
     case 'addonList':
       return action.data
@@ -49,6 +58,7 @@ const dict = (state = initialStateDict, action) => {
 }
 
 export const addons = combineReducers({
+  settings,
   nameList,
   dict
 })

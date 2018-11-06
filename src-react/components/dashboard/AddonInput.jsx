@@ -31,8 +31,16 @@ export class AddonInput extends Component {
 
   renderInput () {
     return (
-      <div className="browser-default col s10">
-        <input id='addonInput' className='browser-default urlInput' type='text' placeholder={this.props.inputLabel} value={this.state.url} onChange={this.onChange.bind(this)} onKeyPress={this.onSubmit.bind(this)}/>
+      <div className="browser-default">
+        <input id='addonInput' className='browser-default urlInput navBarItem' type='text' placeholder={this.props.inputLabel} value={this.state.url} onChange={this.onChange.bind(this)} onKeyPress={this.onSubmit.bind(this)}/>
+      </div>
+    )
+  }
+
+  renderModal () {
+    return (
+      <div className='navBarItem'>
+        <button className='waves-effect waves-green btn-flat btn-small' onClick={() => this.props.onSettings()}><i className="material-icons">settings</i></button>
       </div>
     )
   }
@@ -40,8 +48,11 @@ export class AddonInput extends Component {
   render () {
     return (
       <div className='row nav-wrapper white z-depth-2'>
-        <div className="col s10 offset-s2">
+        <div className="col s8 offset-s2">
           {this.renderInput()}
+        </div>
+        <div className="col s1 offset-s1">
+          {this.renderModal()}
         </div>
       </div>
     )

@@ -9,6 +9,7 @@ import configureStore from './configureStore'
 
 const store = configureStore()
 const electronChannels = [
+  'modSettings',
   'addonList',
   'modAddonObj',
   'updateAddonDL',

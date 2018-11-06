@@ -24,6 +24,9 @@ const mapDispatchToProps = (dispatch) => {
   return {
     onSubmit: (url) => {
       dispatch(ipcSendAction('newURL', url))
+    },
+    onSettings: () => {
+      dispatch(ipcSendAction('getSettings', null))
     }
   }
 }

@@ -204,6 +204,11 @@ ipcMain.on('uninstallAddon', (e, addonObj) => {
   }
 })
 
+ipcMain.on('getSettings', () => {
+  console.log("settings clicked")
+  mainWindow.webContents.send('modSettings', configObj)
+})
+
 // need to wait for react to finishing building Dom
 ipcMain.on('windowDoneLoading', () => {
   mainWindow.webContents.send('addonList', installedAddonsDict)
