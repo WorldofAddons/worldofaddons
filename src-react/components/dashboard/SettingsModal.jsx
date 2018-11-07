@@ -56,25 +56,28 @@ export class SettingsModal extends React.Component {
           <table>
             <tbody>
               <tr>
-                <td>Addon Directory</td>
-                <td>
-                  <button className='waves-effect waves-green btn-flat btn-small' onClick={(e) => this.onModAddonDir(e)} >
+                <td width='10%'><b>Install Location</b></td>
+                <td width='20%'><p className="small">Where your addons will be installed.</p></td>
+                <td width='70%' className="settingsRight">
+                  <button className='pathButton' onClick={(e) => this.onModAddonDir(e)} >
                     {settings.addonDir}
                   </button>
                 </td>
               </tr>
               <tr>
-                <td>Addon Record File</td>
-                <td>
-                  <button className='waves-effect waves-green btn-flat btn-small' onClick={(e) => this.onModAddonRecordFile(e)} >
+                <td width='10%'><b>Record File</b></td>
+                <td width='20%'><p>Information about your addons (version, hosts, etc.) are saved here. You can load another addon configuration by changing this file.</p></td>
+                <td width='70%' className="settingsRight">
+                  <button className='pathButton' onClick={(e) => this.onModAddonRecordFile(e)} >
                     {settings.addonRecordFile}
                   </button>
                 </td>
               </tr>
               <tr>
-                <td>Check Update on Start</td>
-                <td>
-                  <div className='switch'>
+                <td></td>
+                <td width='30%'><p>Automatically check for addon updates when opening World of Addons.</p></td>
+                <td width='70%' className="settingsRight">
+                  <div className='switch settingsRight'>
                     <label>
                       Off
                       <input type='checkbox' checked={settings.checkUpdateOnStart} onChange={(e) => this.onToggleCheckUpdateOnStart(e)} />
@@ -87,9 +90,11 @@ export class SettingsModal extends React.Component {
             </tbody>
           </table>
         </div>
+  
         <div className='row'>
           <button className='waves-effect waves-green btn-flat btn-small' onClick={this.onToggleModal.bind(this)}>Close</button>
         </div>
+        
       </div>
     )
   }

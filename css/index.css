@@ -65,15 +65,36 @@ main {
   width: 100%; /* Full width */
   height: 100%; /* Full height */
   overflow: auto; /* Enable scroll if needed */
-  background: rgba(0,0,0, 0.4);
+  background-color: rgb(128, 128, 128, 0.4);
 }
 
 .modal-content {
   z-index: 3;
-  background-color: #ffffff;
-  padding: 20px;
-  width: 80%; 
-  position: fixed;
-  left: 10%;
+  background-color: #fff;
+  padding: 5px;
+  width: 90%; 
+  position: absolute;
+  left: 5%;
+  box-shadow: 0 3px 8px 0 #9e9e9e;
+  transition: all 0.3s ease;
 }
 
+.pathButton {
+  width: 100%;
+  padding: 10px;
+  display: inline-block;
+  text-align: left;
+  outline: none;
+  border: none;
+  background: none;
+}
+
+.pathButton:hover {
+  background: #fff;
+  box-shadow: 0 3px 8px 0 #9e9e9e;
+  transition: all 0.3s ease;
+}
+
+.settingsRight {
+  padding-left: 40px;
+}
