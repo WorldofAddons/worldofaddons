@@ -3,10 +3,13 @@ import { app, BrowserWindow } from 'electron'
 import { parseAddonDetails } from './src/parsePage'
 import { checkWhichHost } from './src/checkHost'
 import { installAddon } from './src/installAddon'
-import { initConfig, readAddonList, saveToAddonList } from './src/config'
+import { initConfig, readAddonList, saveToAddonList, saveToConfig } from './src/config'
 import { checkUpdate } from './src/updateAddon'
 import { integrityCheck } from './src/integrityCheck'
 import { uninstallAddon } from './src/uninstallAddon'
+import os from 'os'
+import path from 'path'
+
 const chokidar = require('chokidar')
 
 // Keep a global reference of the window object, if you don't, the window will
@@ -210,9 +213,13 @@ ipcMain.on('getSettings', (e) => {
 })
 
 ipcMain.on('newSettings', (e, newConfig) => {
+  const homedir = os.homedir() // Fetchs user's homedir
+  const worldOfAddonsDir = path.join(homedir, 'WorldOfAddons') // World of Addons stores information in user's home dir
+  const WoAConfig = path.join(worldOfAddonsDir, 'config.json') // Saves all config information in config.json
   console.log('settings modified ', newConfig)
   configObj = newConfig
   mainWindow.webContents.send('modSettings', configObj)
+  saveToConfig(WoAConfig, configObj)
 })
 
 // need to wait for react to finishing building Dom

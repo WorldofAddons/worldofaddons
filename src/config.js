@@ -2,6 +2,24 @@ import fs from 'fs'
 import path from 'path'
 import os from 'os'
 
+
+export function saveToConfig(configPath, configObj) {
+  return new Promise(function (resolve, reject) {
+    console.log("\tUpdating config.json")
+    fs.writeFile(configPath, JSON.stringify(configObj, null, 2), 'utf8', (err) => reject(err))
+    return resolve(configObj)
+  })
+}
+
+export function saveToAddonList (configObj, installedDict) {
+  return new Promise(function (resolve, reject) {
+    console.log('\tUpdating addons.json')
+    const stringInstallDict = JSON.stringify(installedDict, null, 2)
+    fs.writeFile(configObj.addonRecordFile, stringInstallDict, 'utf8', (err) => reject(err))
+    return resolve(installedDict)
+  })
+}
+
 export function initConfig () {
   return new Promise((resolve, reject) => {
     const homedir = os.homedir() // Fetchs user's homedir
@@ -19,8 +37,7 @@ export function initConfig () {
         'addonRecordFile': path.join(worldOfAddonsDir, 'addons.json'), // Path to file storing addon records
         'checkUpdateOnStart': false // If true, then check for update on start
       }
-      fs.writeFile(WoAConfig, JSON.stringify(configObj, null, 2), 'utf8', (err) => reject(err))
-      return resolve(configObj)
+      return resolve(saveToConfig(WoAConfig, configObj))
     }
     try {
       return resolve(JSON.parse(fs.readFileSync(WoAConfig, 'utf8')))
@@ -46,14 +63,5 @@ export function readAddonList (configObj) {
     } catch (err) {
       return reject(err)
     }
-  })
-}
-
-export function saveToAddonList (configObj, installedDict) {
-  return new Promise(function (resolve, reject) {
-    console.log('\tUpdating addons.js')
-    const stringInstallDict = JSON.stringify(installedDict, null, 2)
-    fs.writeFile(configObj.addonRecordFile, stringInstallDict, 'utf8', (err) => reject(err))
-    return resolve(installedDict)
   })
 }
