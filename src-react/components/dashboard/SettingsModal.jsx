@@ -21,23 +21,23 @@ export class SettingsModal extends React.Component {
     const path = dialog.showOpenDialog({ properties: ['openDirectory'] })
     if (path !== undefined) {
       settings.addonDir = path[0]
-      console.log(settings.addonDir)
+      this.props.onNewSettings(settings)
     }
   }
 
   onModAddonRecordFile () {
     const { settings } = this.props
-    const path = dialog.showOpenDialog({ properties: ['openFile'] })
+    const path = dialog.showOpenDialog({ properties: ['openFile'], filters: [{ name: '.json', extensions: ['json'] }]})
     if (path !== undefined) {
       settings.addonRecordFile = path[0]
-      console.log(settings.addonRecordFile)
+      this.props.onNewSettings(settings)
     }
   }
 
-  onToggleCheckUpdateOnStart (value) {
-    this.props.settings.checkUpdateOnStart = !value
-    console.log(this.props.settings.checkUpdateOnStart)
-    return this.props.settings.checkUpdateOnStart
+  onToggleCheckUpdateOnStart () {
+    const { settings } = this.props
+    settings.checkUpdateOnStart = !settings.checkUpdateOnStart 
+    this.props.onNewSettings(settings)
   }
 
   renderSettingsBtn () {
@@ -77,7 +77,7 @@ export class SettingsModal extends React.Component {
                   <div className='switch'>
                     <label>
                       Off
-                      <input type='checkbox' checked={settings.checkUpdateOnStart} onChange={this.onToggleCheckUpdateOnStart.bind(this)} />
+                      <input type='checkbox' checked={settings.checkUpdateOnStart} onChange={(e) => this.onToggleCheckUpdateOnStart(e)} />
                       <span className='lever' />
                       On
                     </label>
@@ -88,7 +88,7 @@ export class SettingsModal extends React.Component {
           </table>
         </div>
         <div className='row'>
-          <button onClick={this.onToggleModal.bind(this)}>Close</button>
+          <button className='waves-effect waves-green btn-flat btn-small' onClick={this.onToggleModal.bind(this)}>Close</button>
         </div>
       </div>
     )

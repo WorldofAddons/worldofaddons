@@ -21,7 +21,8 @@ const mapStateToProps = (state) => {
 // mix of dispatch and non dispatch functions
 const mapDispatchToProps = (dispatch) => {
   return {
-    onSettings: () => { dispatch(ipcSendAction('getSettings', null)) }
+    onSettings: () => { dispatch(ipcSendAction('getSettings', null)) },
+    onNewSettings: (configObj) => { dispatch(ipcSendAction('newSettings', configObj)) }
   }
 }
 

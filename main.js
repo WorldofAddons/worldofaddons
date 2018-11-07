@@ -204,8 +204,14 @@ ipcMain.on('uninstallAddon', (e, addonObj) => {
   }
 })
 
-ipcMain.on('getSettings', () => {
+ipcMain.on('getSettings', (e) => {
   console.log('settings clicked')
+  mainWindow.webContents.send('modSettings', configObj)
+})
+
+ipcMain.on('newSettings', (e, newConfig) => {
+  console.log('settings modified ', newConfig)
+  configObj = newConfig
   mainWindow.webContents.send('modSettings', configObj)
 })
 
