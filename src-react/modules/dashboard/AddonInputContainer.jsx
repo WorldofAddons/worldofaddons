@@ -1,10 +1,10 @@
 import React from 'react'
-import {connect} from 'react-redux'
-import {ipcSendAction} from '../../redux/actions/index'
+import { connect } from 'react-redux'
+import { ipcSendAction } from '../../redux/actions/index'
 import { AddonInput } from '../../components/dashboard/AddonInput'
 
 class AddonInputContainer extends React.Component {
-  render() {
+  render () {
     return (
       <AddonInput
         {...this.props}

@@ -58,7 +58,7 @@ export function downloadAddon (addonObj, downloadURL) {
 
     req.then((data) => {
       console.log('\tDownload for ' + addonObj.name + ' completed.')
-      return resolve()      // send complete message to frontend
+      return resolve() // send complete message to frontend
     })
   })
 }

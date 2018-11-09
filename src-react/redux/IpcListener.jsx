@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 import { ipcRenderer } from 'electron'
 
 const sendToReducerAction = (type, data) => {
-  return {type, data}
+  return { type, data }
 }
 
 class IpcListener extends Component {
@@ -24,17 +24,17 @@ class IpcListener extends Component {
     })
   }
 
-  createReduxListener(channel) {
+  createReduxListener (channel) {
     const { sendToReducer } = this.props
     ipcRenderer.on(channel, (e, data) => sendToReducer(e, data, channel))
   }
 
-  removeReduxListener(channel) {
+  removeReduxListener (channel) {
     const { sendToReducer } = this.props
     ipcRenderer.removeListener(channel, (e, data) => sendToReducer(e, data, channel))
   }
 
-  render() {
+  render () {
     return <div key='ipcListener'>{this.props.children || null}</div>
   }
 }

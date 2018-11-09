@@ -5,7 +5,7 @@ import { ipcSendAction } from '../../redux/actions/index'
 import { AddonTable } from '../../components/dashboard/AddonTable'
 
 class AddonTableContainer extends React.Component {
-  render() {
+  render () {
     return <AddonTable {...this.props} />
   }
 }
@@ -19,11 +19,11 @@ const mapStateToProps = (state) => {
 // mix of dispatch and non dispatch functions
 const mapDispatchToProps = (dispatch) => {
   return {
-    onInstall: (addonObj) => {dispatch(ipcSendAction('installAddon', addonObj))},
-    onCheckUpdate: (addonObj) => {dispatch(ipcSendAction('checkAddonUpdate', addonObj))},
-    onUpdate: (addonObj) => {dispatch(ipcSendAction('updateObj', addonObj))},
-    onInstallUpdate: (addonObj) => {dispatch(ipcSendAction('installUpdate', addonObj))},
-    onRemove: (addonObj) => {dispatch(ipcSendAction('uninstallAddon', addonObj))}
+    onInstall: (addonObj) => { dispatch(ipcSendAction('installAddon', addonObj)) },
+    onCheckUpdate: (addonObj) => { dispatch(ipcSendAction('checkAddonUpdate', addonObj)) },
+    onUpdate: (addonObj) => { dispatch(ipcSendAction('updateObj', addonObj)) },
+    onInstallUpdate: (addonObj) => { dispatch(ipcSendAction('installUpdate', addonObj)) },
+    onRemove: (addonObj) => { dispatch(ipcSendAction('uninstallAddon', addonObj)) }
   }
 }
 

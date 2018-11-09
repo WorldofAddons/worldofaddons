@@ -1,6 +1,16 @@
 import { combineReducers } from 'redux'
 import clonedeep from 'lodash.clonedeep'
 
+const initialSettingState = { 'addonDir': '', 'addonRecordFile': '', 'checkUpdateOnStart': '' }
+const settings = (state = initialSettingState, action) => {
+  switch (action.type) {
+    case 'modSettings':
+      return action.data
+    default:
+      return state
+  }
+}
+
 const initialStateNameList = []
 const nameList = (state = initialStateNameList, action) => {
   let newState
@@ -25,11 +35,9 @@ const nameList = (state = initialStateNameList, action) => {
   }
 }
 
-
 const initialStateDict = {}
 const dict = (state = initialStateDict, action) => {
   let newState = clonedeep(state)
-
   switch (action.type) {
     case 'addonList':
       return action.data
@@ -37,7 +45,7 @@ const dict = (state = initialStateDict, action) => {
       newState[action.data.name] = action.data
       return newState
     case 'updateAddonDL':
-      const {dlStatus, name} = action.data
+      const { dlStatus, name } = action.data
       newState[name].dlStatus = dlStatus // TODO: name isnt being sent back?
       return newState
     case 'delAddonObj':
@@ -49,6 +57,7 @@ const dict = (state = initialStateDict, action) => {
 }
 
 export const addons = combineReducers({
+  settings,
   nameList,
   dict
 })

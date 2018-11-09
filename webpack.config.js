@@ -1,7 +1,7 @@
 const path = require('path')
-const htmlWebPackPlugin = require("html-webpack-plugin") // compiles html react entry point
+const htmlWebPackPlugin = require('html-webpack-plugin') // compiles html react entry point
 const nodeExternals = require('webpack-node-externals') // excludes packing external modules.
-const MiniCssExtractPlugin = require("mini-css-extract-plugin") //
+const MiniCssExtractPlugin = require('mini-css-extract-plugin') //
 
 const jsRule = {
   test: /\.(js|jsx)?$/,
@@ -15,12 +15,11 @@ const electronMainConfig = {
   externals: [nodeExternals()],
   entry: './main.js',
   output: {
-    path: path.resolve(__dirname, 'dist')
-    ,
+    path: path.resolve(__dirname, 'dist'),
     filename: 'main.bundle.js'
   },
   module: {
-    rules:[ jsRule ]
+    rules: [ jsRule ]
   },
   devtool: 'source-map',
   plugins: [ ]
@@ -30,7 +29,7 @@ const htmlRule = {
   test: /\.html$/,
   use: [
     {
-      loader: "html-loader",
+      loader: 'html-loader',
       options: { minimize: true }
     }
   ]
@@ -40,10 +39,10 @@ const cssRule = { // TODO: fix css bundling
   test: /\.css$/,
   use: [
     {
-    loader: MiniCssExtractPlugin.loader,
-    options: { publicPath: './css' }
+      loader: MiniCssExtractPlugin.loader,
+      options: { publicPath: './css' }
     },
-  "css-loader"
+    'css-loader'
   ]
 }
 
@@ -56,7 +55,7 @@ const electronRendererConfig = {
     filename: 'app.bundle.js'
   },
   module: {
-    rules:[ jsRule, htmlRule ]
+    rules: [ jsRule, htmlRule ]
   },
   resolve: {
     extensions: [ '.js', '.jsx']
@@ -68,7 +67,7 @@ const electronRendererConfig = {
       filename: 'index.html'
     }),
     new MiniCssExtractPlugin({// TODO: fix css bundling
-      filename: "style.bundle.css"
+      filename: 'style.bundle.css'
     })
   ]
 }

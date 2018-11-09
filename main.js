@@ -3,10 +3,13 @@ import { app, BrowserWindow } from 'electron'
 import { parseAddonDetails } from './src/parsePage'
 import { checkWhichHost } from './src/checkHost'
 import { installAddon } from './src/installAddon'
-import { initConfig, readAddonList, saveToAddonList } from './src/config'
+import { initConfig, readAddonList, saveToAddonList, saveToConfig } from './src/config'
 import { checkUpdate } from './src/updateAddon'
 import { integrityCheck } from './src/integrityCheck'
 import { uninstallAddon } from './src/uninstallAddon'
+import os from 'os'
+import path from 'path'
+
 const chokidar = require('chokidar')
 
 // Keep a global reference of the window object, if you don't, the window will
@@ -15,7 +18,7 @@ export let mainWindow
 
 function createWindow () {
   // Create the browser window.
-  mainWindow = new BrowserWindow({ width: 800, height: 600 , icon: 'assets/200x200.png'})
+  mainWindow = new BrowserWindow({ width: 800, height: 600, icon: 'assets/200x200.png' })
 
   // and load the index.html of the app.
   mainWindow.loadFile('dist/src-react/index.html')
@@ -36,10 +39,42 @@ function createWindow () {
   })
 }
 
+function initSubDirWatcher (configObj, installedAddonsDict) {
+  const subDirWatcher = chokidar.watch(configObj.addonDir, { // Watches wow Addon folder for new addons or deletions
+    ignored: /(^|[/\\])\../,
+    persistent: true,
+    depth: 0
+  })
+  subDirWatcher
+    .on('addDir', function (path) {
+        console.log('Addon subdir: ', path)
+        integrityCheck(installedAddonsDict, configObj) // Verifies that addon was installed
+    })
+    .on('unlinkDir', function (path) {
+        console.log('Addon deleted: ', path)
+        integrityCheck(installedAddonsDict, configObj) // Verifies that addon was uninstalled
+    })
+    .on('error', function (error) {
+      console.log('ERROR: ', error)
+    })
+    return subDirWatcher
+}
+
+function initInstallAddonsJsonWatcher (configObj, installedAddonsDict) {
+  const installedAddonsJsonWatcher = chokidar.watch(configObj.addonRecordFile, { persistent: true }) // Watches for changes in addons.json,
+  installedAddonsJsonWatcher.on('all', function () { // if there are changes then update the installAddonsDict variable.
+    readAddonList(configObj).then(value => {
+      console.log('Save/change detected in addons.json, updating installedAddonsDict')
+      installedAddonsDict = value
+    })
+  })
+  return installedAddonsJsonWatcher
+}
+
 function checkAllUpdates (installedAddonsDict, configObj) {
   Object.keys(installedAddonsDict).forEach(function (key) {
     checkUpdate(installedAddonsDict[key]).then(checkedStatus => {
-      if (installedAddonsDict[key].status !== checkedStatus){
+      if (installedAddonsDict[key].status !== checkedStatus) {
         installedAddonsDict[key].status = checkedStatus
         saveToAddonList(configObj, installedAddonsDict)
       }
@@ -76,6 +111,9 @@ app.on('activate', () => {
 let configObj // JSON object that holds application config such as location of addon directory and installed addons file
 let installedAddonsDict // Dictionary of all installed addons. Reference addons using "name" as key
 
+let installedAddonsJsonWatcher
+let subDirWatcher
+
 initConfig()
   .then(value => {
     configObj = value // Sets config settings
@@ -89,36 +127,10 @@ initConfig()
       }
       return val
     })
-    const installedAddonsJsonWatcher = chokidar.watch(configObj.addonRecordFile, { persistent: true }) // Watches for changes in addons.json,
-    installedAddonsJsonWatcher.on('all', function () { // if there are changes then update the installAddonsDict variable.
-      readAddonList(configObj).then(value => {
-        console.log('Save/change detected in addons.json, updating installedAddonsDict')
-        installedAddonsDict = value
-      })
-    })
+    installedAddonsJsonWatcher = initInstallAddonsJsonWatcher(configObj, installedAddonsDict)
   })
   .then(val => {
-    const subDirWatcher = chokidar.watch(configObj.addonDir, { // Watches wow Addon folder for new addons or deletions
-      ignored: /(^|[/\\])\../,
-      persistent: true,
-      depth: 0
-    })
-    subDirWatcher
-      .on('addDir', function (path) {
-        if (path !== configObj.addonDir) {
-          console.log('Addon subdir: ', path)
-          integrityCheck(installedAddonsDict, configObj) // Verifies that addon was installed
-        }
-      })
-      .on('unlinkDir', function (path) {
-        if (path !== configObj.addonDir) {
-          console.log('Addon deleted: ', path)
-          integrityCheck(installedAddonsDict, configObj) // Verifies that addon was uninstalled
-        }
-      })
-      .on('error', function (error) {
-        console.log('ERROR: ', error)
-      })
+    subDirWatcher = initSubDirWatcher(configObj, installedAddonsDict)
   })
 //  --- Initialization End---
 
@@ -154,10 +166,10 @@ ipcMain.on('installUpdate', (e, addonObj) => {
   const URLObj = checkWhichHost(addonObj.url)
   parseAddonDetails(URLObj).then(addonObj => {
     installAddon(addonObj, configObj.addonDir)
-    .then((newAddon) => {
-      installedAddonsDict[newAddon.name] = newAddon
-      integrityCheck(installedAddonsDict, configObj)
-    })
+      .then((newAddon) => {
+        installedAddonsDict[newAddon.name] = newAddon
+        integrityCheck(installedAddonsDict, configObj)
+      })
   })
 })
 
@@ -169,7 +181,7 @@ ipcMain.on('checkAddonUpdate', (e, addonObj) => {
       console.log(installedAddonsDict[addonObj.name].status, updateStatus)
       installedAddonsDict[addonObj.name].status = updateStatus
       saveToAddonList(configObj, installedAddonsDict)
-    }else {
+    } else {
       mainWindow.webContents.send('addonNoUpdate', {
         'name': addonObj.name,
         'status': 'NO UPDATE'
@@ -187,7 +199,7 @@ ipcMain.on('error', (e, errorObj) => {
 // uninstall addon listener
 ipcMain.on('uninstallAddon', (e, addonObj) => {
   console.log(`Received request to delete ${addonObj.name}`)
-  if (addonObj.status === "" || addonObj.status === "NOT_INSTALLED") {
+  if (addonObj.status === '' || addonObj.status === 'NOT_INSTALLED') {
     mainWindow.webContents.send('delAddonObj', addonObj)
   } else {
     mainWindow.webContents.send('modAddonObj', {
@@ -204,7 +216,37 @@ ipcMain.on('uninstallAddon', (e, addonObj) => {
   }
 })
 
+ipcMain.on('getSettings', (e) => {
+  console.log('settings clicked')
+  mainWindow.webContents.send('modSettings', configObj)
+})
+
+ipcMain.on('newSettings', (e, newConfig) => {
+  const homedir = os.homedir() // Fetchs user's homedir
+  const worldOfAddonsDir = path.join(homedir, 'WorldOfAddons') // World of Addons stores information in user's home dir
+  const WoAConfig = path.join(worldOfAddonsDir, 'config.json') // Saves all config information in config.json
+  console.log('settings modified ', newConfig)
+
+  if (configObj.addonRecordFile !== newConfig.addonRecordFile) {
+    installedAddonsJsonWatcher.close()
+    readAddonList(newConfig).then(val => {
+      installedAddonsDict = val
+      mainWindow.webContents.send('addonList', installedAddonsDict)
+      installedAddonsJsonWatcher = initInstallAddonsJsonWatcher(newConfig, installedAddonsDict)
+    })
+  }
+
+  if (configObj.addonDir !== newConfig.addonDir) {
+    subDirWatcher.close()
+    subDirWatcher = initSubDirWatcher(newConfig, installedAddonsDict)
+  }
+
+  configObj = newConfig
+  mainWindow.webContents.send('modSettings', configObj)
+  saveToConfig(WoAConfig, configObj)
+})
+
 // need to wait for react to finishing building Dom
 ipcMain.on('windowDoneLoading', () => {
-  mainWindow.webContents.send('addonList', installedAddonsDict)
+  mainWindow.webContents.send('addonList', installedAddonsDict) // Note: Soft race-condition, Window can be done loading before addons.json is read
 })
