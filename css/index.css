@@ -29,10 +29,11 @@
 }
 
 .colAddonName {
-  text-align: center;
+  text-align: right;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  max-width: 150px;
 }
 
 .colVersion {
@@ -40,6 +41,8 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  max-width: 150px;
+  font-size: 7px;
 }
 
 body {
@@ -97,4 +100,12 @@ main {
 
 .settingsRight {
   padding-left: 40px;
+}
+
+.waves-effect {
+  height: auto;
+  min-height: 20px;
+  line-height: 20px;
+  padding-top: 5px;
+  padding-bottom: 5px;
 }
