@@ -1,4 +1,6 @@
 *.lua
+*.zip
 node_modules/
 dist/
 coverage/
+release/
