@@ -35,7 +35,7 @@ deploy:
   prerelease: $(toggle_prerelease)
   description: <i><b>[Please consult our wiki for installation and usage guides](https://github.com/WorldofAddons/worldofaddons/wiki)</b></i></br> Automatically built from branch `$(APPVEYOR_REPO_BRANCH)`, AppVeyor build `$(APPVEYOR_BUILD_VERSION)`</br></br>$(APPVEYOR_REPO_COMMIT_MESSAGE)
   auth_token:
-    secure: 1znuo0ENAr5EIUkk4ric05kTCLKrOdq0dqd89XBEt6WAzqPzqXmhKvqXvQu1vCn7
+    secure: JPLPY6cHS8ydAPy2lc49ym1aBGk5uUStEAKfEQuVqdB2Jl9X/sfWdu4MVagLff1D
   artifact: WorldOfAddons-$(package_version)-$(rel_type)-win32x64.zip
   on:
     branch: $(APPVEYOR_REPO_BRANCH)
