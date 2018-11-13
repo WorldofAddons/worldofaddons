@@ -2,7 +2,6 @@ branches:
   only:
     - master
     - dev
-    - feat-win-deploy
 skip_tags: true
 cache:
   - node_modules
