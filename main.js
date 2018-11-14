@@ -177,14 +177,14 @@ ipcMain.on('installUpdate', (e, addonObj) => {
 ipcMain.on('checkAddonUpdate', (e, addonObj) => {
   console.log(`Received request to check ${addonObj.name} for updates`)
   checkUpdate(addonObj).then(updateStatus => {
-    if (installedAddonsDict[addonObj.name].status !== updateStatus) {
+    if (updateStatus !== "INSTALLED") {
       console.log(installedAddonsDict[addonObj.name].status, updateStatus)
       installedAddonsDict[addonObj.name].status = updateStatus
       saveToAddonList(configObj, installedAddonsDict)
     } else {
       mainWindow.webContents.send('addonNoUpdate', {
         'name': addonObj.name,
-        'status': 'NO UPDATE'
+        'status': 'NO_UPDATE'
       })
     }
   })

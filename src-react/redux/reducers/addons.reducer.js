@@ -20,7 +20,7 @@ const nameList = (state = initialStateNameList, action) => {
     case 'modAddonObj':
       newState = [...state]
       if (newState.findIndex(a => a === action.data.name) === -1) {
-        newState.push(action.data.name)
+        newState.unshift(action.data.name)
       }
       return newState
     case 'delAddonObj':
@@ -46,7 +46,10 @@ const dict = (state = initialStateDict, action) => {
       return newState
     case 'updateAddonDL':
       const { dlStatus, name } = action.data
-      newState[name].dlStatus = dlStatus // TODO: name isnt being sent back?
+      newState[name].dlStatus = dlStatus
+      return newState
+    case 'addonNoUpdate':
+      newState[action.data.name].status = action.data.status
       return newState
     case 'delAddonObj':
       delete newState[name]

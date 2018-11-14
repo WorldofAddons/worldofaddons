@@ -18,7 +18,7 @@ export class SettingsModal extends React.Component {
 
   onModAddonDir () {
     const { settings } = this.props
-    const path = dialog.showOpenDialog({ properties: ['openDirectory'] })
+    const path = dialog.showOpenDialog({ properties: ['openDirectory'], defaultPath: settings.addonDir})
     if (path !== undefined) {
       settings.addonDir = path[0]
       this.props.onNewSettings(settings)
@@ -27,7 +27,7 @@ export class SettingsModal extends React.Component {
 
   onModAddonRecordFile () {
     const { settings } = this.props
-    const path = dialog.showOpenDialog({ properties: ['openFile'], filters: [{ name: '.json', extensions: ['json'] }]})
+    const path = dialog.showOpenDialog({ properties: ['openFile'], filters: [{ name: '.json', extensions: ['json'] }], defaultPath: settings.addonRecordFile})
     if (path !== undefined) {
       settings.addonRecordFile = path[0]
       this.props.onNewSettings(settings)
