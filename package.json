@@ -1,6 +1,6 @@
 {
   "name": "world-of-addons",
-  "version": "0.4.3",
+  "version": "0.4.4",
   "description": "Open source addon manager for World of Warcraft. Install, update, and manage all your WoW addons in a single lightweight application.",
   "main": "dist/main.bundle.js",
   "scripts": {

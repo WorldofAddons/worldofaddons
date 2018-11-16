@@ -36,13 +36,26 @@
   max-width: 150px;
 }
 
-.colVersion {
+.colSMText {
+  text-transform: lowercase;
   text-align: right;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 150px;
   font-size: 7px;
+}
+
+
+.statusText {
+  text-transform: lowercase;
+  text-align: right;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.statusText::first-letter {
+  text-transform: uppercase;
 }
 
 body {

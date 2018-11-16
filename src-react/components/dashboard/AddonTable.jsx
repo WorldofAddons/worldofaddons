@@ -5,17 +5,17 @@ export class AddonTable extends Component {
   renderRow (addonObj, key) {
     let status = addonObj.status // dlStatus is optional in obj.
     if ((addonObj.dlStatus !== 100) && (addonObj.dlStatus >= 0) && (addonObj.dlStatus < 100)) { // Currently downloading something, display %v
-      status = `%${addonObj.dlStatus}`
+      status = `${addonObj.dlStatus}%`
     } else if (addonObj.dlStatus === 100) { // Addon has finished downloading and is being unzipped and moved
       status = 'Finalizing'
     }
 
     return (
       <tr key={key}>
-        <td width='5%'>{addonObj.host}</td>
-        <td width='5%'>{status}</td>
+        <td width='5%' className='colSMText'>{addonObj.host}</td>
+        <td width='5%' className='statusText'>{status}</td>
         <td width='65%' className='colAddonName'>{addonObj.displayName}</td>
-        <td width='15%' className='colVersion'>{addonObj.version}</td>
+        <td width='15%' className='colSMText'>{addonObj.version}</td>
         <td width='5%'> {AddonControlButton(addonObj, this.props)} </td>
         <td width='5%'>
           <button
