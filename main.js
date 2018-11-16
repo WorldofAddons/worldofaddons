@@ -78,6 +78,14 @@ function checkAllUpdates (installedAddonsDict, configObj) {
         installedAddonsDict[key].status = checkedStatus
         saveToAddonList(configObj, installedAddonsDict)
       }
+      
+      if (checkedStatus === "INSTALLED") {
+        mainWindow.webContents.send('addonNoUpdate', {
+          'name': installedAddonsDict[key].name,
+          'status': 'NO_UPDATE'
+        })
+      }
+
     })
   })
 }
@@ -122,9 +130,6 @@ initConfig()
   .then(configObj => {
     readAddonList(configObj).then(val => {
       installedAddonsDict = val
-      if (configObj.checkUpdateOnStart === true) {
-        checkAllUpdates(val, configObj)
-      }
       return val
     })
     installedAddonsJsonWatcher = initInstallAddonsJsonWatcher(configObj, installedAddonsDict)
@@ -249,4 +254,7 @@ ipcMain.on('newSettings', (e, newConfig) => {
 // need to wait for react to finishing building Dom
 ipcMain.on('windowDoneLoading', () => {
   mainWindow.webContents.send('addonList', installedAddonsDict) // Note: Soft race-condition, Window can be done loading before addons.json is read
+  if (configObj.checkUpdateOnStart === true) {
+    checkAllUpdates(installedAddonsDict, configObj)
+  }
 })
