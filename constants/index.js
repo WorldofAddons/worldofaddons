@@ -1,5 +1,6 @@
 export const HOSTNAMES = {
-  CURSEFORGE: 'CURSEFORGE'
+  CURSEFORGE: 'CURSEFORGE',
+  WOWINTERFACE: 'WOWINTERFACE'
 }
 
 export const MIN_WINDOW_SIZE = { width: 850, height: 600 }

@@ -1,11 +1,13 @@
 import * as curseforge from './curseforge'
+import * as wowinterface from './wowinterface'
 import { HOSTNAMES } from '../../constants/index'
 
 /**
  * hostname to function mapping.
  */
 const parserMap = {
-  [HOSTNAMES.CURSEFORGE]: curseforge.parseAddonDetails
+  [HOSTNAMES.CURSEFORGE]: curseforge.parseAddonDetails,
+  [HOSTNAMES.WOWINTERFACE]: wowinterface.parseAddonDetails
 }
 
 export function detailsParserBuilder (hostname) {
@@ -13,7 +15,8 @@ export function detailsParserBuilder (hostname) {
 }
 
 const parserUrlMap = {
-  [HOSTNAMES.CURSEFORGE]: curseforge.parseDownloadURL
+  [HOSTNAMES.CURSEFORGE]: curseforge.parseDownloadURL,
+  [HOSTNAMES.WOWINTERFACE]:curseforge.parseDownloadURL
 }
 
 export function downloadUrlParserBuilder (hostname) {
