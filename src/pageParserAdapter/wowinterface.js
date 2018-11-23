@@ -2,11 +2,75 @@ import { XMLHttpRequest } from 'xmlhttprequest'
 import { JSDOM } from 'jsdom'
 
 export function parseAddonDetails(url) {
-    console.log("WoWInterface parseaddondetails called")
-    return
+    return new Promise((resolve, reject) => {
+        let req = new XMLHttpRequest()
+        req.open('GET', url, true)
+        req.send(null)
+        req.onreadystatechange = () => {
+          if (req.readyState === 4) {
+            let html = req.responseText
+            let parser = new JSDOM(html)
+            let page = parser.window.document
+            // Fetches the wowinterface addon version
+            const version = page.getElementById('version').innerHTML.replace("Version: ","")
+
+            // Fetches the wowinterface addon display name
+            const displayName = page.title.split(":")[0]
+    
+            // Fetches the owner/author(s)
+            const authors = ['test']
+
+            if (!version || !displayName) {
+              return reject(new Error('wowinterface parser could not parse url.'))
+            }
+            
+            return resolve({
+              'authors': authors,
+              'displayName': displayName, // Name as displayed on wowinterface
+              'version': version // Addon version
+            })
+          }
+        }
+    
+        req.onloadend = () => {
+          if (req.status !== 200) {
+            const errTxt = `ERROR: url returned ${req.status} for ${url}`
+            console.log(errTxt)
+            return reject(new Error(errTxt))
+          }
+        }
+      })
 }
 
 export function parseDownloadURL(url) {
-    console.log("WoWInterface parseDownloadURL called")
-    return
+    return new Promise((resolve, reject) => {
+    const req = new XMLHttpRequest()
+    url = url.replace('info', 'download')
+    req.open('GET', url, true)
+    req.send(null)
+
+    req.onreadystatechange = () => {
+      if (req.readyState === 4) {
+        let html = req.responseText
+        let parser = new JSDOM(html)
+        let page = parser.window.document
+        const link = page.getElementById('manuallink')[0]
+        console.log(link)
+        const downloadURL = `https://www.wowinterface.com/${cleanLink}`
+
+        if (!downloadURL) {
+          return reject(new Error('wowinterface parser could not parse url.'))
+        }
+        return resolve(downloadURL)
+      }
+    }
+
+    req.onloadend = () => {
+      if (req.status !== 200) {
+        const errTxt = `ERROR: url returned ${req.status} for ${url}`
+        console.log(errTxt)
+        return reject(new Error(errTxt))
+      }
+    }
+  })
 }
