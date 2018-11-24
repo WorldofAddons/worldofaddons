@@ -18,7 +18,11 @@ export function parseAddonDetails(url) {
             const displayName = page.title.split(":")[0]
     
             // Fetches the owner/author(s)
-            const authors = ['test']
+            const searchAuthors = page.getElementById('author').getElementsByTagName("a")
+            const authors = []
+            for (let i = 0; i < searchAuthors.length; i++) {
+              authors.push(searchAuthors[i].innerHTML.replace("<b>","").replace("</b>",""))
+            }
 
             if (!version || !displayName) {
               return reject(new Error('wowinterface parser could not parse url.'))
