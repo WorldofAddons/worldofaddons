@@ -4,7 +4,7 @@ export function checkWhichHost (url) {
     return initCurseforgeObj(url)
   }
 
-  if (url.startsWith('https://www.wowinterface.com/downloads/')) {
+  if (url.startsWith('https://www.wowinterface.com/downloads/info')) {
     return initWoWInterface(url)
   }
 

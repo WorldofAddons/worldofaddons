@@ -10,7 +10,7 @@ import { downloadUrlParserBuilder } from './pageParserAdapter/index'
 // Install the addon by chained-promises
 export function installAddon (addonObj, targetPath) {
   return new Promise((resolve, reject) => {
-    downloadUrlParse(addonObj) // TODO: addonObj will have a download url.
+    downloadUrlParse(addonObj)
       .then(downloadURL => {
         console.log(path.join(targetPath, addonObj.name + '.zip'))
         return downloadAddon(addonObj, downloadURL)

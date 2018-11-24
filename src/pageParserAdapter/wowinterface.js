@@ -48,16 +48,12 @@ export function parseDownloadURL(url) {
     url = url.replace('info', 'download')
     req.open('GET', url, true)
     req.send(null)
-
     req.onreadystatechange = () => {
       if (req.readyState === 4) {
         let html = req.responseText
         let parser = new JSDOM(html)
         let page = parser.window.document
-        const link = page.getElementById('manuallink')[0]
-        console.log(link)
-        const downloadURL = `https://www.wowinterface.com/${cleanLink}`
-
+        const downloadURL = page.getElementsByClassName('manuallink')[0].getElementsByTagName('a')[0].href
         if (!downloadURL) {
           return reject(new Error('wowinterface parser could not parse url.'))
         }

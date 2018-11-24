@@ -16,7 +16,7 @@ export function detailsParserBuilder (hostname) {
 
 const parserUrlMap = {
   [HOSTNAMES.CURSEFORGE]: curseforge.parseDownloadURL,
-  [HOSTNAMES.WOWINTERFACE]:curseforge.parseDownloadURL
+  [HOSTNAMES.WOWINTERFACE]: wowinterface.parseDownloadURL
 }
 
 export function downloadUrlParserBuilder (hostname) {
