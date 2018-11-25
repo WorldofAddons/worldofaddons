@@ -84,8 +84,9 @@ function checkAllUpdates (installedAddonsDict, configObj) {
           'name': installedAddonsDict[key].name,
           'status': 'NO_UPDATE'
         })
+      }else {
+        mainWindow.webContents.send('modAddonObj', installedAddonsDict[key])
       }
-
     })
   })
 }
