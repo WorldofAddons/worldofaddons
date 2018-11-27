@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { AddonControlButton } from './AddonControlButton'
+import { shell } from 'electron'
 
 export class AddonTable extends Component {
   renderRow (addonObj, key) {
@@ -14,7 +15,7 @@ export class AddonTable extends Component {
       <tr key={key}>
         <td width='5%' className='colSMText'>{addonObj.host}</td>
         <td width='5%' className='statusText'>{status}</td>
-        <td width='65%' className='colAddonName'>{addonObj.displayName}</td>
+        <td width='65%' className='colAddonName'><a href="#" onClick = {() => shell.openExternal(addonObj.url)}>{addonObj.displayName}</a></td>
         <td width='15%' className='colSMText'>{addonObj.version}</td>
         <td width='5%'> {AddonControlButton(addonObj, this.props)} </td>
         <td width='5%'>

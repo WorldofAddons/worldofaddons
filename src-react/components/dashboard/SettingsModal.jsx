@@ -40,6 +40,36 @@ export class SettingsModal extends React.Component {
     this.props.onNewSettings(settings)
   }
 
+  onToggleTheme () {
+    const { settings } = this.props
+    if (settings.theme === 'light') { // switch light -> dark
+      settings.theme = 'dark'
+    }
+    else if (settings.theme === 'dark') { // switch dark -> light
+      settings.theme = 'light'
+    }
+    this.props.onNewSettings(settings)
+  }
+
+  renderThemeSelection(theme) {
+    const { settings } = this.props
+
+    if (settings.theme === theme) {
+      return <i className="material-icons green-text">done</i>
+    }else {
+      return <i></i>
+    }
+  }
+
+  renderToggleExplain() {
+    const { settings } = this.props
+    if (settings.checkUpdateOnStart === true) {
+      return <p>World of Addons <b>will</b> auto-check for updates when it starts.</p>
+    }else {
+      return <p>World of Addons <b>will not</b> auto-check for updates.</p>
+    }
+  }
+
   renderSettingsBtn () {
     return (
       <button className='waves-effect waves-green btn-flat btn-small' onClick={this.onToggleModal.bind(this)}>
@@ -57,7 +87,7 @@ export class SettingsModal extends React.Component {
             <tbody>
               <tr>
                 <td width='10%'><b>Install Location</b></td>
-                <td width='20%'><p className="small">Where your addons will be installed.</p></td>
+                <td width='20%'><p className="small">World of Warcraft addon directory.</p></td>
                 <td width='70%' className="settingsRight">
                   <button className='pathButton' onClick={(e) => this.onModAddonDir(e)} >
                     {settings.addonDir}
@@ -66,7 +96,7 @@ export class SettingsModal extends React.Component {
               </tr>
               <tr>
                 <td width='10%'><b>Record File</b></td>
-                <td width='20%'><p>Information about your addons (version, hosts, etc.) are saved here. You can load another addon configuration by changing this file.</p></td>
+                <td width='20%'><p>Information about your addons (version, hosts, etc.) are saved here.</p></td>
                 <td width='70%' className="settingsRight">
                   <button className='pathButton' onClick={(e) => this.onModAddonRecordFile(e)} >
                     {settings.addonRecordFile}
@@ -74,8 +104,10 @@ export class SettingsModal extends React.Component {
                 </td>
               </tr>
               <tr>
-                <td></td>
-                <td width='30%'><p>Automatically check for addon updates when opening World of Addons.</p></td>
+                <td><b>Auto-Check Update</b></td>
+                <td width='30%'>
+                  {this.renderToggleExplain()}
+                </td>
                 <td width='70%' className="settingsRight">
                   <div className='switch settingsRight'>
                     <label>
@@ -84,6 +116,23 @@ export class SettingsModal extends React.Component {
                       <span className='lever' />
                       On
                     </label>
+                  </div>
+                </td>
+              </tr>
+
+              <tr>
+                <td><b>Theme</b></td>
+                <td width='30%'>
+                  Light/Dark mode toggle
+                </td>
+                <td width='70%' className="settingsRight">
+                  <div className="row">
+                    <div className="col s3">
+                      <button className="btn-floating btn-large waves-effect waves-dark grey lighten-5" onClick={(e) => this.onToggleTheme(e)}>{this.renderThemeSelection('light')}</button>
+                    </div>
+                    <div className="col s3">
+                      <button className="btn-floating btn-large waves-effect waves-light blue-grey darken-4" onClick={(e) => this.onToggleTheme(e)}>{this.renderThemeSelection('dark')}</button>
+                    </div>
                   </div>
                 </td>
               </tr>

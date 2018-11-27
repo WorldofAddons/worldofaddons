@@ -18,7 +18,7 @@ export let mainWindow
 
 function createWindow () {
   // Create the browser window.
-  mainWindow = new BrowserWindow({ width: 800, height: 600, icon: 'assets/200x200.png' })
+  mainWindow = new BrowserWindow({ width: 800, height: 600, icon: 'assets/500x500.png', 'web-preferences': {'direct-write': false, 'subpixel-font-scaling': false}})
 
   // and load the index.html of the app.
   mainWindow.loadFile('dist/src-react/index.html')
@@ -129,6 +129,7 @@ initConfig()
     return configObj
   })
   .then(configObj => {
+    console.log(configObj)
     readAddonList(configObj).then(val => {
       installedAddonsDict = val
       return val
@@ -223,7 +224,6 @@ ipcMain.on('uninstallAddon', (e, addonObj) => {
 })
 
 ipcMain.on('getSettings', (e) => {
-  console.log('settings clicked')
   mainWindow.webContents.send('modSettings', configObj)
 })
 
@@ -255,6 +255,7 @@ ipcMain.on('newSettings', (e, newConfig) => {
 // need to wait for react to finishing building Dom
 ipcMain.on('windowDoneLoading', () => {
   mainWindow.webContents.send('addonList', installedAddonsDict) // Note: Soft race-condition, Window can be done loading before addons.json is read
+  mainWindow.webContents.send('modSettings', configObj)
   if (configObj.checkUpdateOnStart === true) {
     checkAllUpdates(installedAddonsDict, configObj)
   }

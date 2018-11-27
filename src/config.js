@@ -35,12 +35,15 @@ export function initConfig () {
       configObj = {
         'addonDir': '', // Path to wow addon folder (init to blank for now)
         'addonRecordFile': path.join(worldOfAddonsDir, 'addons.json'), // Path to file storing addon records
-        'checkUpdateOnStart': false // If true, then check for update on start
+        'checkUpdateOnStart': false, // If true, then check for update on start
+        'theme': 'dark'
       }
       return resolve(saveToConfig(WoAConfig, configObj))
     }
     try {
-      return resolve(JSON.parse(fs.readFileSync(WoAConfig, 'utf8')))
+      configObj = JSON.parse(fs.readFileSync(WoAConfig, 'utf8'))
+      configObj = verify_properties(WoAConfig, configObj, path.join(worldOfAddonsDir, 'addons.json'))
+      return resolve(configObj)
     } catch (err) {
       return reject(err)
     }
@@ -63,5 +66,32 @@ export function readAddonList (configObj) {
     } catch (err) {
       return reject(err)
     }
+  })
+}
+
+function verify_properties(configPath, configObj, addonRecordFilePath) {
+  return new Promise((resolve, reject) => {
+    let overwriteFlag = false
+    if (typeof configObj.addonDir === 'undefined') {
+      configObj.addonDir = ""
+      overwriteFlag = true
+    }
+    if (typeof configObj.addonRecordFile === 'undefined') {
+      configObj.addonRecordFile = addonRecordFilePath
+      overwriteFlag = true
+    }
+    if (typeof configObj.checkUpdateOnStart === 'undefined') {
+      configObj.checkUpdateOnStart = false
+      overwriteFlag = true
+    }
+    if (typeof configObj.theme === 'undefined') {
+      configObj.theme = "dark"
+      overwriteFlag = true
+    }
+
+    if (overwriteFlag === true) {
+      saveToConfig(configPath, configObj)
+    }
+  return resolve(configObj)
   })
 }
