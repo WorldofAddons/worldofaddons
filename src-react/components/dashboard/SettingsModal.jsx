@@ -40,15 +40,20 @@ export class SettingsModal extends React.Component {
     this.props.onNewSettings(settings)
   }
 
-  onToggleTheme () {
+  onToggleLight () {
     const { settings } = this.props
-    if (settings.theme === 'light') { // switch light -> dark
-      settings.theme = 'dark'
-    }
-    else if (settings.theme === 'dark') { // switch dark -> light
+    if (settings.theme !== 'light'){
       settings.theme = 'light'
+      this.props.onNewSettings(settings)
     }
-    this.props.onNewSettings(settings)
+  }
+
+  onToggleDark () {
+    const { settings } = this.props
+    if (settings.theme !== 'dark'){
+      settings.theme = 'dark'
+      this.props.onNewSettings(settings)
+    }
   }
 
   renderThemeSelection(theme) {
@@ -128,10 +133,10 @@ export class SettingsModal extends React.Component {
                 <td width='70%' className="settingsRight">
                   <div className="row">
                     <div className="col s3">
-                      <button className="btn-floating btn-large waves-effect waves-dark grey lighten-5" onClick={(e) => this.onToggleTheme(e)}>{this.renderThemeSelection('light')}</button>
+                      <button className="btn-floating btn-large waves-effect waves-teal grey lighten-5" onClick={(e) => this.onToggleLight(e)}>{this.renderThemeSelection('light')}</button>
                     </div>
                     <div className="col s3">
-                      <button className="btn-floating btn-large waves-effect waves-light blue-grey darken-4" onClick={(e) => this.onToggleTheme(e)}>{this.renderThemeSelection('dark')}</button>
+                      <button className="btn-floating btn-large waves-effect waves-teal blue-grey darken-4" onClick={(e) => this.onToggleDark(e)}>{this.renderThemeSelection('dark')}</button>
                     </div>
                   </div>
                 </td>
