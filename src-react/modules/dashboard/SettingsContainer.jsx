@@ -14,7 +14,9 @@ class SettingsContainer extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
-    settings: getSettings(state)
+    settings: getSettings(state),
+    theme: state.addons.settings.theme
+
   }
 }
 

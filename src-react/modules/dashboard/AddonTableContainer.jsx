@@ -12,7 +12,9 @@ class AddonTableContainer extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
-    addonList: getAddonList(state)
+    addonList: getAddonList(state),
+    theme: state.addons.settings.theme
+
   }
 }
 
