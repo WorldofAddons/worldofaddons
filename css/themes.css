@@ -1,9 +1,9 @@
-.light-theme {
+.light-theme-primary {
     color: black;
     background-color: white
 }
 
-.dark-theme {
+.dark-theme-primary {
     color: white;
     background-color: black;
 }

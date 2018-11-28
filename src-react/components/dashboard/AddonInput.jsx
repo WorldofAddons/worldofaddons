@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import {getThemePrimary} from '../../utils/index'
 
 function checkURL (newUrl) {
   const isURL = /^(http|https):\/\/[^ "]+$/.test(newUrl)
@@ -38,8 +39,9 @@ export class AddonInput extends Component {
   }
 
   render () {
+    const containerCss = getThemePrimary(this.props.theme)
     return (
-      <div className='row nav-wrapper white z-depth-2'>
+      <div className={`row nav-wrapper z-depth-2 ${containerCss}`}>
         <div className='col s8 offset-s2'>
           {this.renderInput()}
         </div>
