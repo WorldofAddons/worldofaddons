@@ -123,9 +123,8 @@ main {
   padding-bottom: 5px;
 }
 
-#dashboard-header {
-  display: flex;
-  flex-direction: row-reverse;
+.top-bar {
+  width: 100%;
 }
 
 .screen {

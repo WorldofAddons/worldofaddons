@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { AddonControlButton } from './AddonControlButton'
 import { shell } from 'electron'
-import {getThemeSecondary} from '../../utils/index'
 
 export class AddonTable extends Component {
   renderRow (addonObj, key) {
@@ -54,11 +53,10 @@ export class AddonTable extends Component {
   render () {
     const { addonList } = this.props
     const tag = addonList.length === 0 ? this.renderEmptyBody() : this.renderBody()
-    const containerCss = getThemeSecondary(this.props.theme)
 
     return (
       <div key='addon-table'>
-        <table width='100%' className={`highlight ${containerCss}`}>
+        <table width='100%' className="highlight">
           {tag}
         </table>
       </div>

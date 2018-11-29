@@ -34,7 +34,7 @@ export class AddonInput extends Component {
     const containerCss = getThemeInput(this.props.theme)
     return (
       <div className='browser-default'>
-        <input id='addonInput' className={`browser-default urlInput navBarItem ${containerCss}`} type='text' placeholder={this.props.inputLabel} value={this.state.url} onChange={this.onChange.bind(this)} onKeyPress={this.onSubmit.bind(this)} />
+        <input id='addonInput' className={`browser-default urlInput ${containerCss}`} type='text' placeholder={this.props.inputLabel} value={this.state.url} onChange={this.onChange.bind(this)} onKeyPress={this.onSubmit.bind(this)} />
       </div>
     )
   }
@@ -42,7 +42,7 @@ export class AddonInput extends Component {
   render () {
     const containerCss = getThemePrimary(this.props.theme)
     return (
-      <div className={`row nav-wrapper z-depth-2 ${containerCss}`}>
+      <div className={`${containerCss}`}>
           {this.renderInput()}
       </div>
     )

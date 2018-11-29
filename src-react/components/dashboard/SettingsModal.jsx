@@ -1,6 +1,7 @@
 import React from 'react'
 const { dialog } = require('electron').remote
-import {getThemeSecondary, getThemeInput, getThemePrimary} from '../../utils/index'
+import {getThemeInput, getThemePrimary} from '../../utils/index'
+const { app } = window.require('electron').remote
 
 export class SettingsModal extends React.Component {
   constructor (props) {
@@ -78,7 +79,7 @@ export class SettingsModal extends React.Component {
 
   renderSettingsBtn () {
     return (
-      <button className='waves-effect waves-green btn-flat btn-small' onClick={this.onToggleModal.bind(this)}>
+      <button className='navBarItem waves-effect waves-green btn-flat btn-small' onClick={this.onToggleModal.bind(this)}>
         <i className='material-icons'>settings</i>
       </button>
     )
@@ -92,6 +93,10 @@ export class SettingsModal extends React.Component {
       <div className={`modal-content ${containerCss}`}>
         <div className='row'>
           <button className='waves-effect waves-green red-text btn-flat' onClick={this.onToggleModal.bind(this)}><b>Close</b></button>
+        </div>
+        <div className='row'>
+        <h1>Settings</h1>
+        <p>{app.getVersion()}</p>
         </div>
         <div className='row'>
           <table>
