@@ -46,7 +46,6 @@
   font-size: 7px;
 }
 
-
 .statusText {
   text-transform: lowercase;
   text-align: right;
@@ -132,4 +131,26 @@ main {
   min-height: 100vh;
   flex-direction: column;
   background-color: #ffffff;
+}
+
+table {
+  background: none;
+}
+
+tr:hover {
+  color: #ffffff;
+  background: #7289da;
+  transition: all 0.3s ease;
+}
+
+tr:hover a {
+  color: #baffec;
+}
+
+tr:hover b {
+  color: #31cfa2;
+}
+
+tr:hover label {
+  color: #ffffff;
 }

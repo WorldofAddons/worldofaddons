@@ -15,11 +15,12 @@ export class Dashboard extends React.Component {
           <div className='col s2'>
             <SettingsContainer />
           </div>
-          <div className='col s1'></div>
-          <div className='col s7'>
+          <div className='offset-s1 col s6'>
             <AddonInputContainer />
           </div>
-          <div className='col s4'></div>
+          <div className='offset-s1 col s2'>
+            
+          </div>
 
         </div>
         <AddonTableContainer />

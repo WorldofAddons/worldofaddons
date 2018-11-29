@@ -71,22 +71,31 @@ function initInstallAddonsJsonWatcher (configObj, installedAddonsDict) {
   return installedAddonsJsonWatcher
 }
 
-function checkAllUpdates (installedAddonsDict, configObj) {
+// This function handles recording changes in an addon's install status and
+// sending this information to be displayed
+function recordAddonStatus(key, checkedStatus) {
+  if (installedAddonsDict[key].status !== checkedStatus) {
+    installedAddonsDict[key].status = checkedStatus
+    saveToAddonList(configObj, installedAddonsDict)
+  }
+  
+  if (checkedStatus === "INSTALLED") {
+    mainWindow.webContents.send('addonNoUpdate', {
+      'name': installedAddonsDict[key].name,
+      'status': 'NO_UPDATE'
+    })
+  }
+  
+  if (checkedStatus === "NEW_UPDATE") {
+    mainWindow.webContents.send('modAddonObj', installedAddonsDict[key])
+  }
+}
+
+// This function checks all addons for updates
+function checkAllUpdates (installedAddonsDict) {
   Object.keys(installedAddonsDict).forEach(function (key) {
     checkUpdate(installedAddonsDict[key]).then(checkedStatus => {
-      if (installedAddonsDict[key].status !== checkedStatus) {
-        installedAddonsDict[key].status = checkedStatus
-        saveToAddonList(configObj, installedAddonsDict)
-      }
-      
-      if (checkedStatus === "INSTALLED") {
-        mainWindow.webContents.send('addonNoUpdate', {
-          'name': installedAddonsDict[key].name,
-          'status': 'NO_UPDATE'
-        })
-      }else {
-        mainWindow.webContents.send('modAddonObj', installedAddonsDict[key])
-      }
+      recordAddonStatus(key, checkedStatus)
     })
   })
 }
@@ -183,17 +192,8 @@ ipcMain.on('installUpdate', (e, addonObj) => {
 // checkAddonUpdate() listener
 ipcMain.on('checkAddonUpdate', (e, addonObj) => {
   console.log(`Received request to check ${addonObj.name} for updates`)
-  checkUpdate(addonObj).then(updateStatus => {
-    if (updateStatus !== "INSTALLED") {
-      console.log(installedAddonsDict[addonObj.name].status, updateStatus)
-      installedAddonsDict[addonObj.name].status = updateStatus
-      saveToAddonList(configObj, installedAddonsDict)
-    } else {
-      mainWindow.webContents.send('addonNoUpdate', {
-        'name': addonObj.name,
-        'status': 'NO_UPDATE'
-      })
-    }
+  checkUpdate(addonObj).then(checkedStatus => {
+    recordAddonStatus(addonObj.name, checkedStatus)
   })
 })
 
@@ -256,6 +256,6 @@ ipcMain.on('windowDoneLoading', () => {
   mainWindow.webContents.send('addonList', installedAddonsDict) // Note: Soft race-condition, Window can be done loading before addons.json is read
   mainWindow.webContents.send('modSettings', configObj)
   if (configObj.checkUpdateOnStart === true) {
-    checkAllUpdates(installedAddonsDict, configObj)
+    checkAllUpdates(installedAddonsDict)
   }
 })

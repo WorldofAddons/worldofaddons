@@ -56,7 +56,7 @@ export class AddonTable extends Component {
 
     return (
       <div key='addon-table'>
-        <table width='100%' className="highlight">
+        <table width='100%'>
           {tag}
         </table>
       </div>

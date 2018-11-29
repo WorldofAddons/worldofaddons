@@ -101,28 +101,28 @@ export class SettingsModal extends React.Component {
           <table>
             <tbody>
               <tr>
-                <td width='50%'><b>Install Location</b><p className="small">World of Warcraft addon directory.</p></td>
-                <td width='50%' className="settingsRight">
+                <td><b>Install Location</b><p className="small">World of Warcraft addon directory.</p></td>
+                <td className="settingsRight">
                   <button className={`pathButton ${inputCss}`} onClick={(e) => this.onModAddonDir(e)} >
                     {settings.addonDir}
                   </button>
                 </td>
               </tr>
               <tr>
-                <td width='50%'><b>Record File</b><br></br><p>Information about your addons (version, hosts, etc.) are saved here.</p></td>
-                <td width='50%' className="settingsRight">
+                <td><b>Record File</b><br></br><p>Information about your addons (version, hosts, etc.) are saved here.</p></td>
+                <td className="settingsRight">
                   <button className={`pathButton ${inputCss}`} onClick={(e) => this.onModAddonRecordFile(e)} >
                     {settings.addonRecordFile}
                   </button>
                 </td>
               </tr>
               <tr>
-                <td width='50%'>
+                <td>
                   <b>Auto-Check Update</b>
                   <br></br>
                   {this.renderToggleExplain()}
                 </td>
-                <td width='50%' className="settingsRight">
+                <td className="settingsRight">
                   <div className='switch settingsRight'>
                     <label>
                       Off
@@ -135,11 +135,11 @@ export class SettingsModal extends React.Component {
               </tr>
 
               <tr>
-                <td width='50%'>
+                <td>
                   <b>Theme</b><br></br>
                   Light/Dark mode toggle
                 </td>
-                <td width='50%' className="settingsRight">
+                <td className="settingsRight">
                   <div className="row">
                     <div className="col s3">
                       <button className="btn-floating btn-large waves-effect waves-teal grey lighten-5" onClick={(e) => this.onToggleLight(e)}>{this.renderThemeSelection('light')}</button>
