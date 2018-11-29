@@ -231,7 +231,6 @@ ipcMain.on('newSettings', (e, newConfig) => {
   const homedir = os.homedir() // Fetchs user's homedir
   const worldOfAddonsDir = path.join(homedir, 'WorldOfAddons') // World of Addons stores information in user's home dir
   const WoAConfig = path.join(worldOfAddonsDir, 'config.json') // Saves all config information in config.json
-  console.log('settings modified ', newConfig)
 
   if (configObj.addonRecordFile !== newConfig.addonRecordFile) {
     installedAddonsJsonWatcher.close()

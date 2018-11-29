@@ -1,7 +1,10 @@
 import React from 'react'
-const { dialog } = require('electron').remote
+import { shell } from 'electron'
 import {getThemeInput, getThemePrimary} from '../../utils/index'
+const { dialog } = require('electron').remote
 const { app } = window.require('electron').remote
+
+
 
 export class SettingsModal extends React.Component {
   constructor (props) {
@@ -79,7 +82,7 @@ export class SettingsModal extends React.Component {
 
   renderSettingsBtn () {
     return (
-      <button className='navBarItem waves-effect waves-green btn-flat btn-small' onClick={this.onToggleModal.bind(this)}>
+      <button className='navBarItem waves-effect waves-green btn-small' onClick={this.onToggleModal.bind(this)}>
         <i className='material-icons'>settings</i>
       </button>
     )
@@ -93,10 +96,6 @@ export class SettingsModal extends React.Component {
       <div className={`modal-content ${containerCss}`}>
         <div className='row'>
           <button className='waves-effect waves-green red-text btn-flat' onClick={this.onToggleModal.bind(this)}><b>Close</b></button>
-        </div>
-        <div className='row'>
-        <h1>Settings</h1>
-        <p>{app.getVersion()}</p>
         </div>
         <div className='row'>
           <table>
@@ -154,7 +153,15 @@ export class SettingsModal extends React.Component {
             </tbody>
           </table>
         </div>
-        
+        Version {app.getVersion()}
+        <div className="row">
+          <div className="col s2">
+            <p><button className="btn-small waves-effect waves-teal" href="#" onClick = {() => shell.openExternal("https://github.com/WorldofAddons/worldofaddons/releases")}>Releases</button></p>
+          </div>
+          <div className="col s2">
+            <p><button className="btn-small waves-effect waves-teal" href="#" onClick = {() => shell.openExternal("https://github.com/WorldofAddons/worldofaddons/wiki")}>Wiki</button></p>
+          </div>
+        </div>
       </div>
     )
   }

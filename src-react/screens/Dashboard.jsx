@@ -15,8 +15,8 @@ export class Dashboard extends React.Component {
           <div className='col s2'>
             <SettingsContainer />
           </div>
-          <div className='col s2'></div>
-          <div className='col s6'>
+          <div className='col s1'></div>
+          <div className='col s7'>
             <AddonInputContainer />
           </div>
           <div className='col s4'></div>

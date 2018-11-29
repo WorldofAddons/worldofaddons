@@ -20,7 +20,7 @@ export class AddonTable extends Component {
         <td width='5%'> {AddonControlButton(addonObj, this.props)} </td>
         <td width='5%'>
           <button
-            className='waves-effect waves-red btn-flat btn-small'
+            className='waves-effect waves-red btn-small'
             onClick={() => this.props.onRemove(addonObj)}>
             <i className='material-icons'>delete_forever</i>
           </button>

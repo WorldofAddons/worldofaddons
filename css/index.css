@@ -87,11 +87,11 @@ main {
 .modal-content {
   z-index: 3;
   background-color: #fff;
-  padding: 5px;
+  padding: 40px;
   width: 92%; 
   position: absolute;
   left: 4%;
-  box-shadow: 0 3px 8px 0 #9e9e9e;
+  box-shadow: none;
   transition: all 0.3s ease;
 }
 

@@ -3,7 +3,6 @@
     background-color: #ffffff;
 }
 
-
 /* DARK THEME */
 .dark-theme-primary {
     color: #ffffff;
@@ -34,7 +33,7 @@ b.dark-theme {
 .dark-theme-input:focus {
     background-color: #000000;
     outline: none;
-    box-shadow: 0 0 5px #0091EA;
+    box-shadow: 0 0 8px #0091EA;
     transition: all 0.2s ease;
     color: #ffffff;
 }
