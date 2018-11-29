@@ -123,6 +123,11 @@ main {
   padding-bottom: 5px;
 }
 
+#dashboard-header {
+  display: flex;
+  flex-direction: row-reverse;
+}
+
 .screen {
   display: flex;
   min-height: 100vh;

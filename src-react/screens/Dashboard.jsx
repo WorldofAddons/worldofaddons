@@ -11,8 +11,10 @@ export class Dashboard extends React.Component {
 
     return (
       <div className={`screen ${containerCss}`}>
+        <div id='dashboard-header'>
         <AddonInputContainer />
         <SettingsContainer />
+        </div>
         <AddonTableContainer />
       </div>
     )
