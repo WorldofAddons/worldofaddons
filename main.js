@@ -18,7 +18,7 @@ export let mainWindow
 
 function createWindow () {
   // Create the browser window.
-  mainWindow = new BrowserWindow({ width: 800, height: 600, icon: 'assets/500x500.png', 'web-preferences': {'direct-write': false, 'subpixel-font-scaling': false}})
+  mainWindow = new BrowserWindow({ width: 1000, height: 700, icon: 'assets/500x500.png', 'web-preferences': {'direct-write': false, 'subpixel-font-scaling': false}})
 
   // and load the index.html of the app.
   mainWindow.loadFile('dist/src-react/index.html')

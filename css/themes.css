@@ -1,9 +1,45 @@
 .light-theme-primary {
-    color: black;
-    background-color: white
+    color: #000000;
+    background-color: #ffffff;
 }
 
+
+/* DARK THEME */
 .dark-theme-primary {
-    color: white;
-    background-color: black;
+    color: #ffffff;
+    background-color: #263238;
+    box-shadow: none;
+}
+
+.dark-theme-secondary {
+    color: #ffffff;
+    background-color: #37474f;
+    box-shadow: none;
+}
+
+b.dark-theme {
+    color: #0091EA;
+}
+
+.dark-theme-input {
+    color: #ffffff;
+    background-color: #000000;
+}
+
+.dark-theme-input:hover {
+    background: #161616;
+    box-shadow: none;
+    transition: all 0.2s ease;
+}
+
+.dark-theme-input:focus {
+    background-color: #000000;
+    outline: none;
+    box-shadow: 0 0 5px #0091EA;
+    transition: all 0.2s ease;
+    color: #ffffff;
+}
+
+.dark-theme-input::placeholder {
+    color: #90A4AE;
 }

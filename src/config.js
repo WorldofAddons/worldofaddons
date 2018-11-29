@@ -36,7 +36,7 @@ export function initConfig () {
         'addonDir': '', // Path to wow addon folder (init to blank for now)
         'addonRecordFile': path.join(worldOfAddonsDir, 'addons.json'), // Path to file storing addon records
         'checkUpdateOnStart': false, // If true, then check for update on start
-        'theme': 'dark'
+        'theme': 'light'
       }
       return resolve(saveToConfig(WoAConfig, configObj))
     }
@@ -85,7 +85,7 @@ function verify_properties(configPath, configObj, addonRecordFilePath) {
       overwriteFlag = true
     }
     if (typeof configObj.theme === 'undefined') {
-      configObj.theme = "dark"
+      configObj.theme = "light"
       overwriteFlag = true
     }
 
