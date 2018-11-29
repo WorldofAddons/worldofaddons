@@ -122,3 +122,10 @@ main {
   padding-top: 5px;
   padding-bottom: 5px;
 }
+
+.screen {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+  background-color: #ffffff;
+}

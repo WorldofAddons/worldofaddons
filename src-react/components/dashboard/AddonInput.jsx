@@ -43,9 +43,7 @@ export class AddonInput extends Component {
     const containerCss = getThemePrimary(this.props.theme)
     return (
       <div className={`row nav-wrapper z-depth-2 ${containerCss}`}>
-        <div className='col s8 offset-s2'>
           {this.renderInput()}
-        </div>
       </div>
     )
   }
