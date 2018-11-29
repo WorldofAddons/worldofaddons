@@ -15,5 +15,11 @@
     <script src='../../js/materialize.min.js'></script>
     <script src='./app.bundle.js'></script>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script>
+      document.addEventListener("DOMContentLoaded", function(event) {
+        const { ipcRenderer } = require('electron')
+        ipcRenderer.send('windowDoneLoading', {}) // let backend know react is done rendering.
+        })
+    </script>
   </body>
 </html>

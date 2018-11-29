@@ -252,7 +252,7 @@ ipcMain.on('newSettings', (e, newConfig) => {
 })
 
 // need to wait for react to finishing building Dom
-ipcMain.on('windowDoneLoading', () => {
+ipcMain.once('windowDoneLoading', () => {
   mainWindow.webContents.send('addonList', installedAddonsDict) // Note: Soft race-condition, Window can be done loading before addons.json is read
   mainWindow.webContents.send('modSettings', configObj)
   if (configObj.checkUpdateOnStart === true) {
