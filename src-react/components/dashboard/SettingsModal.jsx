@@ -4,8 +4,6 @@ import {getThemeInput, getThemePrimary} from '../../utils/index'
 const { dialog } = require('electron').remote
 const { app } = window.require('electron').remote
 
-
-
 export class SettingsModal extends React.Component {
   constructor (props) {
     super(props)
@@ -95,7 +93,7 @@ export class SettingsModal extends React.Component {
     return (
       <div className={`modal-content ${containerCss}`}>
         <div className='row'>
-          <button className='waves-effect waves-green red-text btn-flat' onClick={this.onToggleModal.bind(this)}><b>Close</b></button>
+          <button className='btn-flat waves-effect waves-green red-text' onClick={this.onToggleModal.bind(this)}><b>Close</b></button>
         </div>
         <div className='row'>
           <table>

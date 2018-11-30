@@ -11,7 +11,7 @@ export const AddonControlButton = (addonObj, { onInstall, onInstallUpdate, onChe
         onClick={() => onCheckUpdate(addonObj)}><i className='material-icons'>autorenew</i></button>
     case 'NEW_UPDATE': // Install update Button
       return <button className='waves-effect waves-orange btn-small'
-        onClick={() => onInstallUpdate(addonObj)}><i className='material-icons orange-text text-darken-4'>cloud_download</i></button>
+        onClick={() => onInstallUpdate(addonObj)}><i className='material-icons orange-text text-darken-1'>cloud_download</i></button>
     case 'NO_UPDATE': // No Update, show checkmark
       return <i className='material-icons green-text text-darken-4'>check_circle_outline</i>
     default: // Install Button

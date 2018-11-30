@@ -114,14 +114,6 @@ main {
   padding-left: 40px;
 }
 
-.waves-effect {
-  height: auto;
-  min-height: 20px;
-  line-height: 20px;
-  padding-top: 5px;
-  padding-bottom: 5px;
-}
-
 .top-bar {
   width: 100%;
 }
@@ -138,12 +130,20 @@ table {
 }
 
 tr:hover {
-  background: rgb(116, 114, 218, 0.3);
-  /*background: #7472da;*/
+  background: rgb(33, 93, 156, 0.3);
+  /*background: #215D9C;*/
   transition: all 0.2s ease;
 }
-/*
-tr:hover b {
-  color: #31cfa2;
+
+.btn-small {
+  background-color: #215D9C;
 }
-*/
+
+.btn-small:hover {
+  background-color: #42b8a8;
+}
+
+.btn-pad-left {
+  float: right;
+  margin: 5px;
+}

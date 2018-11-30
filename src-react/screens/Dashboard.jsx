@@ -21,11 +21,8 @@ export class Dashboard extends React.Component {
           </div>
           <div className='offset-s1 col s2'>
           </div>
-
         </div>
-        <div className="row">
-            <CheckOrUpdateAllButtonContainer />
-        </div>
+        <CheckOrUpdateAllButtonContainer />
         <AddonTableContainer />
       </div>
     )

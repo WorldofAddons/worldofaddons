@@ -189,11 +189,33 @@ ipcMain.on('installUpdate', (e, addonObj) => {
   })
 })
 
+// update all addons that need updating listener
+ipcMain.on('updateAll', (e, notUpdated) => {
+  notUpdated.forEach(function(addonObj) {
+    const URLObj = checkWhichHost(addonObj.url)
+    parseAddonDetails(URLObj).then(addonObj => {
+      installAddon(addonObj, configObj.addonDir).then((newAddon) => {
+          installedAddonsDict[newAddon.name] = newAddon
+          integrityCheck(installedAddonsDict, configObj)
+        })
+    })
+  })
+})
+
 // checkAddonUpdate() listener
 ipcMain.on('checkAddonUpdate', (e, addonObj) => {
   console.log(`Received request to check ${addonObj.name} for updates`)
   checkUpdate(addonObj).then(checkedStatus => {
     recordAddonStatus(addonObj.name, checkedStatus)
+  })
+})
+
+// Check all addons for update listener
+ipcMain.on('checkAll', (e, notChecked) => {
+  notChecked.forEach(function(addonObj) {
+    checkUpdate(addonObj).then(checkedStatus => {
+      recordAddonStatus(addonObj.name, checkedStatus)
+    })
   })
 })
 
