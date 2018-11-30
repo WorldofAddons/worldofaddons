@@ -16,7 +16,6 @@ const mapStateToProps = (state) => {
   return {
     settings: getSettings(state),
     theme: state.addons.settings.theme
-
   }
 }
 

@@ -1,8 +1,3 @@
-.light-theme-primary {
-    color: #000000;
-    background-color: #ffffff;
-}
-
 /* DARK THEME */
 .dark-theme-primary {
     color: #ffffff;
@@ -36,4 +31,8 @@
 
 .dark-theme-input::placeholder {
     color: #99aab5;
+}
+
+.dark-theme b{
+  color: #31cfa2;
 }

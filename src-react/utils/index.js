@@ -1,5 +1,5 @@
 const themeMapPrimary = {
-    light: 'light-theme-primary',
+    light: '',
     dark: 'dark-theme-primary'
 }
 

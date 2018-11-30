@@ -1,8 +1,9 @@
 import React from 'react'
 import AddonTableContainer from '../modules/dashboard/AddonTableContainer'
 import {getThemePrimary, getThemeSecondary} from '../utils/index'
-import AddonInputContainer from '../modules/dashboard/AddonInputContainer'
 import SettingsContainer from '../modules/dashboard/SettingsContainer'
+import AddonInputContainer from '../modules/dashboard/AddonInputContainer'
+import CheckOrUpdateAllButtonContainer from '../modules/dashboard/CheckOrUpdateAllButtonContainer'
 import { connect } from 'react-redux'
 
 export class Dashboard extends React.Component {
@@ -19,7 +20,7 @@ export class Dashboard extends React.Component {
             <AddonInputContainer />
           </div>
           <div className='offset-s1 col s2'>
-            
+            <CheckOrUpdateAllButtonContainer />
           </div>
 
         </div>
