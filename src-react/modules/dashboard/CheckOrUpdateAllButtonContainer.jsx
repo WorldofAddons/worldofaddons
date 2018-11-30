@@ -22,8 +22,8 @@ const mapStateToProps = (state) => {
 // mix of dispatch and non dispatch functions
 const mapDispatchToProps = (dispatch) => {
   return {
-      onCheckAll: () => { dispatch(ipcSendAction('checkAll', null)) },
-      onUpdateAll: () => { dispatch(ipcSendAction('updateAll', null)) }
+      onCheckAll: (checkList) => { dispatch(ipcSendAction('checkAll', checkList)) },
+      onUpdateAll: (updateList) => { dispatch(ipcSendAction('updateAll', updateList)) }
   }
 }
 
