@@ -2,15 +2,17 @@ import React from 'react'
 
 export class CheckOrUpdateAllButton extends React.Component {
 
-    renderCheckButton(notChecked) {
-        if (notChecked.length >= 1) {
-            return <button className='waves-effect waves-green btn-small btn-pad-left' onClick={(e) => this.props.onCheckAll(notChecked)}>Check All</button>
+    renderCheckButton(notChecked, notUpdated) {
+        if (notChecked.length === 0 && notUpdated.length === 0) {
+            return <p className="btn-pad-left">All your addons are up-to-date!</p>
+        }else if (notChecked.length >= 1){
+            return <button className='waves-effect waves-green btn-small btn-pad-left' onClick={(e) => this.props.onCheckAll(notChecked)}>Check All ({notChecked.length})</button>
         }
     }
 
     renderUpdateButton(notUpdated) {
         if (notUpdated.length >= 1) {
-            return <button className='waves-effect waves-green btn-small btn-pad-left' onClick={(e) => this.props.onUpdateAll(notUpdated)}>Update All</button>
+            return <button className='waves-effect waves-green btn-small btn-pad-left' onClick={(e) => this.props.onUpdateAll(notUpdated)}>Update All ({notUpdated.length})</button>
         }
     }
 
@@ -29,7 +31,7 @@ export class CheckOrUpdateAllButton extends React.Component {
 
         return (
             <div>
-                {this.renderCheckButton(notChecked)}
+                {this.renderCheckButton(notChecked, notUpdated)}
                 {this.renderUpdateButton(notUpdated)}
             </div>
         )
