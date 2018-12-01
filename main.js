@@ -19,7 +19,7 @@ export let mainWindow
 
 function createWindow () {
   // Create the browser window.
-  mainWindow = new BrowserWindow({ width: 1000, height: 700, icon: 'assets/500x500.png', 'web-preferences': {'direct-write': false, 'subpixel-font-scaling': false}})
+  mainWindow = new BrowserWindow({ width: 1000, height: 700, icon: 'assets/500x500.png', 'web-preferences': { 'direct-write': false, 'subpixel-font-scaling': false } })
 
   // and load the index.html of the app.
   mainWindow.loadFile('dist/src-react/index.html')
@@ -48,17 +48,17 @@ function initSubDirWatcher (configObj, installedAddonsDict) {
   })
   subDirWatcher
     .on('addDir', function (path) {
-        console.log('Addon subdir: ', path)
-        integrityCheck(installedAddonsDict, configObj) // Verifies that addon was installed
+      console.log('Addon subdir: ', path)
+      integrityCheck(installedAddonsDict, configObj) // Verifies that addon was installed
     })
     .on('unlinkDir', function (path) {
-        console.log('Addon deleted: ', path)
-        integrityCheck(installedAddonsDict, configObj) // Verifies that addon was uninstalled
+      console.log('Addon deleted: ', path)
+      integrityCheck(installedAddonsDict, configObj) // Verifies that addon was uninstalled
     })
     .on('error', function (error) {
       console.log('ERROR: ', error)
     })
-    return subDirWatcher
+  return subDirWatcher
 }
 
 function initInstallAddonsJsonWatcher (configObj, installedAddonsDict) {
@@ -74,20 +74,20 @@ function initInstallAddonsJsonWatcher (configObj, installedAddonsDict) {
 
 // This function handles recording changes in an addon's install status and
 // sending this information to be displayed
-function recordAddonStatus(key, checkedStatus) {
+function recordAddonStatus (key, checkedStatus) {
   if (installedAddonsDict[key].status !== checkedStatus) {
     installedAddonsDict[key].status = checkedStatus
     saveToAddonList(configObj, installedAddonsDict)
   }
-  
-  if (checkedStatus === "INSTALLED") {
+
+  if (checkedStatus === 'INSTALLED') {
     mainWindow.webContents.send('addonNoUpdate', {
       'name': installedAddonsDict[key].name,
       'status': 'NO_UPDATE'
     })
   }
-  
-  if (checkedStatus === "NEW_UPDATE") {
+
+  if (checkedStatus === 'NEW_UPDATE') {
     mainWindow.webContents.send('modAddonObj', installedAddonsDict[key])
   }
 }
@@ -192,13 +192,13 @@ ipcMain.on('installUpdate', (e, addonObj) => {
 
 // update all addons that need updating listener
 ipcMain.on('updateAll', (e, notUpdated) => {
-  notUpdated.forEach(function(addonObj) {
+  notUpdated.forEach(function (addonObj) {
     const URLObj = checkWhichHost(addonObj.url)
     parseAddonDetails(URLObj).then(addonObj => {
       installAddon(addonObj, configObj.addonDir).then((newAddon) => {
-          installedAddonsDict[newAddon.name] = newAddon
-          integrityCheck(installedAddonsDict, configObj)
-        })
+        installedAddonsDict[newAddon.name] = newAddon
+        integrityCheck(installedAddonsDict, configObj)
+      })
     })
   })
 })
@@ -213,7 +213,7 @@ ipcMain.on('checkAddonUpdate', (e, addonObj) => {
 
 // Check all addons for update listener
 ipcMain.on('checkAll', (e, notChecked) => {
-  notChecked.forEach(function(addonObj) {
+  notChecked.forEach(function (addonObj) {
     checkUpdate(addonObj).then(checkedStatus => {
       recordAddonStatus(addonObj.name, checkedStatus)
     })
@@ -248,7 +248,7 @@ ipcMain.on('uninstallAddon', (e, addonObj) => {
 
 ipcMain.on('getSettings', (e) => {
   mainWindow.webContents.send('modSettings', configObj)
-  checkWoAVersion().then(value =>{
+  checkWoAVersion().then(value => {
     mainWindow.webContents.send('latestVersion', value)
   })
 })

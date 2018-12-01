@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import {getThemePrimary, getThemeInput} from '../../utils/index'
+import { getThemePrimary, getThemeInput } from '../../utils/index'
 
 function checkURL (newUrl) {
   const isURL = /^(http|https):\/\/[^ "]+$/.test(newUrl)
@@ -43,7 +43,7 @@ export class AddonInput extends Component {
     const containerCss = getThemePrimary(this.props.theme)
     return (
       <div className={`${containerCss}`}>
-          {this.renderInput()}
+        {this.renderInput()}
       </div>
     )
   }

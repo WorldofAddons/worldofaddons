@@ -1,6 +1,6 @@
 import React from 'react'
 import AddonTableContainer from '../modules/dashboard/AddonTableContainer'
-import {getThemePrimary, getThemeSecondary} from '../utils/index'
+import { getThemePrimary, getThemeSecondary } from '../utils/index'
 import SettingsContainer from '../modules/dashboard/SettingsContainer'
 import AddonInputContainer from '../modules/dashboard/AddonInputContainer'
 import CheckOrUpdateAllButtonContainer from '../modules/dashboard/CheckOrUpdateAllButtonContainer'
@@ -19,8 +19,7 @@ export class Dashboard extends React.Component {
           <div className='offset-s1 col s6'>
             <AddonInputContainer />
           </div>
-          <div className='offset-s1 col s2'>
-          </div>
+          <div className='offset-s1 col s2' />
         </div>
         <CheckOrUpdateAllButtonContainer />
         <AddonTableContainer />

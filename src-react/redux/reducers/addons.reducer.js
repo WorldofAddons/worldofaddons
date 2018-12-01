@@ -11,7 +11,7 @@ const settings = (state = initialSettingState, action) => {
   }
 }
 
-const initialVersionState = ["COULD NOT PARSE","VER"]
+const initialVersionState = ['COULD NOT PARSE', 'VER']
 const version = (state = initialVersionState, action) => {
   switch (action.type) {
     case 'latestVersion':

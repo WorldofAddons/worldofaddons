@@ -1,16 +1,16 @@
 const themeMapPrimary = {
-    light: '',
-    dark: 'dark-theme-primary'
+  light: '',
+  dark: 'dark-theme-primary'
 }
 
 const themeMapSecondary = {
-    light: '',
-    dark: 'dark-theme-secondary'
+  light: '',
+  dark: 'dark-theme-secondary'
 }
 
 const themeMapInput = {
-    light: '',
-    dark: 'dark-theme-input'
+  light: '',
+  dark: 'dark-theme-input'
 }
 
 export const getThemePrimary = (theme) => themeMapPrimary[theme]

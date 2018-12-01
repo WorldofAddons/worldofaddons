@@ -7,7 +7,7 @@ import { getAddonList } from '../../redux/selectors/index'
 class CheckOrUpdateAllButtonContainer extends React.Component {
   render () {
     return (
-      <CheckOrUpdateAllButton {...this.props}/>
+      <CheckOrUpdateAllButton {...this.props} />
     )
   }
 }
@@ -22,8 +22,8 @@ const mapStateToProps = (state) => {
 // mix of dispatch and non dispatch functions
 const mapDispatchToProps = (dispatch) => {
   return {
-      onCheckAll: (checkList) => { dispatch(ipcSendAction('checkAll', checkList)) },
-      onUpdateAll: (updateList) => { dispatch(ipcSendAction('updateAll', updateList)) }
+    onCheckAll: (checkList) => { dispatch(ipcSendAction('checkAll', checkList)) },
+    onUpdateAll: (updateList) => { dispatch(ipcSendAction('updateAll', updateList)) }
   }
 }
 

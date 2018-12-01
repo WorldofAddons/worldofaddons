@@ -2,10 +2,9 @@ import fs from 'fs'
 import path from 'path'
 import os from 'os'
 
-
-export function saveToConfig(configPath, configObj) {
+export function saveToConfig (configPath, configObj) {
   return new Promise(function (resolve, reject) {
-    console.log("\tUpdating config.json")
+    console.log('\tUpdating config.json')
     fs.writeFile(configPath, JSON.stringify(configObj, null, 2), 'utf8', (err) => reject(err))
     return resolve(configObj)
   })
@@ -69,11 +68,11 @@ export function readAddonList (configObj) {
   })
 }
 
-function verify_properties(configPath, configObj, addonRecordFilePath) {
+function verify_properties (configPath, configObj, addonRecordFilePath) {
   return new Promise((resolve, reject) => {
     let overwriteFlag = false
     if (typeof configObj.addonDir === 'undefined') {
-      configObj.addonDir = ""
+      configObj.addonDir = ''
       overwriteFlag = true
     }
     if (typeof configObj.addonRecordFile === 'undefined') {
@@ -85,13 +84,13 @@ function verify_properties(configPath, configObj, addonRecordFilePath) {
       overwriteFlag = true
     }
     if (typeof configObj.theme === 'undefined') {
-      configObj.theme = "light"
+      configObj.theme = 'light'
       overwriteFlag = true
     }
 
     if (overwriteFlag === true) {
       saveToConfig(configPath, configObj)
     }
-  return resolve(configObj)
+    return resolve(configObj)
   })
 }
