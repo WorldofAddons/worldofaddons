@@ -16,12 +16,12 @@ export class SettingsModal extends React.Component {
     let updateMessage = 'Latest Version'
     let explain = ''
 
-    if (this.props.version[1] === 'nightly') {
+    if (this.props.version[1] === 'nightly') { // Explains that nightly is beta release, otherwise it's a stable release
       explain = 'beta'
     } else {
       explain = 'stable'
     }
-
+    // Index 0 is version number, Index 1 is nightly or stable
     if (this.props.version[0] > app.getVersion()) {
       updateMessage = 'New '.concat(this.props.version[0], ' ', explain, ' release available!')
     }
