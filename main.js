@@ -7,6 +7,7 @@ import { initConfig, readAddonList, saveToAddonList, saveToConfig } from './src/
 import { checkUpdate } from './src/updateAddon'
 import { integrityCheck } from './src/integrityCheck'
 import { uninstallAddon } from './src/uninstallAddon'
+import { checkWoAVersion } from './src/checkWoAVersion'
 import os from 'os'
 import path from 'path'
 
@@ -18,7 +19,7 @@ export let mainWindow
 
 function createWindow () {
   // Create the browser window.
-  mainWindow = new BrowserWindow({ width: 800, height: 600, icon: 'assets/200x200.png' })
+  mainWindow = new BrowserWindow({ width: 1000, height: 700, icon: 'assets/500x500.png', 'web-preferences': { 'direct-write': false, 'subpixel-font-scaling': false } })
 
   // and load the index.html of the app.
   mainWindow.loadFile('dist/src-react/index.html')
@@ -47,17 +48,17 @@ function initSubDirWatcher (configObj, installedAddonsDict) {
   })
   subDirWatcher
     .on('addDir', function (path) {
-        console.log('Addon subdir: ', path)
-        integrityCheck(installedAddonsDict, configObj) // Verifies that addon was installed
+      console.log('Addon subdir: ', path)
+      integrityCheck(installedAddonsDict, configObj) // Verifies that addon was installed
     })
     .on('unlinkDir', function (path) {
-        console.log('Addon deleted: ', path)
-        integrityCheck(installedAddonsDict, configObj) // Verifies that addon was uninstalled
+      console.log('Addon deleted: ', path)
+      integrityCheck(installedAddonsDict, configObj) // Verifies that addon was uninstalled
     })
     .on('error', function (error) {
       console.log('ERROR: ', error)
     })
-    return subDirWatcher
+  return subDirWatcher
 }
 
 function initInstallAddonsJsonWatcher (configObj, installedAddonsDict) {
@@ -71,22 +72,31 @@ function initInstallAddonsJsonWatcher (configObj, installedAddonsDict) {
   return installedAddonsJsonWatcher
 }
 
-function checkAllUpdates (installedAddonsDict, configObj) {
+// This function handles recording changes in an addon's install status and
+// sending this information to be displayed
+function recordAddonStatus (key, checkedStatus) {
+  if (installedAddonsDict[key].status !== checkedStatus) {
+    installedAddonsDict[key].status = checkedStatus
+    saveToAddonList(configObj, installedAddonsDict)
+  }
+
+  if (checkedStatus === 'INSTALLED') {
+    mainWindow.webContents.send('addonNoUpdate', {
+      'name': installedAddonsDict[key].name,
+      'status': 'NO_UPDATE'
+    })
+  }
+
+  if (checkedStatus === 'NEW_UPDATE') {
+    mainWindow.webContents.send('modAddonObj', installedAddonsDict[key])
+  }
+}
+
+// This function checks all addons for updates
+function checkAllUpdates (installedAddonsDict) {
   Object.keys(installedAddonsDict).forEach(function (key) {
     checkUpdate(installedAddonsDict[key]).then(checkedStatus => {
-      if (installedAddonsDict[key].status !== checkedStatus) {
-        installedAddonsDict[key].status = checkedStatus
-        saveToAddonList(configObj, installedAddonsDict)
-      }
-      
-      if (checkedStatus === "INSTALLED") {
-        mainWindow.webContents.send('addonNoUpdate', {
-          'name': installedAddonsDict[key].name,
-          'status': 'NO_UPDATE'
-        })
-      }else {
-        mainWindow.webContents.send('modAddonObj', installedAddonsDict[key])
-      }
+      recordAddonStatus(key, checkedStatus)
     })
   })
 }
@@ -129,6 +139,7 @@ initConfig()
     return configObj
   })
   .then(configObj => {
+    console.log(configObj)
     readAddonList(configObj).then(val => {
       installedAddonsDict = val
       return val
@@ -179,20 +190,33 @@ ipcMain.on('installUpdate', (e, addonObj) => {
   })
 })
 
+// update all addons that need updating listener
+ipcMain.on('updateAll', (e, notUpdated) => {
+  notUpdated.forEach(function (addonObj) {
+    const URLObj = checkWhichHost(addonObj.url)
+    parseAddonDetails(URLObj).then(addonObj => {
+      installAddon(addonObj, configObj.addonDir).then((newAddon) => {
+        installedAddonsDict[newAddon.name] = newAddon
+        integrityCheck(installedAddonsDict, configObj)
+      })
+    })
+  })
+})
+
 // checkAddonUpdate() listener
 ipcMain.on('checkAddonUpdate', (e, addonObj) => {
   console.log(`Received request to check ${addonObj.name} for updates`)
-  checkUpdate(addonObj).then(updateStatus => {
-    if (updateStatus !== "INSTALLED") {
-      console.log(installedAddonsDict[addonObj.name].status, updateStatus)
-      installedAddonsDict[addonObj.name].status = updateStatus
-      saveToAddonList(configObj, installedAddonsDict)
-    } else {
-      mainWindow.webContents.send('addonNoUpdate', {
-        'name': addonObj.name,
-        'status': 'NO_UPDATE'
-      })
-    }
+  checkUpdate(addonObj).then(checkedStatus => {
+    recordAddonStatus(addonObj.name, checkedStatus)
+  })
+})
+
+// Check all addons for update listener
+ipcMain.on('checkAll', (e, notChecked) => {
+  notChecked.forEach(function (addonObj) {
+    checkUpdate(addonObj).then(checkedStatus => {
+      recordAddonStatus(addonObj.name, checkedStatus)
+    })
   })
 })
 
@@ -223,15 +247,16 @@ ipcMain.on('uninstallAddon', (e, addonObj) => {
 })
 
 ipcMain.on('getSettings', (e) => {
-  console.log('settings clicked')
   mainWindow.webContents.send('modSettings', configObj)
+  checkWoAVersion().then(value => {
+    mainWindow.webContents.send('latestVersion', value)
+  })
 })
 
 ipcMain.on('newSettings', (e, newConfig) => {
   const homedir = os.homedir() // Fetchs user's homedir
   const worldOfAddonsDir = path.join(homedir, 'WorldOfAddons') // World of Addons stores information in user's home dir
   const WoAConfig = path.join(worldOfAddonsDir, 'config.json') // Saves all config information in config.json
-  console.log('settings modified ', newConfig)
 
   if (configObj.addonRecordFile !== newConfig.addonRecordFile) {
     installedAddonsJsonWatcher.close()
@@ -255,7 +280,8 @@ ipcMain.on('newSettings', (e, newConfig) => {
 // need to wait for react to finishing building Dom
 ipcMain.on('windowDoneLoading', () => {
   mainWindow.webContents.send('addonList', installedAddonsDict) // Note: Soft race-condition, Window can be done loading before addons.json is read
+  mainWindow.webContents.send('modSettings', configObj)
   if (configObj.checkUpdateOnStart === true) {
-    checkAllUpdates(installedAddonsDict, configObj)
+    checkAllUpdates(installedAddonsDict)
   }
 })

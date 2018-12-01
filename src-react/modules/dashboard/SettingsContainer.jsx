@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { getSettings } from '../../redux/selectors/index'
+import { getSettings, getVersion } from '../../redux/selectors/index'
 import { ipcSendAction } from '../../redux/actions/index'
 import { SettingsModal } from '../../components/dashboard/SettingsModal'
 
@@ -14,7 +14,9 @@ class SettingsContainer extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
-    settings: getSettings(state)
+    version: state.addons.version,
+    settings: getSettings(state),
+    theme: state.addons.settings.theme
   }
 }
 

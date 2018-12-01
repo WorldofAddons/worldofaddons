@@ -11,6 +11,16 @@ const settings = (state = initialSettingState, action) => {
   }
 }
 
+const initialVersionState = ['COULD NOT PARSE', 'VER']
+const version = (state = initialVersionState, action) => {
+  switch (action.type) {
+    case 'latestVersion':
+      return action.data
+    default:
+      return state
+  }
+}
+
 const initialStateNameList = []
 const nameList = (state = initialStateNameList, action) => {
   let newState
@@ -61,6 +71,7 @@ const dict = (state = initialStateDict, action) => {
 
 export const addons = combineReducers({
   settings,
+  version,
   nameList,
   dict
 })

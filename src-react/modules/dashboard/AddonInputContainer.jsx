@@ -16,7 +16,9 @@ class AddonInputContainer extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-  return {}
+  return {
+    theme: state.addons.settings.theme
+  }
 }
 
 // mix of dispatch and non dispatch functions

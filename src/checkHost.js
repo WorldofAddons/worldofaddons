@@ -26,9 +26,11 @@ function initCurseforgeObj (url) {
 // JSON object is referenced by other components
 function initWoWInterface (url) {
   const URLSplit = url.split('https://www.wowinterface.com/downloads/')
-  const URLObj = { 'url': url, 'host': 'wowinterface', 'name': URLSplit[1].substring(
-    URLSplit[1].lastIndexOf("-") + 1, 
-    URLSplit[1].lastIndexOf(".html")
-)}
+  const URLObj = { 'url': url,
+    'host': 'wowinterface',
+    'name': URLSplit[1].substring(
+      URLSplit[1].lastIndexOf('-') + 1,
+      URLSplit[1].lastIndexOf('.html')
+    ) }
   return URLObj
 }

@@ -9,7 +9,6 @@ const sendToReducerAction = (type, data) => {
 class IpcListener extends Component {
   constructor (props) {
     super(props)
-    ipcRenderer.send('windowDoneLoading', {}) // react is done rendering.
   }
 
   componentDidMount () {

@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { getThemePrimary, getThemeInput } from '../../utils/index'
 
 function checkURL (newUrl) {
   const isURL = /^(http|https):\/\/[^ "]+$/.test(newUrl)
@@ -30,19 +31,19 @@ export class AddonInput extends Component {
   }
 
   renderInput () {
+    const containerCss = getThemeInput(this.props.theme)
     return (
       <div className='browser-default'>
-        <input id='addonInput' className='browser-default urlInput navBarItem' type='text' placeholder={this.props.inputLabel} value={this.state.url} onChange={this.onChange.bind(this)} onKeyPress={this.onSubmit.bind(this)} />
+        <input id='addonInput' className={`browser-default urlInput ${containerCss}`} type='text' placeholder={this.props.inputLabel} value={this.state.url} onChange={this.onChange.bind(this)} onKeyPress={this.onSubmit.bind(this)} />
       </div>
     )
   }
 
   render () {
+    const containerCss = getThemePrimary(this.props.theme)
     return (
-      <div className='row nav-wrapper white z-depth-2'>
-        <div className='col s8 offset-s2'>
-          {this.renderInput()}
-        </div>
+      <div className={`${containerCss}`}>
+        {this.renderInput()}
       </div>
     )
   }
