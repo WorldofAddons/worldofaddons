@@ -7,6 +7,7 @@ import { initConfig, readAddonList, saveToAddonList, saveToConfig } from './src/
 import { checkUpdate } from './src/updateAddon'
 import { integrityCheck } from './src/integrityCheck'
 import { uninstallAddon } from './src/uninstallAddon'
+import { checkWoAVersion } from './src/checkWoAVersion'
 import os from 'os'
 import path from 'path'
 
@@ -247,6 +248,9 @@ ipcMain.on('uninstallAddon', (e, addonObj) => {
 
 ipcMain.on('getSettings', (e) => {
   mainWindow.webContents.send('modSettings', configObj)
+  checkWoAVersion().then(value =>{
+    mainWindow.webContents.send('latestVersion', value)
+  })
 })
 
 ipcMain.on('newSettings', (e, newConfig) => {

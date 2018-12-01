@@ -147,3 +147,7 @@ tr:hover {
   float: right;
   margin: 5px;
 }
+
+.btn-margin {
+  margin: 5px;
+}

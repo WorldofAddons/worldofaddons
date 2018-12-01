@@ -12,6 +12,27 @@ export class SettingsModal extends React.Component {
     }
   }
 
+  latestVersion() {
+    let updateMessage = "Latest Version"
+    let explain = ""
+
+    if (this.props.version[1] === "nightly") {
+      explain = "beta"
+    }else {
+      explain = "stable"
+    }
+
+    if (this.props.version[0] > app.getVersion()) {
+      updateMessage = "New ".concat(this.props.version[0]," ", explain," release available!")
+    }
+    return <div>
+            You are using World of Addons {app.getVersion()} - {updateMessage}
+            <br></br>
+            <a href="#" onClick = {() => shell.openExternal("https://github.com/WorldofAddons/worldofaddons/releases")}>Latest Release: {this.props.version[0]} {this.props.version[1]} ({explain})</a>
+            <br></br>
+          </div>
+  }
+
   onToggleModal (e) {
     this.setState({ show: !this.state.show })
     if (this.state.show === false) { // Fetch config settings when opening modal
@@ -151,14 +172,11 @@ export class SettingsModal extends React.Component {
             </tbody>
           </table>
         </div>
-        Version {app.getVersion()}
+        {this.latestVersion()}
         <div className="row">
-          <div className="col s2">
-            <p><button className="btn-small waves-effect waves-teal" href="#" onClick = {() => shell.openExternal("https://github.com/WorldofAddons/worldofaddons/releases")}>Releases</button></p>
-          </div>
-          <div className="col s2">
-            <p><button className="btn-small waves-effect waves-teal" href="#" onClick = {() => shell.openExternal("https://github.com/WorldofAddons/worldofaddons/wiki")}>Wiki</button></p>
-          </div>
+            <button className="btn-small btn-margin waves-effect waves-teal" href="#" onClick = {() => shell.openExternal("https://github.com/WorldofAddons/worldofaddons/releases")}>All Versions <i className='material-icons'>history</i></button>
+            <button className="btn-small btn-margin waves-effect waves-teal" href="#" onClick = {() => shell.openExternal("https://github.com/WorldofAddons/")}>Github <i className='material-icons'>home</i></button>
+            <button className="btn-small btn-margin waves-effect waves-teal" href="#" onClick = {() => shell.openExternal("https://github.com/WorldofAddons/worldofaddons/wiki")}>Help / Wiki <i className='material-icons'>help_outline</i></button>
         </div>
       </div>
     )

@@ -13,7 +13,8 @@ const electronChannels = [
   'modAddonObj',
   'updateAddonDL',
   'delAddonObj',
-  'addonNoUpdate'
+  'addonNoUpdate',
+  'latestVersion'
 ]
 
 class App extends React.Component {
