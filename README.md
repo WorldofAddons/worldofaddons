@@ -18,6 +18,8 @@ Check out our [Wiki](https://github.com/WorldofAddons/worldofaddons/wiki) for in
 World of Addons is an open-souce addon manager for World of Warcraft.
 Simply paste the URL of the add-on you want to install, and World of Addons will handle installing, uninstalling, and updating.
 
+![Demo](https://i.imgur.com/mIIHJL1.gif)
+
 ### Supported Sites
 Install any addon from,
 - https://www.curseforge.com/wow/addons
