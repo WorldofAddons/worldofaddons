@@ -58,7 +58,7 @@
   - provider: GitHub
     release: $(package_version)-$(rel_type)
     prerelease: $(toggle_prerelease)
-    description: <i><b>[Please consult our wiki for installation and usage guides](https://github.com/WorldofAddons/worldofaddons/wiki)</b></i></br> Automatically built from branch `$(APPVEYOR_REPO_BRANCH)`, AppVeyor build `$(APPVEYOR_BUILD_VERSION)`</br></br>$(APPVEYOR_REPO_COMMIT_MESSAGE)
+    description: <i><b>[Please consult our wiki for installation and usage guides](https://github.com/WorldofAddons/worldofaddons/wiki)</b></i></br>Pre-release builds may be unstable.</br>Automatically built from branch `$(APPVEYOR_REPO_BRANCH)`, AppVeyor build `$(APPVEYOR_BUILD_VERSION)`</br></br>$(APPVEYOR_REPO_COMMIT_MESSAGE)
     auth_token:
       secure: JPLPY6cHS8ydAPy2lc49ym1aBGk5uUStEAKfEQuVqdB2Jl9X/sfWdu4MVagLff1D
     artifact: WorldOfAddons-$(package_version)-$(rel_type)-win32x64.zip
