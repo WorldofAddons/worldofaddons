@@ -11,7 +11,7 @@ Download the latest version [here](https://github.com/WorldofAddons/worldofaddon
 Check out our [Wiki](https://github.com/WorldofAddons/worldofaddons/wiki) for installation help, usage guides, and contribution guidelines.
 
 |Branch|Build|OS|Build Status|
-|---|---|---|---|---|
+|---|---|---|---|
 |master|Official Release|Windows|![Windows Build](https://ci.appveyor.com/api/projects/status/github/worldofaddons/worldofaddons?branch=master&svg=true)|
 |dev|Nightly/Beta|Windows|![Windows Build](https://ci.appveyor.com/api/projects/status/github/worldofaddons/worldofaddons?branch=dev&svg=true)|
 
