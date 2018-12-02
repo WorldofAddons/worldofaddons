@@ -8,7 +8,7 @@
 
 Download the latest version [here](https://github.com/WorldofAddons/worldofaddons/releases)
 
-Check out our [Wiki](https://github.com/WorldofAddons/worldofaddons/wiki) for installation help, usage guides, and contribution guidelines.
+Check out our [Wiki](https://github.com/WorldofAddons/worldofaddons/wiki) for help and contribution guidelines.
 
 |Branch|Build|OS|Build Status|
 |---|---|---|---|
@@ -29,6 +29,11 @@ Install any addon from,
 - Simple, fast, and modern GUI
 - Easy addon update, installation, and removal
 - **Free** and **open source**. **Forever**.  **No** advertisements, data-collection or junk you don't care about.
+
+Created by
+[@khlam](https://github.com/khlam)
+[@zainkai](https://github.com/zainkai)
+
 
 *World of Addons is not affiliated with  [World of Warcraft or Blizzard Entertainment](https://www.blizzard.com/).*
 [*World of Warcraft is a game made by Blizzard Entertainment.*](https://www.blizzard.com/)
