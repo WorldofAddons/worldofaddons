@@ -1,6 +1,6 @@
 <img align="right" width="110" height="110" src="./assets/200x200.png?raw=true">
 
-# World of Addons [![Windows Build](https://ci.appveyor.com/api/projects/status/github/worldofaddons/worldofaddons?branch=master&svg=true)](https://ci.appveyor.com/project/khlam/worldofaddons-7jvip)
+# World of Addons <a href="https://ci.appveyor.com/project/khlam/worldofaddons-7jvip"><img src="https://ci.appveyor.com/api/projects/status/github/worldofaddons/worldofaddons?branch=master&svg=true" /></a> <a href="https://discord.gg/NsSM9Fn"><img src="https://img.shields.io/badge/discord-join-7289DA.svg?logo=discord&longCache=true&style=flat" /></a>
 
 > Install, update, and manage all your World of Warcraft addons in a single open source application.
 
