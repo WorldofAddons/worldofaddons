@@ -2,7 +2,7 @@
 
 # World of Addons <a href="https://ci.appveyor.com/project/khlam/worldofaddons-7jvip"><img src="https://ci.appveyor.com/api/projects/status/github/worldofaddons/worldofaddons?branch=master&svg=true" /></a> <a href="https://discord.gg/NsSM9Fn"><img src="https://img.shields.io/badge/discord-join-7289DA.svg?logo=discord&longCache=true&style=flat" /></a>
 
-> Install, update, and manage all your World of Warcraft addons in a single open source application.
+> Manage all your World of Warcraft addons in a single open source application.
 
 Download the latest version [here](https://github.com/WorldofAddons/worldofaddons/releases).
 

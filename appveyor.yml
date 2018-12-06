@@ -48,7 +48,7 @@
     - npm run build
     - npm run package-win
   after_build:
-  - ps: 7z a WorldOfAddons-$env:package_version-$env:rel_type-win32x64.zip $env:APPVEYOR_BUILD_FOLDER\release
+  - ps: 7z a WorldOfAddons-$env:package_version-$env:rel_type-win32x64.zip $env:APPVEYOR_BUILD_FOLDER\release\*.exe $env:APPVEYOR_BUILD_FOLDER\README.md $env:APPVEYOR_BUILD_FOLDER\LICENSE.md
   artifacts:
   - path: release
     name: WorldOfAddons-$(package_version)-$(rel_type)-win32x64
