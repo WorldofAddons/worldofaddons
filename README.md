@@ -11,7 +11,9 @@ Download the latest version [here](https://github.com/WorldofAddons/worldofaddon
 We make addon installation easy! Just copy & paste an addon's URL from your browser into World of Addons and hit enter!
 World of Addons will handle installing, uninstalling, and updating. [Wiki: How to Install a New Addon](https://github.com/WorldofAddons/worldofaddons/wiki/How-to-Use-World-of-Addons#how-to-install-a-new-addon)
 
-![Demo](https://raw.githubusercontent.com/WorldofAddons/worldofaddons.github.io/master/images/demo.gif)
+<p align="center">
+<img src="https://raw.githubusercontent.com/WorldofAddons/worldofaddons.github.io/master/images/demo.gif" />
+</p>
 
 ### Supported Sites
 Install any addon from,
