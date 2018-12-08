@@ -17,7 +17,9 @@
     "win": {
       "asar": true,
       "icon": "assets/icon.ico",
-      "target": ["nsis"]
+      "target": [
+        "nsis"
+      ]
     },
     "nsis": {
       "installerIcon": "assets/icon.ico",
