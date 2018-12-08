@@ -9,13 +9,11 @@ function parseContributors (getAPIURL) {
         req.onreadystatechange = () => {
           if (req.readyState === 4) {
             let jsonResponse = JSON.parse(req.responseText)
-            return resolve(["temp"])
-            /*
-            return resolve({
-              'authors': authors,
-              'displayName': displayName, // Name as displayed on wowinterface
-              'version': version // Addon version
-            })*/
+            let authors = []
+            jsonResponse.forEach( obj => {
+              authors.push(obj.login)
+            })
+            return resolve(authors)
           }
         }
     
@@ -41,11 +39,12 @@ export function parseAddonDetails (url) {
     req.onreadystatechange = () => {
       if (req.readyState === 4) {
         let jsonResponse = JSON.parse(req.responseText)
-        //console.log(parseContributors(gitAPIURL))
-        return resolve({
-          'authors': ["test"],
-          'displayName': displayName, // Name as displayed on wowinterface
-          'version': jsonResponse.tag_name // Addon version
+        parseContributors(gitAPIURL).then(authors => {
+          return resolve({
+            'authors': authors,
+            'displayName': displayName, // Name as displayed on wowinterface
+            'version': jsonResponse.tag_name // Addon version
+          })
         })
       }
     }
