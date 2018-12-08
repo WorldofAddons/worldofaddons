@@ -1,6 +1,6 @@
 {
   "name": "world-of-addons",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Open source addon manager for World of Warcraft. Install, update, and manage all your WoW addons in a single lightweight application.",
   "main": "dist/main.bundle.js",
   "scripts": {
@@ -8,8 +8,32 @@
     "linter": "standard --fix",
     "test": "jest --config=jest.config.json",
     "build": "webpack --mode development",
-    "build:hot": "webpack --watch --mode development",
-    "package-win": "electron-packager . WorldOfAddons --overwrite --asar --platform=win32 --arch=x64 --icon=assets/icon.ico --prune --out=release/ --version-string.CompanyName=WorldOfAddons --version-string.FileDescription=WorldOfAddons --version-string.ProductName=\"WorldOfAddons\""
+    "postinstall": "electron-builder install-app-deps",
+    "package-win": "electron-builder --win --publish never"
+  },
+  "build": {
+    "appId": "com.electron.worldofaddons",
+    "productName": "World Of Addons",
+    "win": {
+      "asar": true,
+      "icon": "assets/icon.ico",
+      "target": [
+        "nsis"
+      ]
+    },
+    "nsis": {
+      "installerIcon": "assets/icon.ico",
+      "uninstallerIcon": "assets/icon.ico",
+      "license": "LICENSE.md",
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "runAfterFinish": true
+    },
+    "directories": {
+      "output": "release"
+    }
   },
   "repository": "https://github.com/WorldofAddons/worldofaddons",
   "keywords": [
@@ -31,7 +55,7 @@
     "chai": "^4.2.0",
     "css-loader": "^1.0.0",
     "electron": "^3.0.9",
-    "electron-packager": "^12.2.0",
+    "electron-builder": "^20.38.2",
     "html-loader": "^0.5.5",
     "html-webpack-plugin": "^3.2.0",
     "jest": "^23.6.0",
