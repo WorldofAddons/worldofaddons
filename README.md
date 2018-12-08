@@ -4,7 +4,7 @@
 
 > Install, update, and manage all your World of Warcraft addons in a single open source application.
 
-Download the latest version [here](https://github.com/WorldofAddons/worldofaddons/releases).
+Download the latest version [here](https://github.com/WorldofAddons/worldofaddons/releases/latest).
 
 [Wiki: Installation Guide](https://github.com/WorldofAddons/worldofaddons/wiki/Installation-Guide-%5BWindows-Mac-Linux%5D) 
 
