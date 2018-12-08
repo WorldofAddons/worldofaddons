@@ -20,7 +20,7 @@
   test_script:
     - npm run test
 
-# Test and only build windows release on master and dev branches
+# Test and build windows release only on master and dev branches
 -
   branches:
     only:
