@@ -8,10 +8,6 @@ export function checkWhichHost (url) {
     return initWoWInterface(url)
   }
 
-  if (url.startsWith('https://www.github.com/') || url.startsWith('https://github.com/')){
-    return initGithub(url)
-  }
-
   const errorObj = { 'error': `Invalid url '${url}'. Given link does not match parse` }
   return errorObj
 }
@@ -37,21 +33,4 @@ function initWoWInterface (url) {
       URLSplit[1].lastIndexOf('.html')
     ) }
   return URLObj
-}
-
-// Creates a JSON object for addons hosted by Github.
-// Parses the addon name from the end of the url, this name is how the
-// JSON object is referenced by other components
-
-function initGithub (url) {
-  const URLSplit = url.split('github.com/')
-  const nameSplit = URLSplit[1].split("/")
-  console.log(nameSplit)
-  if (nameSplit.length >= 2) {
-    const URLObj = { 'url': url,
-    'host': 'github',
-    'name': nameSplit[1]
-    }
-    return URLObj
-  }
 }

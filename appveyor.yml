@@ -1,9 +1,5 @@
-# Execute tests on all pushes to any branch except master and dev
+# Execute tests on all pushes to any branch
 -
-  branches:
-    except:
-      - master
-      - dev
   cache:
     - node_modules
   environment:
@@ -52,9 +48,9 @@
     - npm run build
     - npm run package-win
   after_build:
-  - ps: 7z a WorldOfAddons-$env:package_version-$env:rel_type-win32x64.zip $env:APPVEYOR_BUILD_FOLDER\release\*.exe $env:APPVEYOR_BUILD_FOLDER\README.md $env:APPVEYOR_BUILD_FOLDER\LICENSE.md
+  - ps: 7z a WorldOfAddons-$env:package_version-$env:rel_type-win32x64.zip $env:APPVEYOR_BUILD_FOLDER\release
   artifacts:
-  - path: WorldOfAddons-$(package_version)-$(rel_type)-win32x64.zip
+  - path: release
     name: WorldOfAddons-$(package_version)-$(rel_type)-win32x64
   shallow_clone: true
   clone_depth: 1
