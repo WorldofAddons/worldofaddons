@@ -1,5 +1,4 @@
 import { detailsParserBuilder } from './pageParserAdapter/index'
-import { parse } from 'path';
 
 // Generic function that fetches the parser specific to the Addon's host
 // On successful parse, returns a JSON object. This object is used by the
