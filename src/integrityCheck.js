@@ -3,6 +3,7 @@ import { saveToAddonList } from './config'
 import { mainWindow } from '../main'
 
 // Verifies that all addon subdirs are present. Updates addon statuses accordingly
+// In many cases integrityCheck() is inefficient because it checks the entire filesystem
 export function integrityCheck (installedAddonsDict, configObj) {
   let changed = false
   console.log('Checking install integrity')

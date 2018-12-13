@@ -12,7 +12,8 @@ import os from 'os'
 import path from 'path'
 
 const chokidar = require('chokidar')
-
+const now = require("performance-now")
+const start = now()
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 export let mainWindow
@@ -49,7 +50,7 @@ function initSubDirWatcher (configObj, installedAddonsDict) {
   subDirWatcher
     .on('addDir', function (path) {
       console.log('Addon subdir: ', path)
-      integrityCheck(installedAddonsDict, configObj) // Verifies that addon was installed
+      integrityCheck(installedAddonsDict, configObj) // Verifies that addon was installed.
     })
     .on('unlinkDir', function (path) {
       console.log('Addon deleted: ', path)
@@ -285,4 +286,6 @@ ipcMain.on('windowDoneLoading', () => {
   if (configObj.checkUpdateOnStart === true) {
     checkAllUpdates(installedAddonsDict)
   }
+  const end = now()
+  console.log("Startup took ", (end-start).toFixed(3), " ms")
 })
