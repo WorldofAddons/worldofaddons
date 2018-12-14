@@ -67,14 +67,14 @@ export function downloadAddon (addonObj, downloadURL) {
 export function extAddonToDir (addonObj, targetPath) {
   return new Promise((resolve, reject) => {
     const addonZip = path.join(os.tmpdir(), addonObj.name + '.zip')
-    console.log(`\tExtracting ${addonObj.name} from ${addonZip} to dir: ${targetPath}`)
+    console.log(`\tExtracting ${addonObj.name}\n\t\tFrom: ${addonZip} \n\t\To: ${targetPath}`)
 
     decompress(addonZip, targetPath, {
       map: file => { return file }
     }).then(files => {
       fs.unlink(addonZip, (err) => {
         if (err) throw err
-        console.log(`\tDeleted ${addonZip}`)
+        console.log(`\tDeleted zip folder ${addonZip}`)
       })
 
       files.forEach((part, index, files) => { // Quick and dirty record all addon dirs

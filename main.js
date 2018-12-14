@@ -5,11 +5,12 @@ import { checkWhichHost } from './src/checkHost'
 import { installAddon } from './src/installAddon'
 import { initConfig, readAddonList, saveToAddonList, saveToConfig } from './src/config'
 import { checkUpdate } from './src/updateAddon'
-import { integrityCheck } from './src/integrityCheck'
+import { subDirCheckAll } from './src/integrityCheck'
 import { uninstallAddon } from './src/uninstallAddon'
 import { checkWoAVersion } from './src/checkWoAVersion'
 import os from 'os'
 import path from 'path'
+
 
 const chokidar = require('chokidar')
 const now = require("performance-now")
@@ -45,16 +46,20 @@ function initSubDirWatcher (configObj, installedAddonsDict) {
   const subDirWatcher = chokidar.watch(configObj.addonDir, { // Watches wow Addon folder for new addons or deletions
     ignored: /(^|[/\\])\../,
     persistent: true,
+    ignoreInitial: true,
     depth: 0
   })
   subDirWatcher
-    .on('addDir', function (path) {
-      console.log('Addon subdir: ', path)
-      integrityCheck(installedAddonsDict, configObj) // Verifies that addon was installed.
+  /*
+    .on('addDir', function (filePath) {
+      let fname = path.parse(filePath).base
+      console.log('Addon subdir: ', fname, " Hashed to ", fileHash.get(fname))
+      subDirCheckAll(installedAddonsDict, configObj) // Verifies that addon was installed.
     })
-    .on('unlinkDir', function (path) {
-      console.log('Addon deleted: ', path)
-      integrityCheck(installedAddonsDict, configObj) // Verifies that addon was uninstalled
+  */
+    .on('unlinkDir', function (filePath) {
+      console.log('subDir deleted: ', filePath)
+      subDirCheckAll(installedAddonsDict, configObj) // Verifies that addon was uninstalled
     })
     .on('error', function (error) {
       console.log('ERROR: ', error)
@@ -63,7 +68,7 @@ function initSubDirWatcher (configObj, installedAddonsDict) {
 }
 
 function initInstallAddonsJsonWatcher (configObj, installedAddonsDict) {
-  const installedAddonsJsonWatcher = chokidar.watch(configObj.addonRecordFile, { persistent: true }) // Watches for changes in addons.json,
+  const installedAddonsJsonWatcher = chokidar.watch(configObj.addonRecordFile, { persistent: true, ignoreInitial: true}) // Watches for changes in addons.json,
   installedAddonsJsonWatcher.on('all', function () { // if there are changes then update the installAddonsDict variable.
     readAddonList(configObj).then(value => {
       console.log('Save/change detected in addons.json, updating installedAddonsDict')
@@ -130,6 +135,7 @@ app.on('activate', () => {
 // --- Initialization Start---
 let configObj // JSON object that holds application config such as location of addon directory and installed addons file
 let installedAddonsDict // Dictionary of all installed addons. Reference addons using "name" as key
+let fileHash // Hashmap that holds all subdirectory names
 
 let installedAddonsJsonWatcher
 let subDirWatcher
@@ -140,15 +146,14 @@ initConfig()
     return configObj
   })
   .then(configObj => {
-    console.log(configObj)
-    readAddonList(configObj).then(val => {
-      installedAddonsDict = val
-      return val
+    readAddonList(configObj).then(val => { // Reads addons.json
+      installedAddonsDict = val            // Populates installedAddonsDict
     })
-    installedAddonsJsonWatcher = initInstallAddonsJsonWatcher(configObj, installedAddonsDict)
   })
-  .then(val => {
+  .then( () => {
+    //fileHash = initFileHash(fileHash, installedAddonsDict)
     subDirWatcher = initSubDirWatcher(configObj, installedAddonsDict)
+    installedAddonsJsonWatcher = initInstallAddonsJsonWatcher(configObj, installedAddonsDict)
   })
 //  --- Initialization End---
 
@@ -175,7 +180,7 @@ ipcMain.on('installAddon', (e, addonObj) => {
   installAddon(addonObj, configObj.addonDir)
     .then((newAddon) => {
       installedAddonsDict[newAddon.name] = newAddon
-      integrityCheck(installedAddonsDict, configObj)
+      subDirCheckAll(installedAddonsDict, configObj)
     })
 })
 
@@ -187,7 +192,7 @@ ipcMain.on('installUpdate', (e, addonObj) => {
     installAddon(addonObj, configObj.addonDir)
       .then((newAddon) => {
         installedAddonsDict[newAddon.name] = newAddon
-        integrityCheck(installedAddonsDict, configObj)
+        subDirCheckAll(installedAddonsDict, configObj)
       })
   })
 })
@@ -199,7 +204,7 @@ ipcMain.on('updateAll', (e, notUpdated) => {
     parseAddonDetails(URLObj).then(addonObj => {
       installAddon(addonObj, configObj.addonDir).then((newAddon) => {
         installedAddonsDict[newAddon.name] = newAddon
-        integrityCheck(installedAddonsDict, configObj)
+        subDirCheckAll(installedAddonsDict, configObj)
       })
     })
   })
@@ -281,6 +286,7 @@ ipcMain.on('newSettings', (e, newConfig) => {
 
 // need to wait for react to finishing building Dom
 ipcMain.on('windowDoneLoading', () => {
+  subDirCheckAll(installedAddonsDict, configObj)
   mainWindow.webContents.send('addonList', installedAddonsDict) // Note: Soft race-condition, Window can be done loading before addons.json is read
   mainWindow.webContents.send('modSettings', configObj)
   if (configObj.checkUpdateOnStart === true) {
